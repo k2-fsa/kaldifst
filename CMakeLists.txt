@@ -1,0 +1,42 @@
+if("x${CMAKE_SOURCE_DIR}" STREQUAL "x${CMAKE_BINARY_DIR}")
+  message(FATAL_ERROR "\
+In-source build is not a good practice.
+Please use:
+  mkdir build
+  cd build
+  cmake ..
+to build this project"
+  )
+endif()
+
+cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
+
+
+project(kaldifst CXX)
+
+set(KALDIFST_VERSION "0.1")
+
+set(ALLOWABLE_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
+set(DEFAULT_BUILD_TYPE "Debug")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "${ALLOWABLE_BUILD_TYPES}")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  # CMAKE_CONFIGURATION_TYPES: with config type values from other generators (IDE).
+  message(STATUS "No CMAKE_BUILD_TYPE given, default to ${DEFAULT_BUILD_TYPE}")
+  set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}")
+elseif(NOT CMAKE_BUILD_TYPE IN_LIST ALLOWABLE_BUILD_TYPES)
+  message(FATAL_ERROR "Invalid build type: ${CMAKE_BUILD_TYPE}, \
+    choose one from ${ALLOWABLE_BUILD_TYPES}")
+endif()
+
+option(KALDIFST_BUILD_TESTS "Whether to build tests or not" ON)
+
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+include(pybind11)
+include(openfst)
+if(KALDIFST_BUILD_TESTS)
+  include(googletest)
+endif()
+
+add_subdirectory(kaldifst)
