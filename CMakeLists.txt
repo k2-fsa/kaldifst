@@ -17,7 +17,7 @@ project(kaldifst CXX)
 set(KALDIFST_VERSION "0.1")
 
 set(ALLOWABLE_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
-set(DEFAULT_BUILD_TYPE "Debug")
+set(DEFAULT_BUILD_TYPE "Release")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "${ALLOWABLE_BUILD_TYPES}")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   # CMAKE_CONFIGURATION_TYPES: with config type values from other generators (IDE).
@@ -28,7 +28,7 @@ elseif(NOT CMAKE_BUILD_TYPE IN_LIST ALLOWABLE_BUILD_TYPES)
     choose one from ${ALLOWABLE_BUILD_TYPES}")
 endif()
 
-option(KALDIFST_BUILD_TESTS "Whether to build tests or not" ON)
+option(KALDIFST_BUILD_TESTS "Whether to build tests or not" OFF)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
