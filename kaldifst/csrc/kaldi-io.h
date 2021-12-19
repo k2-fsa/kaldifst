@@ -5,6 +5,7 @@
 
 // Copyright 2009-2011  Microsoft Corporation;  Jan Silovsky
 //                2016  Xiaohui Zhang
+
 #ifndef KALDIFST_CSRC_KALDI_IO_H_
 #define KALDIFST_CSRC_KALDI_IO_H_
 
@@ -145,14 +146,12 @@ class Output {
 // Note that to catch errors you need to use try.. catch.
 // Input communicates errors by throwing exceptions.
 
-
 // Input interprets four kinds of filenames:
 //  (1) Normal filenames
 //  (2) The empty string or "-", interpreted as standard output
 //  (3) A pipe: e.g.  "gunzip -c /tmp/abc.gz |"
 //  (4) Offsets into [real] files, e.g. "/my/filename:12049"
 // The last one has no correspondence in Output.
-
 
 class Input {
  public:
@@ -162,7 +161,7 @@ class Input {
   /// throws on error.
   Input(const std::string &rxfilename, bool *contents_binary = NULL);
 
-  Input(): impl_(NULL) {}
+  Input() : impl_(NULL) {}
 
   // Open opens the stream for reading (the mode, where relevant, is binary; use
   // OpenTextMode for text-mode, we made this a separate function rather than a
@@ -196,6 +195,7 @@ class Input {
   // Destructor does not throw: input streams may legitimately fail so we
   // don't worry about the status when we close them.
   ~Input();
+
  private:
   bool OpenInternal(const std::string &rxfilename, bool file_binary,
                     bool *contents_binary);
@@ -203,12 +203,22 @@ class Input {
   KALDIFST_DISALLOW_COPY_AND_ASSIGN(Input);
 };
 
-template <class C> void ReadKaldiObject(const std::string &filename,
-                                        C *c) {
+template <class C>
+void ReadKaldiObject(const std::string &filename, C *c) {
   bool binary_in;
   Input ki(filename, &binary_in);
   c->Read(ki.Stream(), binary_in);
 }
+
+/// PrintableRxfilename turns the rxfilename into a more human-readable
+/// form for error reporting, i.e. it does quoting and escaping and
+/// replaces "" or "-" with "standard input".
+std::string PrintableRxfilename(const std::string &rxfilename);
+
+/// PrintableWxfilename turns the wxfilename into a more human-readable
+/// form for error reporting, i.e. it does quoting and escaping and
+/// replaces "" or "-" with "standard output".
+std::string PrintableWxfilename(const std::string &wxfilename);
 
 }  // namespace kaldifst
 

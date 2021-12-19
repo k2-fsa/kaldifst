@@ -5,8 +5,33 @@
 
 // Copyright 2009-2011    Microsoft Corporation
 //                2013    Johns Hopkins University (author: Daniel Povey)
+
+#ifndef KALDIFST_CSRC_KALDI_TABLE_H_
+#define KALDIFST_CSRC_KALDI_TABLE_H_
 #include <string>
+
+#include "kaldifst/csrc/kaldi-holder.h"
+
 namespace kaldifst {
+
+// Forward declarations
+template <class Holder>
+class RandomAccessTableReaderImplBase;
+template <class Holder>
+class SequentialTableReaderImplBase;
+template <class Holder>
+class TableWriterImplBase;
+
+// This header defines the Table classes (RandomAccessTableReader,
+// SequentialTableReader and TableWriter) and explains what the Holder classes,
+// which the Table class requires as a template argument, are like.  It also
+// explains the "rspecifier" and "wspecifier" concepts (these are strings that
+// explain how to read/write objects via archives or scp files.  A table is
+// conceptually a collection of objects of a particular type T indexed by keys
+// of type std::string (these Keys additionally have an order within
+// each table).
+// The Table classes are templated on a type (call it Holder) such that
+// Holder::T is a typedef equal to T.
 
 // Documentation for "rspecifier"
 // "rspecifier" describes how we read a set of objects indexed by keys.
@@ -150,4 +175,275 @@ WspecifierType ClassifyWspecifier(const std::string &wspecifier,
                                   std::string *script_wxfilename,
                                   WspecifierOptions *opts);
 
+// ReadScriptFile reads an .scp file in its entirety, and appends it
+// (in order as it was in the scp file) in script_out_, which contains
+// pairs of (key, xfilename).  The .scp
+// file format is: on each line, key xfilename
+// where xfilename means rxfilename or wxfilename, and may contain internal
+// spaces (we trim away any leading or trailing space).  The key is space-free.
+// ReadScriptFile returns true if the format was valid (empty files
+// are valid).
+// If 'print_warnings', it will print out warning messages that explain what
+// kind of error there was.
+bool ReadScriptFile(
+    const std::string &rxfilename, bool print_warnings,
+    std::vector<std::pair<std::string, std::string>> *script_out);
+
+// This version of ReadScriptFile works from an istream.
+bool ReadScriptFile(
+    std::istream &is, bool print_warnings,
+    std::vector<std::pair<std::string, std::string>> *script_out);
+
+// Writes, for each entry in script, the first element, then ' ', then the
+// second element then '\n'.  Checks that the keys (first elements of pairs) are
+// valid tokens (nonempty, no whitespace), and the values (second elements of
+// pairs) are newline-free and contain no leading or trailing space.  Returns
+// true on success.
+bool WriteScriptFile(
+    const std::string &wxfilename,
+    const std::vector<std::pair<std::string, std::string>> &script);
+
+// This version writes to an ostream.
+bool WriteScriptFile(
+    std::ostream &os,
+    const std::vector<std::pair<std::string, std::string>> &script);
+
+/// Allows random access to a collection
+/// of objects in an archive or script file; see \ref io_sec_tables.
+template <class Holder>
+class RandomAccessTableReader {
+ public:
+  typedef typename Holder::T T;
+
+  RandomAccessTableReader() : impl_(NULL) {}
+
+  // This constructor is equivalent to default constructor + "open", but
+  // throws on error.
+  explicit RandomAccessTableReader(const std::string &rspecifier);
+
+  // Opens the table.
+  bool Open(const std::string &rspecifier);
+
+  // Returns true if table is open.
+  bool IsOpen() const { return (impl_ != NULL); }
+
+  // Close() will close the table [throws if it was not open],
+  // and returns true on success (false if we were reading an
+  // archive and we discovered an error in the archive).
+  bool Close();
+
+  // Says if it has this key.
+  // If you are using the "permissive" (p) read option,
+  // it will return false for keys whose corresponding entry
+  // in the scp file cannot be read.
+
+  bool HasKey(const std::string &key);
+
+  // Value() may throw if you are reading an scp file, you
+  // do not have the "permissive" (p) option, and an entry
+  // in the scp file cannot be read.  Typically you won't
+  // want to catch this error.
+  const T &Value(const std::string &key);
+
+  ~RandomAccessTableReader();
+
+  // Allow copy-constructor only for non-opened readers (needed for inclusion in
+  // stl vector)
+  RandomAccessTableReader(const RandomAccessTableReader<Holder> &other)
+      : impl_(NULL) {
+    KALDI_ASSERT(other.impl_ == NULL);
+  }
+
+ private:
+  // Disallow assignment.
+  RandomAccessTableReader &operator=(const RandomAccessTableReader<Holder> &);
+  void CheckImpl() const;  // Checks that impl_ is non-NULL; prints an error
+                           // message and dies (with KALDI_ERR) if NULL.
+  RandomAccessTableReaderImplBase<Holder> *impl_;
+};
+
+/// A templated class for reading objects sequentially from an archive or script
+/// file; see \ref io_sec_tables.
+template <class Holder>
+class SequentialTableReader {
+ public:
+  typedef typename Holder::T T;
+
+  SequentialTableReader() : impl_(NULL) {}
+
+  // This constructor equivalent to default constructor + "open", but
+  // throws on error.
+  explicit SequentialTableReader(const std::string &rspecifier);
+
+  // Opens the table.  Returns exit status; but does throw if previously open
+  // stream was in error state.  You can call Close to prevent this; anyway,
+  // calling Open more than once is not usually needed.
+  bool Open(const std::string &rspecifier);
+
+  // Returns true if we're done.  It will also return true if there's some kind
+  // of error and we can't read any more; in this case, you can detect the
+  // error by calling Close and checking the return status; otherwise
+  // the destructor will throw.
+  inline bool Done();
+
+  // Only valid to call Key() if Done() returned false.
+  inline std::string Key();
+
+  // FreeCurrent() is provided as an optimization to save memory, for large
+  // objects.  It instructs the class to deallocate the current value. The
+  // reference Value() will be invalidated by this.
+  void FreeCurrent();
+
+  // Return reference to the current value.  It's only valid to call this if
+  // Done() returned false.  The reference is valid till next call to this
+  // object.  It will throw if you are reading an scp file, did not specify the
+  // "permissive" (p) option and the file cannot be read.  [The permissive
+  // option makes it behave as if that key does not even exist, if the
+  // corresponding file cannot be read.]  You probably wouldn't want to catch
+  // this exception; the user can just specify the p option in the rspecifier.
+  // We make this non-const to enable things like shallow swap on the held
+  // object in situations where this would avoid making a redundant copy.
+  T &Value();
+
+  // Next goes to the next key.  It will not throw; any error will
+  // result in Done() returning true, and then the destructor will
+  // throw unless you call Close().
+  void Next();
+
+  // Returns true if table is open for reading (does not imply
+  // stream is in good state).
+  bool IsOpen() const;
+
+  // Close() will return false (failure) if Done() became true
+  // because of an error/ condition rather than because we are
+  // really done [e.g. because of an error or early termination
+  // in the archive].
+  // If there is an error and you don't call Close(), the destructor
+  // will fail.
+  // Close()
+  bool Close();
+
+  // The destructor may throw.  This is the desired behaviour, as it's the way
+  // we signal the error to the user (to detect it, call Close().  The issue is
+  // that otherwise the user has no way to tell whether Done() returned true
+  // because we reached the end of the archive or script, or because there was
+  // an error that prevented further reading.
+  ~SequentialTableReader();
+
+  // Allow copy-constructor only for non-opened readers (needed for inclusion in
+  // stl vector)
+  SequentialTableReader(const SequentialTableReader<Holder> &other)
+      : impl_(NULL) {
+    KALDI_ASSERT(other.impl_ == NULL);
+  }
+
+ private:
+  // Disallow assignment.
+  SequentialTableReader &operator=(const SequentialTableReader<Holder> &);
+  void CheckImpl() const;  // Checks that impl_ is non-NULL; prints an error
+                           // message and dies (with KALDI_ERR) if NULL.
+  SequentialTableReaderImplBase<Holder> *impl_;
+};
+
+/// A templated class for writing objects to an
+/// archive or script file; see \ref io_sec_tables.
+template <class Holder>
+class TableWriter {
+ public:
+  typedef typename Holder::T T;
+
+  TableWriter() : impl_(NULL) {}
+
+  // This constructor equivalent to default constructor
+  // + "open", but throws on error.  See docs for
+  // wspecifier above.
+  explicit TableWriter(const std::string &wspecifier);
+
+  // Opens the table.  See docs for wspecifier above.
+  // If it returns true, it is open.
+  bool Open(const std::string &wspecifier);
+
+  // Returns true if open for writing.
+  bool IsOpen() const;
+
+  // Write the object. Throws KaldiFatalError on error via the KALDI_ERR macro.
+  inline void Write(const std::string &key, const T &value) const;
+
+  // Flush will flush any archive; it does not return error status
+  // or throw, any errors will be reported on the next Write or Close.
+  // Useful if we may be writing to a command in a pipe and want
+  // to ensure good CPU utilization.
+  void Flush();
+
+  // Close() is not necessary to call, as the destructor
+  // closes it; it's mainly useful if you want to handle
+  // error states because the destructor will throw on
+  // error if you do not call Close().
+  bool Close();
+
+  ~TableWriter();
+
+  // Allow copy-constructor only for non-opened writers (needed for inclusion in
+  // stl vector)
+  TableWriter(const TableWriter &other) : impl_(NULL) {
+    KALDI_ASSERT(other.impl_ == NULL);
+  }
+
+ private:
+  TableWriter &operator=(const TableWriter &);  // Disallow assignment.
+
+  void CheckImpl() const;  // Checks that impl_ is non-NULL; prints an error
+                           // message and dies (with KALDI_ERR) if NULL.
+  TableWriterImplBase<Holder> *impl_;
+};
+
+/// This class is for when you are reading something in random access, but
+/// it may actually be stored per-speaker (or something similar) but the
+/// keys you're using are per utterance.  So you also provide an "rxfilename"
+/// for a file containing lines like
+/// utt1 spk1
+/// utt2 spk1
+/// utt3 spk1
+/// and so on.  Note: this is optional; if it is an empty string, we just won't
+/// do the mapping.  Also, "table_rxfilename" may be the empty string (as for
+/// a regular table), in which case the table just won't be opened.
+/// We provide only the most frequently used of the functions of
+/// RandomAccessTableReader.
+
+template <class Holder>
+class RandomAccessTableReaderMapped {
+ public:
+  typedef typename Holder::T T;
+  /// Note: "utt2spk_rxfilename" will in the normal case be an rxfilename
+  /// for an utterance to speaker map, but this code is general; it accepts
+  /// a generic map.
+  RandomAccessTableReaderMapped(const std::string &table_rxfilename,
+                                const std::string &utt2spk_rxfilename);
+
+  RandomAccessTableReaderMapped() {}
+
+  /// Note: when calling Open, utt2spk_rxfilename may be empty.
+  bool Open(const std::string &table_rxfilename,
+            const std::string &utt2spk_rxfilename);
+
+  bool HasKey(const std::string &key);
+  const T &Value(const std::string &key);
+  inline bool IsOpen() const { return reader_.IsOpen(); }
+  inline bool Close() { return reader_.Close(); }
+
+  // The default copy-constructor will do what we want: it will crash for
+  // already-opened readers, by calling the member-variable copy-constructors.
+ private:
+  // Disallow assignment.
+  RandomAccessTableReaderMapped &operator=(
+      const RandomAccessTableReaderMapped<Holder> &);
+  RandomAccessTableReader<Holder> reader_;
+  RandomAccessTableReader<TokenHolder> token_reader_;
+  std::string utt2spk_rxfilename_;  // Used only in diagnostic messages.
+};
+
 }  // namespace kaldifst
+
+#include "kaldifst/csrc/kaldi-table-inl.h"
+
+#endif  // KALDIFST_CSRC_KALDI_TABLE_H_

@@ -10,6 +10,9 @@
 #include <type_traits>
 #include <vector>
 
+#ifndef KALDIFST_CSRC_TEXT_UTILS_H_
+#define KALDIFST_CSRC_TEXT_UTILS_H_
+
 #ifdef _MSC_VER
 #define KALDIFST_STRTOLL(cur_cstr, end_cstr) _strtoi64(cur_cstr, end_cstr, 10);
 #else
@@ -53,4 +56,21 @@ bool ConvertStringToInteger(const std::string &str, Int *out) {
   return true;
 }
 
+/// Returns true if "token" is nonempty, and all characters are
+/// printable and whitespace-free.
+bool IsToken(const std::string &token);
+
+// CharToString prints the character in a human-readable form, for debugging.
+std::string CharToString(const char &c);
+
+/// Removes leading and trailing white space from the string, then splits on the
+/// first section of whitespace found (if present), putting the part before the
+/// whitespace in "first" and the rest in "rest".  If there is no such space,
+/// everything that remains after removing leading and trailing whitespace goes
+/// in "first".
+void SplitStringOnFirstSpace(const std::string &line, std::string *first,
+                             std::string *rest);
+
 }  // namespace kaldifst
+
+#endif  // KALDIFST_CSRC_TEXT_UTILS_H_

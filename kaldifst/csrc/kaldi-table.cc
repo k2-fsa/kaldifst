@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "kaldifst/csrc/kaldi-io.h"
 #include "kaldifst/csrc/text-utils.h"
 namespace kaldifst {
 
@@ -199,6 +200,113 @@ WspecifierType ClassifyWspecifier(const std::string &wspecifier,
       break;
   }
   return ws;
+}
+
+bool ReadScriptFile(
+    const std::string &rxfilename, bool warn,
+    std::vector<std::pair<std::string, std::string>> *script_out) {
+  bool is_binary;
+  Input input;
+
+  if (!input.Open(rxfilename, &is_binary)) {
+    if (warn)
+      KALDIFST_WARN << "Error opening script file: "
+                    << PrintableRxfilename(rxfilename);
+    return false;
+  }
+  if (is_binary) {
+    if (warn)
+      KALDIFST_WARN << "Error: script file appears to be binary: "
+                    << PrintableRxfilename(rxfilename);
+    return false;
+  }
+
+  bool ans = ReadScriptFile(input.Stream(), warn, script_out);
+  if (warn && !ans)
+    KALDIFST_WARN << "[script file was: " << PrintableRxfilename(rxfilename)
+                  << "]";
+  return ans;
+}
+
+bool ReadScriptFile(
+    std::istream &is, bool warn,
+    std::vector<std::pair<std::string, std::string>> *script_out) {
+  KALDIFST_ASSERT(script_out != NULL);
+  std::string line;
+  int line_number = 0;
+  while (getline(is, line)) {
+    line_number++;
+    const char *c = line.c_str();
+    if (*c == '\0') {
+      if (warn)
+        KALDIFST_WARN << "Empty " << line_number << "'th line in script file";
+      return false;  // Empty line so invalid scp file format..
+    }
+
+    std::string key, rest;
+    SplitStringOnFirstSpace(line, &key, &rest);
+
+    if (key.empty() || rest.empty()) {
+      if (warn)
+        KALDIFST_WARN << "Invalid " << line_number << "'th line in script file"
+                      << ":\"" << line << '"';
+      return false;
+    }
+    script_out->resize(script_out->size() + 1);
+    script_out->back().first = key;
+    script_out->back().second = rest;
+  }
+  return true;
+}
+
+bool WriteScriptFile(
+    std::ostream &os,
+    const std::vector<std::pair<std::string, std::string>> &script) {
+  if (!os.good()) {
+    KALDIFST_WARN << "WriteScriptFile: attempting to write to invalid stream.";
+    return false;
+  }
+  std::vector<std::pair<std::string, std::string>>::const_iterator iter;
+  for (iter = script.begin(); iter != script.end(); ++iter) {
+    if (!IsToken(iter->first)) {
+      KALDIFST_WARN << "WriteScriptFile: using invalid token \"" << iter->first
+                    << '"';
+      return false;
+    }
+    if (iter->second.find('\n') != std::string::npos ||
+        (iter->second.length() != 0 &&
+         (isspace(iter->second[0]) ||
+          isspace(iter->second[iter->second.length() - 1])))) {
+      // second part contains newline or leading or trailing space.
+      KALDIFST_WARN << "WriteScriptFile: attempting to write invalid line \""
+                    << iter->second << '"';
+      return false;
+    }
+    os << iter->first << ' ' << iter->second << '\n';
+  }
+  if (!os.good()) {
+    KALDIFST_WARN << "WriteScriptFile: stream in error state.";
+    return false;
+  }
+  return true;
+}
+
+bool WriteScriptFile(
+    const std::string &wxfilename,
+    const std::vector<std::pair<std::string, std::string>> &script) {
+  Output output;
+  if (!output.Open(wxfilename, false, false)) {  // false, false means not
+    // binary, no binary-mode header.
+    KALDIFST_ERR << "Error opening output stream for script file: "
+                 << PrintableWxfilename(wxfilename);
+    return false;
+  }
+  if (!WriteScriptFile(output.Stream(), script)) {
+    KALDIFST_ERR << "Error writing script file to stream "
+                 << PrintableWxfilename(wxfilename);
+    return false;
+  }
+  return true;
 }
 
 }  // namespace kaldifst
