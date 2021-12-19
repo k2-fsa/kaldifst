@@ -13,7 +13,7 @@ set(srcs
   )
 
 add_library(kaldifst_core ${srcs})
-target_link_libraries(kaldifst_core fst)
+target_link_libraries(kaldifst_core PUBLIC fst)
 
 function(kaldifst_add_test source)
   get_filename_component(name ${source} NAME_WE)

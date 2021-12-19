@@ -46,6 +46,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(pybind11)
 include(openfst)
 if(KALDIFST_BUILD_TESTS)
+  enable_testing()
   include(googletest)
 endif()
 

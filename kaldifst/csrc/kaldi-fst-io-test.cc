@@ -4,6 +4,8 @@
 
 #include "kaldifst/csrc/kaldi-fst-io.h"
 
+#include <stdio.h>
+
 #include "gtest/gtest.h"
 
 namespace kaldifst {
@@ -30,6 +32,8 @@ TEST(TestKaldiFstIO, ReadWrite) {
   fst::StdVectorFst fst2;
   fst::ReadFstKaldi(filename, &fst2);
   ASSERT_TRUE(fst::Equivalent(fst1, fst2));
+
+  remove(filename.c_str());
 }
 
 }  // namespace kaldifst
