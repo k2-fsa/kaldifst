@@ -9,9 +9,25 @@
 
 #include <string.h>
 
+#include "kaldifst/csrc/kaldi-pipebuf.h"
 #include "kaldifst/csrc/kaldi-table.h"
 #include "kaldifst/csrc/log.h"
+#include "kaldifst/csrc/parse-options.h"
+
+#define MapOsPath(x) x
+
 namespace kaldifst {
+
+std::string PrintableWxfilename(const std::string &wxfilename) {
+  if (wxfilename == "" || wxfilename == "-") {
+    return "standard output";
+  } else {
+    // If this call to Escape later causes compilation issues,
+    // just replace it with "return wxfilename"; it's only a
+    // pretty-printing issue.
+    return ParseOptions::Escape(wxfilename);
+  }
+}
 
 OutputType ClassifyWxfilename(const std::string &filename) {
   const char *c = filename.c_str();
@@ -115,6 +131,198 @@ InputType ClassifyRxfilename(const std::string &filename) {
     return kNoInput;
   }
   return kFileInput;  // It matched no other pattern: assume it's a filename.
+}
+
+#ifndef _MSC_VER  // on VS, we don't need this type.
+// could replace basic_pipebuf<char> with stdio_filebuf<char> on some platforms.
+// Would mean we could use less of our own code.
+typedef basic_pipebuf<char> PipebufType;
+#endif
+
+class OutputImplBase {
+ public:
+  // Open will open it as a file (no header), and return true
+  // on success.  It cannot be called on an already open stream.
+  virtual bool Open(const std::string &filename, bool binary) = 0;
+  virtual std::ostream &Stream() = 0;
+  virtual bool Close() = 0;
+  virtual ~OutputImplBase() {}
+};
+
+class FileOutputImpl : public OutputImplBase {
+ public:
+  virtual bool Open(const std::string &filename, bool binary) {
+    if (os_.is_open())
+      KALDIFST_ERR << "FileOutputImpl::Open(), "
+                   << "open called on already open file.";
+    filename_ = filename;
+    os_.open(MapOsPath(filename_).c_str(),
+             binary ? std::ios_base::out | std::ios_base::binary
+                    : std::ios_base::out);
+    return os_.is_open();
+  }
+
+  virtual std::ostream &Stream() {
+    if (!os_.is_open())
+      KALDIFST_ERR << "FileOutputImpl::Stream(), file is not open.";
+    // I believe this error can only arise from coding error.
+    return os_;
+  }
+
+  virtual bool Close() {
+    if (!os_.is_open())
+      KALDIFST_ERR << "FileOutputImpl::Close(), file is not open.";
+    // I believe this error can only arise from coding error.
+    os_.close();
+    return !(os_.fail());
+  }
+  virtual ~FileOutputImpl() {
+    if (os_.is_open()) {
+      os_.close();
+      if (os_.fail()) KALDIFST_ERR << "Error closing output file " << filename_;
+    }
+  }
+
+ private:
+  std::string filename_;
+  std::ofstream os_;
+};
+
+class StandardOutputImpl : public OutputImplBase {
+ public:
+  StandardOutputImpl() : is_open_(false) {}
+
+  virtual bool Open(const std::string &filename, bool binary) {
+    if (is_open_)
+      KALDIFST_ERR << "StandardOutputImpl::Open(), "
+                      "open called on already open file.";
+#ifdef _MSC_VER
+    _setmode(_fileno(stdout), binary ? _O_BINARY : _O_TEXT);
+#endif
+    is_open_ = std::cout.good();
+    return is_open_;
+  }
+
+  virtual std::ostream &Stream() {
+    if (!is_open_)
+      KALDIFST_ERR << "StandardOutputImpl::Stream(), object not initialized.";
+    // I believe this error can only arise from coding error.
+    return std::cout;
+  }
+
+  virtual bool Close() {
+    if (!is_open_)
+      KALDIFST_ERR << "StandardOutputImpl::Close(), file is not open.";
+    is_open_ = false;
+    std::cout << std::flush;
+    return !(std::cout.fail());
+  }
+  virtual ~StandardOutputImpl() {
+    if (is_open_) {
+      std::cout << std::flush;
+      if (std::cout.fail()) KALDIFST_ERR << "Error writing to standard output";
+    }
+  }
+
+ private:
+  bool is_open_;
+};
+
+class PipeOutputImpl : public OutputImplBase {
+ public:
+  PipeOutputImpl() : f_(NULL), os_(NULL) {}
+
+  virtual bool Open(const std::string &wxfilename, bool binary) {
+    filename_ = wxfilename;
+    KALDIFST_ASSERT(f_ == NULL);  // Make sure closed.
+    KALDIFST_ASSERT(wxfilename.length() != 0 &&
+                    wxfilename[0] == '|');  // should
+    // start with '|'
+    std::string cmd_name(wxfilename, 1);
+#if defined(_MSC_VER) || defined(__CYGWIN__)
+    f_ = popen(cmd_name.c_str(), (binary ? "wb" : "w"));
+#else
+    f_ = popen(cmd_name.c_str(), "w");
+#endif
+    if (!f_) {  // Failure.
+      KALDIFST_WARN << "Failed opening pipe for writing, command is: "
+                    << cmd_name << ", errno is " << strerror(errno);
+      return false;
+    } else {
+#ifndef _MSC_VER
+      fb_ = new PipebufType(f_,  // Using this constructor won't make the
+                                 // destructor try to close the stream when
+                                 // we're done.
+                            (binary ? std::ios_base::out | std::ios_base::binary
+                                    : std::ios_base::out));
+      KALDIFST_ASSERT(fb_ != NULL);  // or would be alloc error.
+      os_ = new std::ostream(fb_);
+#else
+      os_ = new std::ofstream(f_);
+#endif
+      return os_->good();
+    }
+  }
+
+  virtual std::ostream &Stream() {
+    if (os_ == NULL)
+      KALDIFST_ERR << "PipeOutputImpl::Stream(),"
+                      " object not initialized.";
+    // I believe this error can only arise from coding error.
+    return *os_;
+  }
+
+  virtual bool Close() {
+    if (os_ == NULL)
+      KALDIFST_ERR << "PipeOutputImpl::Close(), file is not open.";
+    bool ok = true;
+    os_->flush();
+    if (os_->fail()) ok = false;
+    delete os_;
+    os_ = NULL;
+    int status;
+#ifdef _MSC_VER
+    status = _pclose(f_);
+#else
+    status = pclose(f_);
+#endif
+    if (status)
+      KALDIFST_WARN << "Pipe " << filename_ << " had nonzero return status "
+                    << status;
+    f_ = NULL;
+#ifndef _MSC_VER
+    delete fb_;
+    fb_ = NULL;
+#endif
+    return ok;
+  }
+  virtual ~PipeOutputImpl() {
+    if (os_) {
+      if (!Close())
+        KALDIFST_ERR << "Error writing to pipe "
+                     << PrintableWxfilename(filename_);
+    }
+  }
+
+ private:
+  std::string filename_;
+  FILE *f_;
+#ifndef _MSC_VER
+  PipebufType *fb_;
+#endif
+  std::ostream *os_;
+};
+
+Output::Output(const std::string &wxfilename, bool binary, bool write_header)
+    : impl_(NULL) {
+  if (!Open(wxfilename, binary, write_header)) {
+    if (impl_) {
+      delete impl_;
+      impl_ = NULL;
+    }
+    KALDIFST_ERR << "Error opening output stream "
+                 << PrintableWxfilename(wxfilename);
+  }
 }
 
 }  // namespace kaldifst

@@ -5,7 +5,12 @@
 
 // Copyright 2009-2011  Microsoft Corporation;  Jan Silovsky
 //                2016  Xiaohui Zhang
+#ifndef KALDIFST_CSRC_KALDI_IO_H_
+#define KALDIFST_CSRC_KALDI_IO_H_
+
 #include <string>
+
+#include "kaldifst/csrc/log.h"
 
 namespace kaldifst {
 
@@ -84,4 +89,47 @@ enum InputType {
 ///  - kOffsetFileInput: offsets into files, e.g.  /some/filename:12970
 InputType ClassifyRxfilename(const std::string &rxfilename);
 
+class Output {
+ public:
+  // The normal constructor, provided for convenience.
+  // Equivalent to calling with default constructor then Open()
+  // with these arguments.
+  Output(const std::string &filename, bool binary, bool write_header = true);
+
+  Output() : impl_(NULL) {}
+
+  /// This opens the stream, with the given mode (binary or text).  It returns
+  /// true on success and false on failure.  However, it will throw if something
+  /// was already open and could not be closed (to avoid this, call Close()
+  /// first.  if write_header == true and binary == true, it writes the Kaldi
+  /// binary-mode header ('\0' then 'B').  You may call Open even if it is
+  /// already open; it will close the existing stream and reopen (however if
+  /// closing the old stream failed it will throw).
+  bool Open(const std::string &wxfilename, bool binary, bool write_header);
+
+  inline bool IsOpen();  // return true if we have an open stream.  Does not
+  // imply stream is good for writing.
+
+  std::ostream &Stream();  // will throw if not open; else returns stream.
+
+  // Close closes the stream. Calling Close is never necessary unless you
+  // want to avoid exceptions being thrown.  There are times when calling
+  // Close will hurt efficiency (basically, when using offsets into files,
+  // and using the same Input object),
+  // but most of the time the user won't be doing this directly, it will
+  // be done in kaldi-table.{h, cc}, so you don't have to worry about it.
+  bool Close();
+
+  // This will throw if stream could not be closed (to check error status,
+  // call Close()).
+  ~Output();
+
+ private:
+  OutputImplBase *impl_;  // non-NULL if open.
+  std::string filename_;
+  KALDIFST_DISALLOW_COPY_AND_ASSIGN(Output);
+};
+
 }  // namespace kaldifst
+
+#endif  // KALDIFST_CSRC_KALDI_IO_H_
