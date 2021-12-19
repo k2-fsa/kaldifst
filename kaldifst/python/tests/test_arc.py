@@ -12,7 +12,10 @@ def test_std_arc():
     assert arc.olabel == 2
     assert arc.weight == 1.5
     assert arc.nextstate == 3
-    assert arc.type() == "standard"
+    assert arc.type == "standard"
+
+    assert kaldifst.StdArc.type == "standard"
+    #  arc.type = "hello" # error: it is ready only
 
     assert isinstance(arc.weight, kaldifst.TropicalWeight)
 

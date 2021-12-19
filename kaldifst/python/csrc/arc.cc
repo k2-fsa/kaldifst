@@ -48,7 +48,9 @@ static void PybindArcImpl(py::module &m, const std::string &class_name,
                 << "nextstate: " << arc.nextstate << ")";
              return os.str();
            })
-      .def_static("type", &PyClass::Type, py::return_value_policy::reference);
+      .def_property_readonly_static(
+          "type", [](py::object) { return PyClass::Type(); },
+          py::return_value_policy::reference);
 }
 
 void PybindArc(py::module &m) {

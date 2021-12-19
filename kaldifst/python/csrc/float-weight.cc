@@ -16,11 +16,17 @@ static void PybindTropicalWeight(py::module &m) {
       .def("member", &PyClass::Member)
       .def("quantize", &PyClass::Quantize, py::arg("delta") = fst::kDelta)
       .def("reverse", &PyClass::Reverse)
-      .def_static("zero", &PyClass::Zero)
-      .def_static("one", &PyClass::One)
-      .def_static("no_weight", &PyClass::NoWeight)
-      .def_static("type", &PyClass::Type, py::return_value_policy::reference)
-      .def_static("properties", &PyClass::Properties);
+      .def_property_readonly_static("zero",
+                                    [](py::object) { return PyClass::Zero(); })
+      .def_property_readonly_static("one",
+                                    [](py::object) { return PyClass::One(); })
+      .def_property_readonly_static(
+          "no_weight", [](py::object) { return PyClass::NoWeight(); })
+      .def_property_readonly_static(
+          "type", [](py::object) { return PyClass::Type(); },
+          py::return_value_policy::reference)
+      .def_property_readonly_static(
+          "properties", [](py::object) { return PyClass::Properties(); });
 
   m.def("plus",
         [](const PyClass &w1, const PyClass &w2) { return fst::Plus(w1, w2); });

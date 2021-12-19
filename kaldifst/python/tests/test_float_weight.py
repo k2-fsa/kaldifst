@@ -19,13 +19,13 @@ def test_tropical_weight():
     assert w.value == 1
 
     # Note: You cannot change w.value once it is set
-    w2 = kaldifst.TropicalWeight.zero()
+    w2 = kaldifst.TropicalWeight.zero
     assert w2 == float("inf")
 
-    w3 = kaldifst.TropicalWeight.one()
+    w3 = kaldifst.TropicalWeight.one
     assert w3 == 0.0
 
-    w4 = kaldifst.TropicalWeight.no_weight()
+    w4 = kaldifst.TropicalWeight.no_weight
     assert str(w4) == "nan"
 
 

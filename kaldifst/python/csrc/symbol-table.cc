@@ -111,12 +111,14 @@ void PybindSymbolTable(py::module &m) {
              sym.WriteText(os);
              return os.str();
            })
-      .def("check_sum", &PyClass::CheckSum,
-           "Return the label-agnostic MD5 check-sum for this table. All new "
-           "symbols added to the table will result in an updated checksum. "
-           "Deprecated.")
-      .def("labeled_check_sum", &PyClass::LabeledCheckSum,
-           "Same as check_sum(), but returns an label-dependent version.");
+      .def_property_readonly(
+          "check_sum", &PyClass::CheckSum,
+          "Return the label-agnostic MD5 check-sum for this table. All new "
+          "symbols added to the table will result in an updated checksum. "
+          "Deprecated.")
+      .def_property_readonly(
+          "labeled_check_sum", &PyClass::LabeledCheckSum,
+          "Same as `check_sum`, but returns an label-dependent version.");
 }
 
 }  // namespace kaldifst

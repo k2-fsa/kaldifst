@@ -17,7 +17,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFloatWeight(m);
   PybindArc(m);
   PybindSymbolTable(m);
-  // PybindFst(m);
+  PybindFst(m);
 }
 
 }  // namespace kaldifst

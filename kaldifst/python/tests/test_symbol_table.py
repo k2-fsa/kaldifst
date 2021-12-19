@@ -53,15 +53,15 @@ def test_symbol_table():
     # write binary format
     sym.write("sym.bin")
     sym2 = kaldifst.SymbolTable.read("sym.bin")
-    assert sym.check_sum() == sym2.check_sum()
-    assert sym.labeled_check_sum() == sym2.labeled_check_sum()
+    assert sym.check_sum == sym2.check_sum
+    assert sym.labeled_check_sum == sym2.labeled_check_sum
     assert sym2.name == "test"
 
     # write text format
     sym.write_text("sym.txt")
     sym2 = kaldifst.SymbolTable.read_text("sym.txt")
-    assert sym.check_sum() == sym2.check_sum()
-    assert sym.labeled_check_sum() == sym2.labeled_check_sum()
+    assert sym.check_sum == sym2.check_sum
+    assert sym.labeled_check_sum == sym2.labeled_check_sum
     assert sym2.name == "sym.txt"
 
     os.remove("sym.bin")
