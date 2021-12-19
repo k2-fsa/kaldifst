@@ -70,7 +70,7 @@ setuptools.setup(
     author="Fangjun Kuang",
     author_email="csukuangfj@gmail.com",
     package_dir={
-        package_name: "kaldift/python/kaldifst",
+        package_name: "kaldifst/python/kaldifst",
     },
     packages=[package_name],
     url="https://github.com/csukuangfj/kaldifst",
