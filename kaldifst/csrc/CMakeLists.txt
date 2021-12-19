@@ -1,14 +1,16 @@
 
 include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${openfst_SOURCE_DIR}/src/include)
+
 set(srcs
-  kaldi-io.cc
-  kaldi-table.cc
-  text-utils.cc
-  parse-options.cc
+  kaldi-fst-io.cc
   kaldi-holder.cc
+  kaldi-io.cc
   kaldi-semaphore.cc
+  kaldi-table.cc
+  parse-options.cc
+  text-utils.cc
   )
 
-add_library(kaldifst_core
-  ${srcs}
-  )
+add_library(kaldifst_core ${srcs})
+target_link_libraries(kaldifst_core fst)
