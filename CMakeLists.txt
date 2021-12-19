@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-set(KALDIFST_VERSION "0.1")
+set(KALDIFST_VERSION "0.3")
 
 set(ALLOWABLE_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
 set(DEFAULT_BUILD_TYPE "Release")

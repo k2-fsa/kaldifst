@@ -5,3 +5,4 @@ from _kaldifst import TropicalWeight
 from _kaldifst import plus
 from _kaldifst import times
 from _kaldifst import divide
+from _kaldifst import StdVectorFst

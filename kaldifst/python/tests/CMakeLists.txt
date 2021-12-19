@@ -20,6 +20,7 @@ set(py_test_files
   test_arc.py
   test_float_weight.py
   test_symbol_table.py
+  test_std_vector_fst.py
 )
 
 foreach(source IN LISTS py_test_files)

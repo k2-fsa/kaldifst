@@ -11,7 +11,7 @@ function(download_openfst)
   set(openfst_HASH "SHA256=02c49b559c3976a536876063369efc0e41ab374be1035918036474343877046e")
 
   set(HAVE_BIN OFF CACHE BOOL "" FORCE)
-  set(HAVE_SCRIPT OFF CACHE BOOL "" FORCE)
+  set(HAVE_SCRIPT ON CACHE BOOL "" FORCE)
   set(HAVE_COMPACT OFF CACHE BOOL "" FORCE)
   set(HAVE_COMPRESS OFF CACHE BOOL "" FORCE)
   set(HAVE_CONST OFF CACHE BOOL "" FORCE)
@@ -30,9 +30,9 @@ function(download_openfst)
     URL_HASH          ${openfst_HASH}
     PATCH_COMMAND
       sed -i.bak s/enable_testing\(\)//g "src/CMakeLists.txt" &&
-      sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt" &&
-      sed -i.bak s/add_subdirectory\(script\)//g "src/CMakeLists.txt" &&
-      sed -i.bak s/add_subdirectory\(extensions\)//g "src/CMakeLists.txt"
+      sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt"
+      # sed -i.bak s/add_subdirectory\(script\)//g "src/CMakeLists.txt" &&
+      # sed -i.bak s/add_subdirectory\(extensions\)//g "src/CMakeLists.txt"
   )
 
   FetchContent_GetProperties(openfst)
