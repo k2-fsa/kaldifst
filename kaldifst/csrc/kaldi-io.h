@@ -130,6 +130,88 @@ class Output {
   KALDIFST_DISALLOW_COPY_AND_ASSIGN(Output);
 };
 
+// bool binary_in;
+// Input ki(some_filename, &binary_in);
+// MyObject.Read(ki.Stream(), binary_in);
+//
+// ... more extensive example:
+//
+// {
+//    bool binary_in;
+//    Input ki(some_filename, &binary_in);
+//    MyObject1.Read(ki.Stream(), &binary_in);
+//    MyObject2.Write(ki.Stream(), &binary_in);
+// }
+// Note that to catch errors you need to use try.. catch.
+// Input communicates errors by throwing exceptions.
+
+
+// Input interprets four kinds of filenames:
+//  (1) Normal filenames
+//  (2) The empty string or "-", interpreted as standard output
+//  (3) A pipe: e.g.  "gunzip -c /tmp/abc.gz |"
+//  (4) Offsets into [real] files, e.g. "/my/filename:12049"
+// The last one has no correspondence in Output.
+
+
+class Input {
+ public:
+  /// The normal constructor.  Opens the stream in binary mode.
+  /// Equivalent to calling the default constructor followed by Open(); then, if
+  /// binary != NULL, it calls ReadHeader(), putting the output in "binary"; it
+  /// throws on error.
+  Input(const std::string &rxfilename, bool *contents_binary = NULL);
+
+  Input(): impl_(NULL) {}
+
+  // Open opens the stream for reading (the mode, where relevant, is binary; use
+  // OpenTextMode for text-mode, we made this a separate function rather than a
+  // boolean argument, to avoid confusion with Kaldi's text/binary distinction,
+  // since reading in the file system's text mode is unusual.)  If
+  // contents_binary != NULL, it reads the binary-mode header and puts it in the
+  // "binary" variable.  Returns true on success.  If it returns false it will
+  // not be open.  You may call Open even if it is already open; it will close
+  // the existing stream and reopen (however if closing the old stream failed it
+  // will throw).
+  inline bool Open(const std::string &rxfilename, bool *contents_binary = NULL);
+
+  // As Open but (if the file system has text/binary modes) opens in text mode;
+  // you shouldn't ever have to use this as in Kaldi we read even text files in
+  // binary mode (and ignore the \r).
+  inline bool OpenTextMode(const std::string &rxfilename);
+
+  // Return true if currently open for reading and Stream() will
+  // succeed.  Does not guarantee that the stream is good.
+  inline bool IsOpen();
+
+  // It is never necessary or helpful to call Close, except if
+  // you are concerned about to many filehandles being open.
+  // Close does not throw. It returns the exit code as int32_t
+  // in the case of a pipe [kPipeInput], and always zero otherwise.
+  int32_t Close();
+
+  // Returns the underlying stream. Throws if !IsOpen()
+  std::istream &Stream();
+
+  // Destructor does not throw: input streams may legitimately fail so we
+  // don't worry about the status when we close them.
+  ~Input();
+ private:
+  bool OpenInternal(const std::string &rxfilename, bool file_binary,
+                    bool *contents_binary);
+  InputImplBase *impl_;
+  KALDIFST_DISALLOW_COPY_AND_ASSIGN(Input);
+};
+
+template <class C> void ReadKaldiObject(const std::string &filename,
+                                        C *c) {
+  bool binary_in;
+  Input ki(filename, &binary_in);
+  c->Read(ki.Stream(), binary_in);
+}
+
 }  // namespace kaldifst
+
+#include "kaldifst/csrc/kaldi-io-inl.h"
 
 #endif  // KALDIFST_CSRC_KALDI_IO_H_

@@ -9,14 +9,27 @@
 
 #include <string.h>
 
+#include "kaldifst/csrc/io-funcs.h"
 #include "kaldifst/csrc/kaldi-pipebuf.h"
 #include "kaldifst/csrc/kaldi-table.h"
 #include "kaldifst/csrc/log.h"
 #include "kaldifst/csrc/parse-options.h"
+#include "kaldifst/csrc/text-utils.h"
 
 #define MapOsPath(x) x
 
 namespace kaldifst {
+
+std::string PrintableRxfilename(const std::string &rxfilename) {
+  if (rxfilename == "" || rxfilename == "-") {
+    return "standard input";
+  } else {
+    // If this call to Escape later causes compilation issues,
+    // just replace it with "return rxfilename"; it's only a
+    // pretty-printing issue.
+    return ParseOptions::Escape(rxfilename);
+  }
+}
 
 std::string PrintableWxfilename(const std::string &wxfilename) {
   if (wxfilename == "" || wxfilename == "-") {
@@ -323,6 +336,471 @@ Output::Output(const std::string &wxfilename, bool binary, bool write_header)
     KALDIFST_ERR << "Error opening output stream "
                  << PrintableWxfilename(wxfilename);
   }
+}
+
+bool Output::Close() {
+  if (!impl_) {
+    return false;  // error to call Close if not open.
+  } else {
+    bool ans = impl_->Close();
+    delete impl_;
+    impl_ = NULL;
+    return ans;
+  }
+}
+
+Output::~Output() {
+  if (impl_) {
+    bool ok = impl_->Close();
+    delete impl_;
+    impl_ = NULL;
+    if (!ok)
+      KALDIFST_ERR << "Error closing output file "
+                   << PrintableWxfilename(filename_)
+                   << (ClassifyWxfilename(filename_) == kFileOutput
+                           ? " (disk full?)"
+                           : "");
+  }
+}
+
+std::ostream &Output::Stream() {  // will throw if not open; else returns
+  // stream.
+  if (!impl_) KALDIFST_ERR << "Output::Stream() called but not open.";
+  return impl_->Stream();
+}
+
+bool Output::Open(const std::string &wxfn, bool binary, bool header) {
+  if (IsOpen()) {
+    if (!Close()) {  // Throw here rather than return status, as it's an error
+      // about something else: if the user wanted to avoid the exception he/she
+      // could have called Close().
+      KALDIFST_ERR << "Output::Open(), failed to close output stream: "
+                   << PrintableWxfilename(filename_);
+    }
+  }
+
+  filename_ = wxfn;
+
+  OutputType type = ClassifyWxfilename(wxfn);
+  KALDIFST_ASSERT(impl_ == NULL);
+
+  if (type == kFileOutput) {
+    impl_ = new FileOutputImpl();
+  } else if (type == kStandardOutput) {
+    impl_ = new StandardOutputImpl();
+  } else if (type == kPipeOutput) {
+    impl_ = new PipeOutputImpl();
+  } else {  // type == kNoOutput
+    KALDIFST_WARN << "Invalid output filename format "
+                  << PrintableWxfilename(wxfn);
+    return false;
+  }
+  if (!impl_->Open(wxfn, binary)) {
+    delete impl_;
+    impl_ = NULL;
+    return false;  // failed to open.
+  } else {         // successfully opened it.
+    if (header) {
+      InitKaldiOutputStream(impl_->Stream(), binary);
+      bool ok = impl_->Stream().good();  // still OK?
+      if (!ok) {
+        delete impl_;
+        impl_ = NULL;
+        return false;
+      }
+      return true;
+    } else {
+      return true;
+    }
+  }
+}
+
+class InputImplBase {
+ public:
+  // Open will open it as a file, and return true on success.
+  // May be called twice only for kOffsetFileInput (otherwise,
+  // if called twice, we just create a new Input object, to avoid
+  // having to deal with the extra hassle of reopening with the
+  // same object.
+  // Note that we will to call Open with true (binary) for
+  // for text-mode Kaldi files; the only actual text-mode input
+  // is for non-Kaldi files.
+  virtual bool Open(const std::string &filename, bool binary) = 0;
+  virtual std::istream &Stream() = 0;
+  virtual int32_t Close() = 0;  // We only need to check failure in the case of
+                                // kPipeInput.
+  // on close for input streams.
+  virtual InputType MyType() = 0;  // Because if it's kOffsetFileInput, we may
+                                   // call Open twice
+  // (has efficiency benefits).
+
+  virtual ~InputImplBase() {}
+};
+
+class FileInputImpl : public InputImplBase {
+ public:
+  virtual bool Open(const std::string &filename, bool binary) {
+    if (is_.is_open())
+      KALDIFST_ERR << "FileInputImpl::Open(), "
+                   << "open called on already open file.";
+    is_.open(
+        MapOsPath(filename).c_str(),
+        binary ? std::ios_base::in | std::ios_base::binary : std::ios_base::in);
+    return is_.is_open();
+  }
+
+  virtual std::istream &Stream() {
+    if (!is_.is_open())
+      KALDIFST_ERR << "FileInputImpl::Stream(), file is not open.";
+    // I believe this error can only arise from coding error.
+    return is_;
+  }
+
+  virtual int32_t Close() {
+    if (!is_.is_open())
+      KALDIFST_ERR << "FileInputImpl::Close(), file is not open.";
+    // I believe this error can only arise from coding error.
+    is_.close();
+    // Don't check status.
+    return 0;
+  }
+
+  virtual InputType MyType() { return kFileInput; }
+
+  virtual ~FileInputImpl() {
+    // Stream will automatically be closed, and we don't care about
+    // whether it fails.
+  }
+
+ private:
+  std::ifstream is_;
+};
+
+class StandardInputImpl : public InputImplBase {
+ public:
+  StandardInputImpl() : is_open_(false) {}
+
+  virtual bool Open(const std::string &filename, bool binary) {
+    if (is_open_)
+      KALDIFST_ERR << "StandardInputImpl::Open(), "
+                      "open called on already open file.";
+    is_open_ = true;
+#ifdef _MSC_VER
+    _setmode(_fileno(stdin), binary ? _O_BINARY : _O_TEXT);
+#endif
+    return true;  // Don't check good() because would be false if
+    // eof, which may be valid input.
+  }
+
+  virtual std::istream &Stream() {
+    if (!is_open_)
+      KALDIFST_ERR << "StandardInputImpl::Stream(), object not initialized.";
+    // I believe this error can only arise from coding error.
+    return std::cin;
+  }
+
+  virtual InputType MyType() { return kStandardInput; }
+
+  virtual int32_t Close() {
+    if (!is_open_)
+      KALDIFST_ERR << "StandardInputImpl::Close(), file is not open.";
+    is_open_ = false;
+    return 0;
+  }
+  virtual ~StandardInputImpl() {}
+
+ private:
+  bool is_open_;
+};
+
+class PipeInputImpl : public InputImplBase {
+ public:
+  PipeInputImpl() : f_(NULL), is_(NULL) {}
+
+  virtual bool Open(const std::string &rxfilename, bool binary) {
+    filename_ = rxfilename;
+    KALDIFST_ASSERT(f_ == NULL);  // Make sure closed.
+    KALDIFST_ASSERT(rxfilename.length() != 0 &&
+                    rxfilename[rxfilename.length() - 1] ==
+                        '|');  // should end with '|'
+    std::string cmd_name(rxfilename, 0, rxfilename.length() - 1);
+#if defined(_MSC_VER) || defined(__CYGWIN__)
+    f_ = popen(cmd_name.c_str(), (binary ? "rb" : "r"));
+#else
+    f_ = popen(cmd_name.c_str(), "r");
+#endif
+
+    if (!f_) {  // Failure.
+      KALDIFST_WARN << "Failed opening pipe for reading, command is: "
+                    << cmd_name << ", errno is " << strerror(errno);
+      return false;
+    } else {
+#ifndef _MSC_VER
+      fb_ = new PipebufType(f_,  // Using this constructor won't lead the
+                                 // destructor to close the stream.
+                            (binary ? std::ios_base::in | std::ios_base::binary
+                                    : std::ios_base::in));
+      KALDIFST_ASSERT(fb_ != NULL);  // or would be alloc error.
+      is_ = new std::istream(fb_);
+#else
+      is_ = new std::ifstream(f_);
+#endif
+      if (is_->fail() || is_->bad()) return false;
+      if (is_->eof()) {
+        KALDIFST_WARN << "Pipe opened with command "
+                      << PrintableRxfilename(rxfilename) << " is empty.";
+        // don't return false: empty may be valid.
+      }
+      return true;
+    }
+  }
+
+  virtual std::istream &Stream() {
+    if (is_ == NULL)
+      KALDIFST_ERR << "PipeInputImpl::Stream(), object not initialized.";
+    // I believe this error can only arise from coding error.
+    return *is_;
+  }
+
+  virtual int32_t Close() {
+    if (is_ == NULL)
+      KALDIFST_ERR << "PipeInputImpl::Close(), file is not open.";
+    delete is_;
+    is_ = NULL;
+    int32_t status;
+#ifdef _MSC_VER
+    status = _pclose(f_);
+#else
+    status = pclose(f_);
+#endif
+    if (status)
+      KALDIFST_WARN << "Pipe " << filename_ << " had nonzero return status "
+                    << status;
+    f_ = NULL;
+#ifndef _MSC_VER
+    delete fb_;
+    fb_ = NULL;
+#endif
+    return status;
+  }
+  virtual ~PipeInputImpl() {
+    if (is_) Close();
+  }
+  virtual InputType MyType() { return kPipeInput; }
+
+ private:
+  std::string filename_;
+  FILE *f_;
+#ifndef _MSC_VER
+  PipebufType *fb_;
+#endif
+  std::istream *is_;
+};
+
+/*
+#else
+
+// Just have an empty implementation of the pipe input that crashes if
+// called.
+class PipeInputImpl: public InputImplBase {
+ public:
+  PipeInputImpl() { KALDIFST_ASSERT(0 && "Pipe input not yet supported on this
+  platform."); }
+  virtual bool Open(const std::string, bool) { return 0; }
+  virtual std::istream &Stream() const { return NULL; }
+  virtual void Close() {}
+  virtual InputType MyType() { return kPipeInput; }
+};
+
+#endif
+*/
+
+class OffsetFileInputImpl : public InputImplBase {
+  // This class is a bit more complicated than the
+
+ public:
+  // splits a filename like /my/file:123 into /my/file and the
+  // number 123.  Crashes if not this format.
+  static void SplitFilename(const std::string &rxfilename,
+                            std::string *filename, size_t *offset) {
+    size_t pos = rxfilename.find_last_of(':');
+    KALDIFST_ASSERT(pos !=
+                    std::string::npos);  // would indicate error in calling
+    // code, as the filename is supposed to be of the correct form at this
+    // point.
+    *filename = std::string(rxfilename, 0, pos);
+    std::string number(rxfilename, pos + 1);
+    bool ans = ConvertStringToInteger(number, offset);
+    if (!ans)
+      KALDIFST_ERR
+          << "Cannot get offset from filename " << rxfilename
+          << " (possibly you compiled in 32-bit and have a >32-bit"
+          << " byte offset into a file; you'll have to compile 64-bit.";
+  }
+
+  bool Seek(size_t offset) {
+    size_t cur_pos = is_.tellg();
+    if (cur_pos == offset)
+      return true;
+    else if (cur_pos < offset && cur_pos + 100 > offset) {
+      // We're close enough that it may be faster to just
+      // read that data, rather than seek.
+      for (size_t i = cur_pos; i < offset; i++) is_.get();
+      return (is_.tellg() == std::streampos(offset));
+    }
+    // Try to actually seek.
+    is_.seekg(offset, std::ios_base::beg);
+    if (is_.fail()) {  // failbit or badbit is set [error happened]
+      is_.close();
+      return false;  // failure.
+    } else {
+      is_.clear();  // Clear any failure bits (e.g. eof).
+      return true;  // success.
+    }
+  }
+
+  // This Open routine is unusual in that it is designed to work even
+  // if it was already open.  This for efficiency when seeking multiple
+  // times.
+  virtual bool Open(const std::string &rxfilename, bool binary) {
+    if (is_.is_open()) {
+      // We are opening when we have an already-open file.
+      // We may have to seek within this file, or else close it and
+      // open a different one.
+      std::string tmp_filename;
+      size_t offset;
+      SplitFilename(rxfilename, &tmp_filename, &offset);
+      if (tmp_filename == filename_ && binary == binary_) {  // Just seek
+        is_.clear();  // clear fail bit, etc.
+        return Seek(offset);
+      } else {
+        is_.close();  // don't bother checking error status of is_.
+        filename_ = tmp_filename;
+        is_.open(MapOsPath(filename_).c_str(),
+                 binary ? std::ios_base::in | std::ios_base::binary
+                        : std::ios_base::in);
+        if (!is_.is_open())
+          return false;
+        else
+          return Seek(offset);
+      }
+    } else {
+      size_t offset;
+      SplitFilename(rxfilename, &filename_, &offset);
+      binary_ = binary;
+      is_.open(MapOsPath(filename_).c_str(),
+               binary ? std::ios_base::in | std::ios_base::binary
+                      : std::ios_base::in);
+      if (!is_.is_open())
+        return false;
+      else
+        return Seek(offset);
+    }
+  }
+
+  virtual std::istream &Stream() {
+    if (!is_.is_open())
+      KALDIFST_ERR << "FileInputImpl::Stream(), file is not open.";
+    // I believe this error can only arise from coding error.
+    return is_;
+  }
+
+  virtual int32_t Close() {
+    if (!is_.is_open())
+      KALDIFST_ERR << "FileInputImpl::Close(), file is not open.";
+    // I believe this error can only arise from coding error.
+    is_.close();
+    // Don't check status.
+    return 0;
+  }
+
+  virtual InputType MyType() { return kOffsetFileInput; }
+
+  virtual ~OffsetFileInputImpl() {
+    // Stream will automatically be closed, and we don't care about
+    // whether it fails.
+  }
+
+ private:
+  std::string filename_;  // the actual filename
+  bool binary_;           // true if was opened in binary mode.
+  std::ifstream is_;
+};
+
+Input::Input(const std::string &rxfilename, bool *binary) : impl_(NULL) {
+  if (!Open(rxfilename, binary)) {
+    KALDIFST_ERR << "Error opening input stream "
+                 << PrintableRxfilename(rxfilename);
+  }
+}
+
+int32_t Input::Close() {
+  if (impl_) {
+    int32_t ans = impl_->Close();
+    delete impl_;
+    impl_ = NULL;
+    return ans;
+  } else {
+    return 0;
+  }
+}
+
+bool Input::OpenInternal(const std::string &rxfilename, bool file_binary,
+                         bool *contents_binary) {
+  InputType type = ClassifyRxfilename(rxfilename);
+  if (IsOpen()) {
+    // May have to close the stream first.
+    if (type == kOffsetFileInput && impl_->MyType() == kOffsetFileInput) {
+      // We want to use the same object to Open... this is in case
+      // the files are the same, so we can just seek.
+      if (!impl_->Open(rxfilename, file_binary)) {  // true is binary mode--
+        // always open in binary.
+        delete impl_;
+        impl_ = NULL;
+        return false;
+      }
+      // read the binary header, if requested.
+      if (contents_binary != NULL)
+        return InitKaldiInputStream(impl_->Stream(), contents_binary);
+      else
+        return true;
+    } else {
+      Close();
+      // and fall through to code below which actually opens the file.
+    }
+  }
+  if (type == kFileInput) {
+    impl_ = new FileInputImpl();
+  } else if (type == kStandardInput) {
+    impl_ = new StandardInputImpl();
+  } else if (type == kPipeInput) {
+    impl_ = new PipeInputImpl();
+  } else if (type == kOffsetFileInput) {
+    impl_ = new OffsetFileInputImpl();
+  } else {  // type == kNoInput
+    KALDIFST_WARN << "Invalid input filename format "
+                  << PrintableRxfilename(rxfilename);
+    return false;
+  }
+  if (!impl_->Open(rxfilename, file_binary)) {  // true is binary mode--
+    // always read in binary.
+    delete impl_;
+    impl_ = NULL;
+    return false;
+  }
+  if (contents_binary != NULL)
+    return InitKaldiInputStream(impl_->Stream(), contents_binary);
+  else
+    return true;
+}
+
+Input::~Input() {
+  if (impl_) Close();
+}
+
+std::istream &Input::Stream() {
+  if (!IsOpen()) KALDIFST_ERR << "Input::Stream(), not open.";
+  return impl_->Stream();
 }
 
 }  // namespace kaldifst

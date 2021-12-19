@@ -92,8 +92,6 @@ class Voidifier {
   Class(const Class &) = delete;                 \
   Class &operator=(const Class &) = delete;
 
-using MatrixIndexT = int32_t;
-
 }  // namespace kaldifst
 
 #endif  // KALDIFST_CSRC_LOG_H_
