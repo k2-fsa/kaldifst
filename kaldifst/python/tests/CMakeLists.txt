@@ -17,6 +17,8 @@ endfunction()
 
 # please sort the files in alphabetic order
 set(py_test_files
+  test_arc.py
+  test_float_weight.py
   test_symbol_table.py
 )
 
