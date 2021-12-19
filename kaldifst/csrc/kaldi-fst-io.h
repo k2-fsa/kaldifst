@@ -27,7 +27,9 @@ namespace fst {
 
 // Read a binary FST using Kaldi I/O mechanisms (pipes, etc.)
 // On error returns NULL. Only supports VectorFst and exists
-// mainly for backward code compabibility.
+// mainly for backward code compatibility.
+//
+// Caution: The user has to free the returned pointer using `delete`.
 VectorFst<StdArc> *ReadFstKaldi(std::string rxfilename);
 
 // Read a binary FST using Kaldi I/O mechanisms (pipes, etc.)
@@ -70,7 +72,9 @@ void ReadFstKaldi(std::istream &is, bool binary, VectorFst<Arc> *fst);
 
 // Read an FST file for LM (G.fst) and make it an acceptor,
 // and make sure it is sorted on labels
-VectorFst<StdArc> *ReadAndPrepareLmFst(std::string rxfilename);
+//
+// Caution: The user has to free the returned pointer using `delete`.
+VectorFst<StdArc> *ReadAndPrepareLmFst(const std::string &rxfilename);
 
 // This is a Holder class with T = VectorFst<Arc>, that meets the requirements
 // of a Holder class as described in ../util/kaldi-holder.h. This enables us to
