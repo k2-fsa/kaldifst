@@ -78,6 +78,36 @@ void PybindVectorFst(py::module &m, const std::string &class_name,
       .def(py::init<const fst::Fst<Arc> &>(), py::arg("fst"));
 }
 
+template <typename Arc, typename State>
+void PybindStateIteratorVectorFst(py::module &m, const std::string &class_name,
+                                  const std::string &class_help_doc = "") {
+  using PyClass = fst::StateIterator<fst::VectorFst<Arc, State>>;
+  py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
+      .def(py::init<const fst::VectorFst<Arc, State> &>(), py::arg("fst"))
+      .def_property_readonly("done", &PyClass::Done)
+      .def_property_readonly("value", &PyClass::Value)
+      .def("next", &PyClass::Next)
+      .def("reset", &PyClass::Reset);
+}
+
+template <typename Arc, typename State>
+void PybindArcIteratorVectorFst(py::module &m, const std::string &class_name,
+                                const std::string &class_help_doc = "") {
+  using PyClass = fst::ArcIterator<fst::VectorFst<Arc, State>>;
+  using StateId = typename PyClass::StateId;
+  py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
+      .def(py::init<const fst::VectorFst<Arc, State> &, StateId>(),
+           py::arg("fst"), py::arg("state"))
+      .def_property_readonly("done", &PyClass::Done)
+      .def_property_readonly("value", &PyClass::Value,
+                             py::return_value_policy::reference)
+      .def("next", &PyClass::Next)
+      .def("reset", &PyClass::Reset)
+      .def("seek", &PyClass::Seek, py::arg("a"))
+      .def_property_readonly("position", &PyClass::Position)
+      .def_property_readonly("flags", &PyClass::Flags);
+}
+
 }  // namespace kaldifst
 
 #endif  // KALDIFST_PYTHON_CSRC_VECTOR_FST_H_

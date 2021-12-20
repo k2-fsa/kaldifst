@@ -28,6 +28,10 @@ void PybindVectorFst(py::module &m) {
       m, "StdImplToMutableFst");
 
   PybindVectorFst<fst::StdArc>(m, "StdVectorFst");
+  PybindStateIteratorVectorFst<fst::StdArc, fst::VectorState<fst::StdArc>>(
+      m, "_StateIteratorStdVectorFst");
+  PybindArcIteratorVectorFst<fst::StdArc, fst::VectorState<fst::StdArc>>(
+      m, "_ArcIteratorStdVectorFst");
 }
 
 }  // namespace kaldifst
