@@ -16,12 +16,6 @@ class StateIterator(object):
         else:
             raise f"Unsupported type: {type(fst)}"
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        pass
-
     def __iter__(self):
         while not self._impl.done:
             yield self._impl.value
@@ -48,12 +42,6 @@ class ArcIterator(object):
             self._impl = _ArcIteratorStdVectorFst(fst, state)
         else:
             raise ValueError(f"Unsupported type: {type(fst)}")
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        pass
 
     def __iter__(self):
         while not self._impl.done:
