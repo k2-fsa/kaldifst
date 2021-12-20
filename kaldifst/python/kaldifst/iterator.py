@@ -2,9 +2,12 @@
 # See ../../../LICENSE for clarification regarding multiple authors
 
 from _kaldifst import (
+    StdConstFst,
     StdFst,
     StdVectorFst,
+    _ArcIteratorStdConstFst,
     _ArcIteratorStdVectorFst,
+    _StateIteratorStdConstFst,
     _StateIteratorStdVectorFst,
 )
 
@@ -13,6 +16,8 @@ class StateIterator(object):
     def __init__(self, fst: StdFst):
         if isinstance(fst, StdVectorFst):
             self._impl = _StateIteratorStdVectorFst(fst)
+        elif isinstance(fst, StdConstFst):
+            self._impl = _StateIteratorStdConstFst(fst)
         else:
             raise f"Unsupported type: {type(fst)}"
 
@@ -40,6 +45,8 @@ class ArcIterator(object):
     def __init__(self, fst: StdFst, state: int):
         if isinstance(fst, StdVectorFst):
             self._impl = _ArcIteratorStdVectorFst(fst, state)
+        elif isinstance(fst, StdConstFst):
+            self._impl = _ArcIteratorStdConstFst(fst, state)
         else:
             raise ValueError(f"Unsupported type: {type(fst)}")
 

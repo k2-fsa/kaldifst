@@ -5,6 +5,7 @@
 #include "kaldifst/python/csrc/kaldifst.h"
 
 #include "kaldifst/python/csrc/arc.h"
+#include "kaldifst/python/csrc/const-fst.h"
 #include "kaldifst/python/csrc/expanded-fst.h"
 #include "kaldifst/python/csrc/float-weight.h"
 #include "kaldifst/python/csrc/fst.h"
@@ -27,6 +28,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindExpandedFst(m);
   PybindMutableFst(m);
   PybindVectorFst(m);
+  PybindConstFst(m);
 
   PybindFstInfo(m);
   PybindFstDraw(m);

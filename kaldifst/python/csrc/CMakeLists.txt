@@ -3,6 +3,7 @@ include_directories(${openfst_SOURCE_DIR}/src/include)
 
 pybind11_add_module(_kaldifst
   arc.cc
+  const-fst.cc
   expanded-fst.cc
   float-weight.cc
   fst.cc

@@ -121,22 +121,22 @@ void PybindFst(py::module &m) {
   PybindFstHeader(m);
   PybindFstWriteOptions(m);
   PybindFstReadOptions(m);
-  PybindMatchType(m);
+  // PybindMatchType(m);
 
-  PybindStateIteratorBaseImpl<fst::StdArc>(m, "StdArcStateIteratorBase");
-  PybindStateIteratorDataImpl<fst::StdArc>(m, "StdArcStateIteratorData");
-  PybindArcIteratorBaseImpl<fst::StdArc>(m, "StdArcArcIteratorBase");
-  PybindArcIteratorDataImpl<fst::StdArc>(m, "StdArcArcIteratorData");
+  // PybindStateIteratorBaseImpl<fst::StdArc>(m, "StdArcStateIteratorBase");
+  // PybindStateIteratorDataImpl<fst::StdArc>(m, "StdArcStateIteratorData");
+  // PybindArcIteratorBaseImpl<fst::StdArc>(m, "StdArcArcIteratorBase");
+  // PybindArcIteratorDataImpl<fst::StdArc>(m, "StdArcArcIteratorData");
 
   PybindFst<fst::StdArc>(
       m, "StdFst",
       "A generic FST, templated on the arc definition, with \n"
       "common-demoninator methods (use StateIterator and \n"
       "ArcIterator to iterate over its states and arcs).");
-  PybindStateIteratorImpl<fst::StdFst>(m, "StdFstStateIterator");
-  PybindArcIteratorImpl<fst::StdFst>(m, "StdFstArcIterator");
+  // PybindStateIteratorImpl<fst::StdFst>(m, "_StdFstStateIterator");
+  // PybindArcIteratorImpl<fst::StdFst>(m, "_StdFstArcIterator");
 
-  PybindFstImpl<fst::StdArc>(m, "StdFstImpl");
+  PybindFstImpl<fst::StdArc>(m, "_StdFstImpl");
 }
 
 }  // namespace kaldifst
