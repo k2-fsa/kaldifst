@@ -7,6 +7,7 @@ from kaldifst import ArcIterator
 from kaldifst import StdVectorFst
 from kaldifst import StdArc
 from kaldifst import info
+from kaldifst import draw
 
 import os
 
@@ -60,6 +61,10 @@ def test_iterator():
     import kaldifst
 
     info(fst)
+    print()
+    dot_str = draw(fst, fontsize=20)
+    print(dot_str)
+    print(help(draw))
 
 
 def main():
