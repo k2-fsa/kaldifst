@@ -8,49 +8,43 @@
 
 namespace kaldifst {
 
-std::string FstDrawParams::ToString() const {
-  std::ostringstream os;
-  os << "isymbols: " << isymbols << "\n";
-  os << "osymbols: " << osymbols << "\n";
-  os << "ssymbols: " << ssymbols << "\n";
-  os << "numeric: " << numeric << "\n";
-  os << "precision: " << precision << "\n";
-  os << "float_format: " << float_format << "\n";
-  os << "show_weight_one: " << show_weight_one << "\n";
-  os << "title: " << title << "\n";
-  os << "portrait: " << portrait << "\n";
-  os << "vertical: " << vertical << "\n";
-  os << "fontsize: " << fontsize << "\n";
-  os << "height: " << height << "\n";
-  os << "width: " << width << "\n";
-  os << "nodesep: " << nodesep << "\n";
-  os << "ranksep: " << ranksep << "\n";
-  os << "allow_negative_labels: " << allow_negative_labels << "\n";
-  return os.str();
-}
-
 std::string FstDrawImpl(const fst::script::FstClass &fst,
                         const FstDrawParams &params) {
+  using fst::SymbolTable;
+  using fst::SymbolTableTextOptions;
+
   std::ostringstream os;
 
-  const fst::SymbolTableTextOptions opts(params.allow_negative_labels);
+  const SymbolTableTextOptions opts(params.allow_negative_labels);
 
-  std::unique_ptr<const fst::SymbolTable> isyms;
-  if (!params.isymbols.empty() && !params.numeric) {
-    isyms.reset(fst::SymbolTable::ReadText(params.isymbols, opts));
-    KALDIFST_ASSERT(!isyms);
+  std::unique_ptr<const SymbolTable> isyms;
+  if (!params.isymbols.is_none()) {
+    if (py::isinstance<py::str>(params.isymbols)) {
+      isyms.reset(SymbolTable::ReadText(py::str(params.isymbols), opts));
+    } else {
+      isyms.reset(py::cast<SymbolTable *>(params.isymbols)->Copy());
+    }
+    KALDIFST_ASSERT(isyms);
   }
 
-  std::unique_ptr<const fst::SymbolTable> osyms;
-  if (!params.osymbols.empty() && !params.numeric) {
-    osyms.reset(fst::SymbolTable::ReadText(params.osymbols, opts));
-    KALDIFST_ASSERT(!osyms);
+  std::unique_ptr<const SymbolTable> osyms;
+  if (!params.osymbols.is_none()) {
+    if (py::isinstance<py::str>(params.osymbols)) {
+      osyms.reset(SymbolTable::ReadText(py::str(params.osymbols), opts));
+    } else {
+      osyms.reset(py::cast<SymbolTable *>(params.osymbols)->Copy());
+    }
+    KALDIFST_ASSERT(osyms);
   }
 
-  std::unique_ptr<const fst::SymbolTable> ssyms;
-  if (!params.ssymbols.empty() && !params.numeric) {
-    ssyms.reset(fst::SymbolTable::ReadText(params.ssymbols));
-    KALDIFST_ASSERT(!ssyms);
+  std::unique_ptr<const SymbolTable> ssyms;
+  if (!params.ssymbols.is_none()) {
+    if (py::isinstance<py::str>(params.ssymbols)) {
+      ssyms.reset(SymbolTable::ReadText(py::str(params.ssymbols), opts));
+    } else {
+      ssyms.reset(py::cast<SymbolTable *>(params.ssymbols)->Copy());
+    }
+    KALDIFST_ASSERT(ssyms);
   }
 
   if (!isyms && !params.numeric && fst.InputSymbols()) {
@@ -70,32 +64,6 @@ std::string FstDrawImpl(const fst::script::FstClass &fst,
   return os.str();
 }
 
-void PybindFstDraw(py::module &m) {
-  py::class_<FstDrawParams>(m, "FstDrawParams")
-      .def(py::init<>())
-      .def_readwrite("acceptor", &FstDrawParams::acceptor)
-      .def_readwrite("isymbols", &FstDrawParams::isymbols)
-      .def_readwrite("osymbols", &FstDrawParams::osymbols)
-      .def_readwrite("ssymbols", &FstDrawParams::ssymbols)
-      .def_readwrite("numeric", &FstDrawParams::numeric)
-      .def_readwrite("precision", &FstDrawParams::precision)
-      .def_readwrite("float_format", &FstDrawParams::float_format)
-      .def_readwrite("show_weight_one", &FstDrawParams::show_weight_one)
-      .def_readwrite("title", &FstDrawParams::title)
-      .def_readwrite("portrait", &FstDrawParams::portrait)
-      .def_readwrite("vertical", &FstDrawParams::vertical)
-      .def_readwrite("fontsize", &FstDrawParams::fontsize)
-      .def_readwrite("height", &FstDrawParams::height)
-      .def_readwrite("width", &FstDrawParams::width)
-      .def_readwrite("nodesep", &FstDrawParams::nodesep)
-      .def_readwrite("ranksep", &FstDrawParams::ranksep)
-      .def_readwrite("allow_negative_labels",
-                     &FstDrawParams::allow_negative_labels)
-      .def("__str__", [](const FstDrawParams &self) -> std::string {
-        return self.ToString();
-      });
-
-  PybindFstDraw<fst::StdArc>(m);
-}
+void PybindFstDraw(py::module &m) { PybindFstDraw<fst::StdArc>(m); }
 
 }  // namespace kaldifst

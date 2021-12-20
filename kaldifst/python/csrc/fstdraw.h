@@ -17,13 +17,13 @@ struct FstDrawParams {
   bool acceptor = false;
 
   // Input label symbol table
-  std::string isymbols;
+  py::object isymbols;
 
   // Output label symbol table
-  std::string osymbols;
+  py::object osymbols;
 
   // State label symbol table
-  std::string ssymbols;
+  py::object ssymbols;
 
   // Print numeric labels
   bool numeric = false;
@@ -62,7 +62,6 @@ struct FstDrawParams {
 
   // Allow negative labels (not recommended; may cause conflicts)
   bool allow_negative_labels = false;
-  std::string ToString() const;
 };
 
 std::string FstDrawImpl(const fst::script::FstClass &fst,
@@ -71,19 +70,12 @@ std::string FstDrawImpl(const fst::script::FstClass &fst,
 template <typename A>
 void PybindFstDraw(py::module &m) {
   using PyClass = fst::Fst<A>;
-  m.def(
-      "draw",
-      [](const PyClass &fst, const FstDrawParams &params) -> std::string {
-        auto _fst = fst::script::FstClass(fst);
-        return FstDrawImpl(_fst, params);
-      },
-      py::arg("fst"), py::arg("params") = FstDrawParams{});
 
   m.def(
       "draw",
       [](const PyClass &fst, bool acceptor = false,
-         const std::string &isymbols = "", const std::string &osymbols = "",
-         const std::string &ssymbols = "", bool numeric = false,
+         py::object isymbols = py::none(), py::object &osymbols = py::none(),
+         py::object ssymbols = py::none(), bool numeric = false,
          int32_t precision = 5, const std::string &float_format = "g",
          bool show_weight_one = false, const std::string &title = "",
          bool portrait = false, bool vertical = false, int32_t fontsize = 14,
@@ -111,14 +103,15 @@ void PybindFstDraw(py::module &m) {
         params.allow_negative_labels = allow_negative_labels;
         return FstDrawImpl(_fst, params);
       },
-      py::arg("fst"), py::arg("acceptor") = false, py::arg("isymbols") = "",
-      py::arg("osymbols") = "", py::arg("ssymbols") = "",
-      py::arg("numeric") = false, py::arg("precision") = 5,
-      py::arg("float_format") = "g", py::arg("show_weight_one") = false,
-      py::arg("title") = "", py::arg("portrait") = false,
-      py::arg("vertical") = false, py::arg("fontsize") = 14,
-      py::arg("height") = 11, py::arg("width") = 8.5, py::arg("nodesep") = 0.25,
-      py::arg("ranksep") = 0.40, py::arg("allow_negative_labels") = false);
+      py::arg("fst"), py::arg("acceptor") = false,
+      py::arg("isymbols") = py::none(), py::arg("osymbols") = py::none(),
+      py::arg("ssymbols") = py::none(), py::arg("numeric") = false,
+      py::arg("precision") = 5, py::arg("float_format") = "g",
+      py::arg("show_weight_one") = false, py::arg("title") = "",
+      py::arg("portrait") = false, py::arg("vertical") = false,
+      py::arg("fontsize") = 14, py::arg("height") = 11, py::arg("width") = 8.5,
+      py::arg("nodesep") = 0.25, py::arg("ranksep") = 0.40,
+      py::arg("allow_negative_labels") = false);
 }
 
 }  // namespace kaldifst
