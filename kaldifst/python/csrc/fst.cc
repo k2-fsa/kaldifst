@@ -123,10 +123,10 @@ void PybindFst(py::module &m) {
   PybindFstReadOptions(m);
   // PybindMatchType(m);
 
-  // PybindStateIteratorBaseImpl<fst::StdArc>(m, "StdArcStateIteratorBase");
-  // PybindStateIteratorDataImpl<fst::StdArc>(m, "StdArcStateIteratorData");
-  // PybindArcIteratorBaseImpl<fst::StdArc>(m, "StdArcArcIteratorBase");
-  // PybindArcIteratorDataImpl<fst::StdArc>(m, "StdArcArcIteratorData");
+  // PybindStateIteratorBaseImpl<fst::StdArc>(m, "_StdArcStateIteratorBase");
+  // PybindStateIteratorDataImpl<fst::StdArc>(m, "_StdArcStateIteratorData");
+  // PybindArcIteratorBaseImpl<fst::StdArc>(m, "_StdArcArcIteratorBase");
+  // PybindArcIteratorDataImpl<fst::StdArc>(m, "_StdArcArcIteratorData");
 
   PybindFst<fst::StdArc>(
       m, "StdFst",

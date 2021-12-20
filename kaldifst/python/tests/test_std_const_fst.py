@@ -2,6 +2,7 @@
 
 # Copyright      2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+import kaldifst
 from kaldifst import (
     ArcIterator,
     StateIterator,
@@ -30,8 +31,23 @@ def test_constructor():
             print(state, arc)
 
 
+def test_compile():
+    s = """
+    0 1 1 2 0.5
+    1 2 3 1 0.3
+    2 1.2
+    """
+    fst = kaldifst.compile(s, fst_type="const")
+    assert isinstance(fst, kaldifst.StdConstFst)
+    print(help(fst))
+
+    fst = kaldifst.compile(s, fst_type="vector")
+    assert isinstance(fst, kaldifst.StdVectorFst)
+
+
 def main():
     test_constructor()
+    test_compile()
 
 
 if __name__ == "__main__":
