@@ -8,6 +8,7 @@
 #include "kaldifst/python/csrc/expanded-fst.h"
 #include "kaldifst/python/csrc/float-weight.h"
 #include "kaldifst/python/csrc/fst.h"
+#include "kaldifst/python/csrc/fstinfo.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/symbol-table.h"
 #include "kaldifst/python/csrc/vector-fst.h"
@@ -24,6 +25,8 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindExpandedFst(m);
   PybindMutableFst(m);
   PybindVectorFst(m);
+
+  PybindFstInfo(m);
 }
 
 }  // namespace kaldifst

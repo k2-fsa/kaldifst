@@ -6,6 +6,7 @@ pybind11_add_module(_kaldifst
   expanded-fst.cc
   float-weight.cc
   fst.cc
+  fstinfo.cc
   kaldifst.cc
   mutable-fst.cc
   symbol-table.cc

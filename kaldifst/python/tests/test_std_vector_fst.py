@@ -6,6 +6,7 @@ from kaldifst import StateIterator
 from kaldifst import ArcIterator
 from kaldifst import StdVectorFst
 from kaldifst import StdArc
+from kaldifst import info
 
 import os
 
@@ -55,6 +56,10 @@ def test_iterator():
     # You can use:
     #  fstprint a.fst
     os.remove("a.fst")
+
+    import kaldifst
+
+    info(fst)
 
 
 def main():
