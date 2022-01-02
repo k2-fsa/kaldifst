@@ -8,6 +8,7 @@ pybind11_add_module(_kaldifst
   float-weight.cc
   fst.cc
   fstcompile.cc
+  fstarcsort.cc
   fstdraw.cc
   fstinfo.cc
   kaldifst.cc
