@@ -6,6 +6,7 @@ from _kaldifst import (
     SymbolTable,
     TropicalWeight,
     compile,
+    compose,
     divide,
     draw,
     info,

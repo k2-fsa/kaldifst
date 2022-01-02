@@ -13,6 +13,7 @@ pybind11_add_module(_kaldifst
   kaldifst.cc
   mutable-fst.cc
   symbol-table.cc
+  table-matcher.cc
   vector-fst.cc
 )
 target_link_libraries(_kaldifst PRIVATE kaldifst_core fstscript)

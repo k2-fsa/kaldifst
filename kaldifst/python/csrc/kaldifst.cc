@@ -14,6 +14,7 @@
 #include "kaldifst/python/csrc/fstinfo.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/symbol-table.h"
+#include "kaldifst/python/csrc/table-matcher.h"
 #include "kaldifst/python/csrc/vector-fst.h"
 
 namespace kaldifst {
@@ -33,6 +34,8 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstInfo(m);
   PybindFstDraw(m);
   PybindFstCompile(m);
+
+  PybindFstTableCompose(m);
 }
 
 }  // namespace kaldifst
