@@ -5,7 +5,6 @@
 #ifndef KALDIFST_PYTHON_CSRC_FSTCOMPILE_H_
 #define KALDIFST_PYTHON_CSRC_FSTCOMPILE_H_
 
-#include "fst/script/compile.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {

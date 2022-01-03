@@ -124,16 +124,16 @@ void PybindFst(py::module &m, const std::string &class_name,
            "(computing o.w. unknown).",
            py::arg("mask"), py::arg("test"))
       .def_property_readonly("type", &PyClass::Type)
-      // .def_property_readonly("is_olable_sorted",
-      //                        [](const PyClass &self) -> bool {
-      //                          return self.Properties(fst::kOLabelSorted,
-      //                                                 true) != 0;
-      //                        })
-      // .def_property_readonly("is_ilable_sorted",
-      //                        [](const PyClass &self) -> bool {
-      //                          return self.Properties(fst::kOLabelSorted,
-      //                                                 true) != 0;
-      //                        })
+      .def_property_readonly("is_olabel_sorted",
+                             [](const PyClass &self) -> bool {
+                               return self.Properties(fst::kOLabelSorted,
+                                                      true) != 0;
+                             })
+      .def_property_readonly("is_ilabel_sorted",
+                             [](const PyClass &self) -> bool {
+                               return self.Properties(fst::kILabelSorted,
+                                                      true) != 0;
+                             })
       .def("copy", &PyClass::Copy,
            "Gets a copy of this Fst. The copying behaves as follows:\n",
            "\n"

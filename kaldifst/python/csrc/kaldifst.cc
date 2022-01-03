@@ -9,6 +9,7 @@
 #include "kaldifst/python/csrc/expanded-fst.h"
 #include "kaldifst/python/csrc/float-weight.h"
 #include "kaldifst/python/csrc/fst.h"
+#include "kaldifst/python/csrc/fstarcsort.h"
 #include "kaldifst/python/csrc/fstcompile.h"
 #include "kaldifst/python/csrc/fstdraw.h"
 #include "kaldifst/python/csrc/fstinfo.h"
@@ -36,6 +37,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstCompile(m);
 
   PybindFstTableCompose(m);
+  PybindFstArcSort(m);
 }
 
 }  // namespace kaldifst
