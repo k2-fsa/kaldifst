@@ -18,6 +18,7 @@ endfunction()
 # please sort the files in alphabetic order
 set(py_test_files
   test_arc.py
+  test_arc_sort.py
   test_compile.py
   test_compose.py
   test_float_weight.py
