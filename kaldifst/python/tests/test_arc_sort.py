@@ -42,6 +42,8 @@ def test_arc_sort():
     s3 = kaldifst.draw(fst, acceptor=False, portrait=True)
     print(s3)  # see https://git.io/JSVr8
 
+    # see also https://www.openfst.org/twiki/bin/view/FST/ArcSortDoc
+
 
 def main():
     test_arc_sort()

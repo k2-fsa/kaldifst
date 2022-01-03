@@ -4,8 +4,7 @@
 
 #include "kaldifst/python/csrc/fstarcsort.h"
 
-#include "fst/script/arcsort.h"
-#include "fst/script/getters.h"
+#include "fst/arcsort.h"
 #include "kaldifst/csrc/log.h"
 
 namespace kaldifst {

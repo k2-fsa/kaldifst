@@ -13,6 +13,7 @@
 #include "kaldifst/python/csrc/fstcompile.h"
 #include "kaldifst/python/csrc/fstdraw.h"
 #include "kaldifst/python/csrc/fstinfo.h"
+#include "kaldifst/python/csrc/fstminimize.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/symbol-table.h"
 #include "kaldifst/python/csrc/table-matcher.h"
@@ -38,6 +39,7 @@ PYBIND11_MODULE(_kaldifst, m) {
 
   PybindFstTableCompose(m);
   PybindFstArcSort(m);
+  PybindFstMinimize(m);
 }
 
 }  // namespace kaldifst
