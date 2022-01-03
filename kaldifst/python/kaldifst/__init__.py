@@ -12,6 +12,7 @@ from _kaldifst import (
     draw,
     info,
     minimize,
+    minimize_encoded,
     plus,
     times,
 )

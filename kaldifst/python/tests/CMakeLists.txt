@@ -22,6 +22,7 @@ set(py_test_files
   test_compile.py
   test_compose.py
   test_float_weight.py
+  test_minimize_encoded.py
   test_std_const_fst.py
   test_std_vector_fst.py
   test_symbol_table.py
