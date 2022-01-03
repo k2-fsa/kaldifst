@@ -11,6 +11,7 @@ from _kaldifst import (
     divide,
     draw,
     info,
+    minimize,
     plus,
     times,
 )
