@@ -21,6 +21,7 @@ set(py_test_files
   test_arc_sort.py
   test_compile.py
   test_compose.py
+  test_determinize.py
   test_float_weight.py
   test_minimize_encoded.py
   test_std_const_fst.py

@@ -11,6 +11,7 @@
 #include "kaldifst/python/csrc/fst.h"
 #include "kaldifst/python/csrc/fstarcsort.h"
 #include "kaldifst/python/csrc/fstcompile.h"
+#include "kaldifst/python/csrc/fstdeterminize.h"
 #include "kaldifst/python/csrc/fstdraw.h"
 #include "kaldifst/python/csrc/fstext-utils.h"
 #include "kaldifst/python/csrc/fstinfo.h"
@@ -42,6 +43,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstArcSort(m);
   PybindFstMinimize(m);
   PybindFstExtUtils(m);
+  PybindFstDeterminize(m);
 }
 
 }  // namespace kaldifst
