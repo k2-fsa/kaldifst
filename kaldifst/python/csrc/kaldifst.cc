@@ -6,6 +6,7 @@
 
 #include "kaldifst/python/csrc/arc.h"
 #include "kaldifst/python/csrc/const-fst.h"
+#include "kaldifst/python/csrc/determinize-star.h"
 #include "kaldifst/python/csrc/expanded-fst.h"
 #include "kaldifst/python/csrc/float-weight.h"
 #include "kaldifst/python/csrc/fst.h"
@@ -46,6 +47,8 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstExtUtils(m);
   PybindFstDeterminize(m);
   PybindFstInvert(m);
+
+  PybindDeterminizeStar(m);
 }
 
 }  // namespace kaldifst
