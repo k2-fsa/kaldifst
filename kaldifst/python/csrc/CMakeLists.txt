@@ -13,6 +13,7 @@ pybind11_add_module(_kaldifst
   fstdraw.cc
   fstext-utils.cc
   fstinfo.cc
+  fstinvert.cc
   fstminimize.cc
   kaldifst.cc
   mutable-fst.cc

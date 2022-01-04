@@ -12,6 +12,7 @@ from _kaldifst import (
     divide,
     draw,
     info,
+    invert,
     minimize,
     minimize_encoded,
     plus,
