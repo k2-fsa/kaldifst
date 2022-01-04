@@ -8,6 +8,7 @@ from _kaldifst import (
     arcsort,
     compile,
     compose,
+    determinize,
     divide,
     draw,
     info,
