@@ -34,6 +34,11 @@ void MinimizeEncoded(MutableFst<Arc> *fst, float delta = kDelta) {
   Decode(fst, encoder);
 }
 
+inline bool DeterminizeStarInLog(VectorFst<StdArc> *fst, float delta = kDelta,
+                                 bool *debug_ptr = NULL, int max_states = -1);
+
 }  // namespace fst
+
+#include "kaldifst/csrc/fstext-utils-inl.h"
 
 #endif  // KALDIFST_CSRC_KALDI_FSTEXT_UTILS_H_

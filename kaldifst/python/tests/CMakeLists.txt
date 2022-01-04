@@ -22,6 +22,7 @@ set(py_test_files
   test_compile.py
   test_compose.py
   test_determinize.py
+  test_determinize_star.py
   test_float_weight.py
   test_invert.py
   test_minimize_encoded.py

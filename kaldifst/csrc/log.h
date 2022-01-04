@@ -43,9 +43,10 @@ class Logger {
     return *this;
   }
 
-  ~Logger() {
-    std::cerr << os_.str() << "\n";
-    if (level_ == LogLevel::kError) abort();
+  ~Logger() noexcept(false) {
+    if (level_ == LogLevel::kError) {
+      throw std::runtime_error(os_.str());
+    }
   }
 
  private:

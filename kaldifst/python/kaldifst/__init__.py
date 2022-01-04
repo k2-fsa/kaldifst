@@ -9,6 +9,7 @@ from _kaldifst import (
     compile,
     compose,
     determinize,
+    determinize_star,
     divide,
     draw,
     info,
