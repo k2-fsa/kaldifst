@@ -15,6 +15,7 @@
 #include "kaldifst/python/csrc/fstdraw.h"
 #include "kaldifst/python/csrc/fstext-utils.h"
 #include "kaldifst/python/csrc/fstinfo.h"
+#include "kaldifst/python/csrc/fstinvert.h"
 #include "kaldifst/python/csrc/fstminimize.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/symbol-table.h"
@@ -44,6 +45,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstMinimize(m);
   PybindFstExtUtils(m);
   PybindFstDeterminize(m);
+  PybindFstInvert(m);
 }
 
 }  // namespace kaldifst
