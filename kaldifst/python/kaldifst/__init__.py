@@ -17,6 +17,7 @@ from _kaldifst import (
     minimize,
     minimize_encoded,
     plus,
+    rmepsilon,
     times,
 )
 

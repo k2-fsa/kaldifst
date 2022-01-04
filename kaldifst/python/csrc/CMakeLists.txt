@@ -16,6 +16,7 @@ pybind11_add_module(_kaldifst
   fstinfo.cc
   fstinvert.cc
   fstminimize.cc
+  fstrmepsilon.cc
   kaldifst.cc
   mutable-fst.cc
   symbol-table.cc
