@@ -18,6 +18,7 @@
 #include "kaldifst/python/csrc/fstinfo.h"
 #include "kaldifst/python/csrc/fstinvert.h"
 #include "kaldifst/python/csrc/fstminimize.h"
+#include "kaldifst/python/csrc/fstreverse.h"
 #include "kaldifst/python/csrc/fstrmepsilon.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/symbol-table.h"
@@ -51,6 +52,7 @@ PYBIND11_MODULE(_kaldifst, m) {
 
   PybindDeterminizeStar(m);
   PybindFstRmEpsilon(m);
+  PybindFstReverse(m);
 }
 
 }  // namespace kaldifst
