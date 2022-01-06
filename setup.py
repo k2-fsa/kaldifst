@@ -5,10 +5,9 @@
 import glob
 import os
 import re
-import setuptools
 import shutil
-import subprocess
 
+import setuptools
 from setuptools.command.build_ext import build_ext
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -32,7 +31,8 @@ class BuildExtension(build_ext):
             raise Exception(
                 "\nBuild kaldifst failed. Please check the error message.\n"
                 "You can ask for help by creating an issue on GitHub.\n"
-                "\nClick:\n    https://github.com/csukuangfj/kaldifst/issues/new\n"
+                "\nClick:\n"
+                "    https://github.com/csukuangfj/kaldifst/issues/new\n"
             )
         lib_so = glob.glob(f"{build_dir}/lib/*.so*")
         for so in lib_so:
@@ -57,9 +57,15 @@ def get_package_version():
     with open("CMakeLists.txt") as f:
         content = f.read()
 
-    latest_version = re.search(r"set\(KALDIFST_VERSION (.*)\)", content).group(1)
+    latest_version = re.search(r"set\(KALDIFST_VERSION (.*)\)", content).group(
+        1
+    )
     latest_version = latest_version.strip('"')
     return latest_version
+
+
+with open("kaldifst/python/kaldifst/__init__.py", "a") as f:
+    f.write(f"__version__ = '{get_package_version()}'\n")
 
 
 package_name = "kaldifst"
@@ -86,3 +92,12 @@ setuptools.setup(
     ],
     license="Apache licensed, as found in the LICENSE file",
 )
+
+# remove the line __dev_version__ from k2/python/k2/__init__.py
+with open("kaldifst/python/kaldifst/__init__.py", "r") as f:
+    lines = f.readlines()
+
+with open("kaldifst/python/kaldifst/__init__.py", "w") as f:
+    for line in lines:
+        if "__version__" not in line:
+            f.write(line)
