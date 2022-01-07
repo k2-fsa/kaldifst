@@ -67,10 +67,10 @@ def main(use_log=False):
     test_determinize_star_case_1(use_log)
     test_determinize_star_case_2(use_log)
     test_determinize_star_case_3(use_log)
-    try:
-        test_determinize_star_case_4(use_log)
-    except RuntimeError as e:
-        print(str(e))
+    #  try:
+    #      test_determinize_star_case_4(use_log)
+    #  except RuntimeError as e:
+    #      print(str(e))
 
 
 if __name__ == "__main__":

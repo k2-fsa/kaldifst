@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-set(KALDIFST_VERSION "0.3")
+set(KALDIFST_VERSION "0.4.3")
 
 set(ALLOWABLE_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
 set(DEFAULT_BUILD_TYPE "Release")
@@ -40,6 +40,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_INSTALL_RPATH "$ORIGIN")
 set(CMAKE_BUILD_RPATH "$ORIGIN")
 
+set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ version to be used.")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)

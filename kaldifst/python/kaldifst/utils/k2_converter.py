@@ -28,18 +28,22 @@ def _k2_acceptor_to_openfst(fsa: k2.Fsa) -> StdVectorFst:
     row_splits = fsa.arcs.row_splits(1)
     row_ids = fsa.arcs.row_ids(1)
 
-    num_states = row_ids.numel()
+    num_states = row_splits.numel() - 1
     arcs_per_state = (row_splits[1:] - row_splits[:-1]).tolist()
+    num_arcs = row_ids.numel()
 
     fst = StdVectorFst()
-
     fst.reserve_states(num_states)
+
     for i in range(num_states):
         s = fst.add_state()
         assert s == i
         fst.reserve_arcs(i, arcs_per_state[i])
 
-    for i, (src, dst, label) in enumerate(fsa.arcs.values()[:, :-1]):
+    arcs = fsa.arcs.values()
+    for i in range(num_arcs):
+        src, dst, label, _ = arcs[i].tolist()
+
         if label == -1:
             label = 0
         arc = StdArc(
@@ -83,8 +87,9 @@ def _k2_transducer_to_openfst(fsa: k2.Fsa, olabels: str) -> StdVectorFst:
     assert isinstance(output_labels, torch.Tensor)
     output_labels = output_labels.tolist()
 
-    num_states = row_ids.numel()
+    num_states = row_splits.numel() - 1
     arcs_per_state = (row_splits[1:] - row_splits[:-1]).tolist()
+    num_arcs = row_ids.numel()
 
     fst = StdVectorFst()
     fst.reserve_states(num_states)
@@ -94,7 +99,10 @@ def _k2_transducer_to_openfst(fsa: k2.Fsa, olabels: str) -> StdVectorFst:
         assert s == i
         fst.reserve_arcs(i, arcs_per_state[i])
 
-    for i, (src, dst, ilabel) in enumerate(fsa.arcs.values()[:, :-1]):
+    arcs = fsa.arcs.values()
+    for i in range(num_arcs):
+        src, dst, ilabel, _ = arcs[i].tolist()
+
         olabel = output_labels[i]
         if ilabel == -1:
             ilabel = 0

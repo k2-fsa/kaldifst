@@ -20,7 +20,8 @@ void PybindDeterminizeStar(py::module &m) {
                      fst::ILabelCompare<fst::StdArc>());  // improves speed.
 
         if (use_log) {
-          DeterminizeStarInLog(in_out, delta, &debug_location, max_states);
+          return DeterminizeStarInLog(in_out, delta, &debug_location,
+                                      max_states);
         } else {
           fst::VectorFst<fst::StdArc> det_fst;
 

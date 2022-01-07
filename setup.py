@@ -5,10 +5,10 @@
 import glob
 import os
 import re
-import setuptools
 import shutil
-import subprocess
+import sys
 
+import setuptools
 from setuptools.command.build_ext import build_ext
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,14 +25,42 @@ class BuildExtension(build_ext):
         build_dir = self.build_temp
         os.makedirs(build_dir, exist_ok=True)
 
+        # build/lib.linux-x86_64-3.8
         os.makedirs(self.build_lib, exist_ok=True)
 
-        ret = os.system(f"cd {build_dir}; cmake {cur_dir}; make -j _kaldifst")
+        kaldifst_dir = os.path.dirname(os.path.abspath(__file__))
+
+        cmake_args = os.environ.get("KALDIFST_CMAKE_ARGS", "")
+        make_args = os.environ.get("KALDIFST_MAKE_ARGS", "")
+        system_make_args = os.environ.get("MAKEFLAGS", "")
+
+        if cmake_args == "":
+            cmake_args = "-DCMAKE_BUILD_TYPE=Release"
+
+        if make_args == "" and system_make_args == "":
+            print("For fast compilation, run:")
+            print('export KALDIFST_MAKE_ARGS="-j"; python setup.py install')
+
+        if "PYTHON_EXECUTABLE" not in cmake_args:
+            print(f"Setting PYTHON_EXECUTABLE to {sys.executable}")
+            cmake_args += f" -DPYTHON_EXECUTABLE={sys.executable}"
+
+        build_cmd = f"""
+            cd {self.build_temp}
+
+            cmake {cmake_args} {kaldifst_dir}
+
+            make {make_args} _kaldifst
+        """
+        print(f"build command is:\n{build_cmd}")
+
+        ret = os.system(build_cmd)
         if ret != 0:
             raise Exception(
                 "\nBuild kaldifst failed. Please check the error message.\n"
                 "You can ask for help by creating an issue on GitHub.\n"
-                "\nClick:\n    https://github.com/csukuangfj/kaldifst/issues/new\n"
+                "\nClick:\n"
+                "    https://github.com/csukuangfj/kaldifst/issues/new\n"
             )
         lib_so = glob.glob(f"{build_dir}/lib/*.so*")
         for so in lib_so:
@@ -57,9 +85,15 @@ def get_package_version():
     with open("CMakeLists.txt") as f:
         content = f.read()
 
-    latest_version = re.search(r"set\(KALDIFST_VERSION (.*)\)", content).group(1)
+    latest_version = re.search(r"set\(KALDIFST_VERSION (.*)\)", content).group(
+        1
+    )
     latest_version = latest_version.strip('"')
     return latest_version
+
+
+with open("kaldifst/python/kaldifst/__init__.py", "a") as f:
+    f.write(f"__version__ = '{get_package_version()}'\n")
 
 
 package_name = "kaldifst"
@@ -86,3 +120,12 @@ setuptools.setup(
     ],
     license="Apache licensed, as found in the LICENSE file",
 )
+
+# remove the line __dev_version__ from k2/python/k2/__init__.py
+with open("kaldifst/python/kaldifst/__init__.py", "r") as f:
+    lines = f.readlines()
+
+with open("kaldifst/python/kaldifst/__init__.py", "w") as f:
+    for line in lines:
+        if "__version__" not in line:
+            f.write(line)

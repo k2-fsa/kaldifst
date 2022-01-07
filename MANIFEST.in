@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+include CMakeLists.txt
+exclude pyproject.toml
+recursive-include kaldifst *.*
+recursive-include cmake *.*

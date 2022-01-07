@@ -1,0 +1,31 @@
+name: build-pip
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-pip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Build
+        shell: bash
+        run: |
+          python3 -m pip install wheel
+          python3 setup.py bdist_wheel
+          ls -lh dist
+          python3 -m pip install ./dist/kaldifst*.whl
+          cd ../..
+          python3 -c "import kaldifst; print(kaldifst.__version__)"
+          python3 -c "import kaldifst; print(kaldifst.__file__)"
