@@ -75,7 +75,12 @@ void PybindVectorFst(py::module &m, const std::string &class_name,
   using Arc = typename PyClass::Arc;
   py::class_<PyClass, Parent>(m, class_name.c_str(), class_help_doc.c_str())
       .def(py::init<>())
-      .def(py::init<const fst::Fst<Arc> &>(), py::arg("fst"));
+      .def(py::init<const fst::Fst<Arc> &>(), py::arg("fst"))
+      .def_static(
+          "read", overload_cast_<const fst::string &>()(&PyClass::Read),
+          "Reads an FST from a file; returns nullptr on error. An empty\n"
+          "filename results in reading from standard input.",
+          py::arg("filename"), py::return_value_policy::take_ownership);
 }
 
 template <typename Arc, typename State>

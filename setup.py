@@ -6,6 +6,7 @@ import glob
 import os
 import re
 import shutil
+import sys
 
 import setuptools
 from setuptools.command.build_ext import build_ext
@@ -24,9 +25,36 @@ class BuildExtension(build_ext):
         build_dir = self.build_temp
         os.makedirs(build_dir, exist_ok=True)
 
+        # build/lib.linux-x86_64-3.8
         os.makedirs(self.build_lib, exist_ok=True)
 
-        ret = os.system(f"cd {build_dir}; cmake {cur_dir}; make -j _kaldifst")
+        kaldifst_dir = os.path.dirname(os.path.abspath(__file__))
+
+        cmake_args = os.environ.get("KALDIFST_CMAKE_ARGS", "")
+        make_args = os.environ.get("KALDIFST_MAKE_ARGS", "")
+        system_make_args = os.environ.get("MAKEFLAGS", "")
+
+        if cmake_args == "":
+            cmake_args = "-DCMAKE_BUILD_TYPE=Release"
+
+        if make_args == "" and system_make_args == "":
+            print("For fast compilation, run:")
+            print('export KALDIFST_MAKE_ARGS="-j"; python setup.py install')
+
+        if "PYTHON_EXECUTABLE" not in cmake_args:
+            print(f"Setting PYTHON_EXECUTABLE to {sys.executable}")
+            cmake_args += f" -DPYTHON_EXECUTABLE={sys.executable}"
+
+        build_cmd = f"""
+            cd {self.build_temp}
+
+            cmake {cmake_args} {kaldifst_dir}
+
+            make {make_args} _kaldifst
+        """
+        print(f"build command is:\n{build_cmd}")
+
+        ret = os.system(build_cmd)
         if ret != 0:
             raise Exception(
                 "\nBuild kaldifst failed. Please check the error message.\n"
