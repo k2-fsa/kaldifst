@@ -26,3 +26,6 @@ jobs:
           python3 setup.py bdist_wheel
           ls -lh dist
           python3 -m pip install ./dist/kaldifst*.whl
+          cd ../..
+          python3 -c "import kaldifst; print(kaldifst.__version__)"
+          python3 -c "import kaldifst; print(kaldifst.__file__)"

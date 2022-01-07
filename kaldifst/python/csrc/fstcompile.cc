@@ -91,6 +91,7 @@ py::object FstCompileImpl(const FstCompileParams &params,
     return py::cast(std::move(ans));
   } else {
     KALDIFST_ERR << "Unsupported arc type: " << params.arc_type;
+    return py::none();
   }
 }
 
