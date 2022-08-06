@@ -1,5 +1,5 @@
 
-name: nightly-windows
+name: nightly-pip
 
 on:
   push:
@@ -16,7 +16,7 @@ on:
     - cron: "50 23 * * *"
 
 jobs:
-  nightly-windows-pip:
+  nightly-pip:
     # see https://github.com/actions/virtual-environments/blob/win19/20210525.0/images/win/Windows2019-Readme.md
     runs-on: ${{ matrix.os }}
     strategy:
