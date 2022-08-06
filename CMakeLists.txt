@@ -44,6 +44,26 @@ set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ version to be used.")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+
+if(WIN32)
+  set(disabled_warnings
+    /wd4018
+    /wd4244
+    /wd4267
+    /wd4291
+    /wd4305
+    /wd4996
+  )
+
+  message(STATUS "Disabled warnings: ${disabled_warnings}")
+  foreach(w IN LISTS disabled_warnings)
+    string(APPEND CMAKE_CXX_FLAGS " ${w} ")
+  endforeach()
+endif()
+
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
 include(pybind11)
 include(openfst)
 if(KALDIFST_BUILD_TESTS)

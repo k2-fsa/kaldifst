@@ -4,6 +4,7 @@
 
 import glob
 import os
+import platform
 import re
 import shutil
 import sys
@@ -12,6 +13,10 @@ import setuptools
 from setuptools.command.build_ext import build_ext
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
+
+
+def is_windows():
+    return platform.system() == "Windows"
 
 
 def cmake_extension(name, *args, **kwargs) -> setuptools.Extension:
@@ -45,31 +50,58 @@ class BuildExtension(build_ext):
             print(f"Setting PYTHON_EXECUTABLE to {sys.executable}")
             cmake_args += f" -DPYTHON_EXECUTABLE={sys.executable}"
 
+        if not is_windows():
+            build_cmd = f"""
+                cd {self.build_temp}
+
+                cmake {cmake_args} {kaldifst_dir}
+
+                make {make_args} _kaldifst
+            """
+            print(f"build command is:\n{build_cmd}")
+
+            ret = os.system(build_cmd)
+            if ret != 0:
+                raise Exception(
+                    "\nBuild kaldifst failed. Please check the error message.\n"
+                    "You can ask for help by creating an issue on GitHub.\n"
+                    "\nClick:\n"
+                    "    https://github.com/csukuangfj/kaldifst/issues/new\n"
+                )
+            lib_so = glob.glob(f"{build_dir}/lib/*.so*")
+
+            # macos
+            # also need to copy *fst*.dylib
+            lib_so += glob.glob(f"{build_dir}/lib/*.dylib*")
+
+            for so in lib_so:
+                print(f"Copying {so} to {self.build_lib}/")
+                shutil.copy(f"{so}", f"{self.build_lib}/")
+            return
+
+        # for windows
         build_cmd = f"""
-            cd {self.build_temp}
-
-            cmake {cmake_args} {kaldifst_dir}
-
-            make {make_args} _kaldifst
+            cmake {cmake_args} -B {self.build_temp} -S {cur_dir}
+            cmake --build {self.build_temp} --target _kaldifst --config Release -- -m
         """
         print(f"build command is:\n{build_cmd}")
 
-        ret = os.system(build_cmd)
+        ret = os.system(f"cmake {cmake_args} -B {self.build_temp} -S {cur_dir}")
         if ret != 0:
-            raise Exception(
-                "\nBuild kaldifst failed. Please check the error message.\n"
-                "You can ask for help by creating an issue on GitHub.\n"
-                "\nClick:\n"
-                "    https://github.com/csukuangfj/kaldifst/issues/new\n"
-            )
-        lib_so = glob.glob(f"{build_dir}/lib/*.so*")
-        for so in lib_so:
-            print(f"Copying {so} to {self.build_lib}/")
-            shutil.copy(f"{so}", f"{self.build_lib}/")
+            raise Exception("Failed to build kaldifst")
 
-        # macos
-        # also need to copy *fst*.dylib
-        lib_so = glob.glob(f"{build_dir}/lib/*.dylib*")
+        ret = os.system(
+            f"cmake --build {self.build_temp} --target _kaldifst --config Release -- -m"
+        )
+        if ret != 0:
+            raise Exception("Failed to build kaldifst")
+
+        # bin/Release/_kaldifst.cp38-win_amd64.pyd
+        lib_so = glob.glob(f"{self.build_temp}/**/*.pyd", recursive=True)
+
+        # lib/Release/{_kaldifst, openfst}.lib
+        lib_so += glob.glob(f"{self.build_temp}/**/*.lib", recursive=True)
+
         for so in lib_so:
             print(f"Copying {so} to {self.build_lib}/")
             shutil.copy(f"{so}", f"{self.build_lib}/")

@@ -25,15 +25,22 @@ function(download_openfst)
   set(HAVE_PYTHON OFF CACHE BOOL "" FORCE)
   set(HAVE_SPECIAL OFF CACHE BOOL "" FORCE)
 
-  FetchContent_Declare(openfst
-    URL               ${openfst_URL}
-    URL_HASH          ${openfst_HASH}
-    PATCH_COMMAND
-      sed -i.bak s/enable_testing\(\)//g "src/CMakeLists.txt" &&
-      sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt"
-      # sed -i.bak s/add_subdirectory\(script\)//g "src/CMakeLists.txt" &&
-      # sed -i.bak s/add_subdirectory\(extensions\)//g "src/CMakeLists.txt"
-  )
+  if(NOT WIN32)
+    FetchContent_Declare(openfst
+      URL               ${openfst_URL}
+      URL_HASH          ${openfst_HASH}
+      PATCH_COMMAND
+        sed -i.bak s/enable_testing\(\)//g "src/CMakeLists.txt" &&
+        sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt"
+        # sed -i.bak s/add_subdirectory\(script\)//g "src/CMakeLists.txt" &&
+        # sed -i.bak s/add_subdirectory\(extensions\)//g "src/CMakeLists.txt"
+    )
+  else()
+    FetchContent_Declare(openfst
+      URL               ${openfst_URL}
+      URL_HASH          ${openfst_HASH}
+    )
+  endif()
 
   FetchContent_GetProperties(openfst)
   if(NOT openfst_POPULATED)
@@ -43,6 +50,11 @@ function(download_openfst)
   message(STATUS "openfst is downloaded to ${openfst_SOURCE_DIR}")
   add_subdirectory(${openfst_SOURCE_DIR} ${openfst_BINARY_DIR} EXCLUDE_FROM_ALL)
   set(openfst_SOURCE_DIR ${openfst_SOURCE_DIR} PARENT_SCOPE)
+
+  # Rename libfst.so.6 to libkaldifst_fst.so.6 to avoid potential conflicts
+  # when kaldifst is installed.
+  set_target_properties(fst PROPERTIES OUTPUT_NAME "kaldifst_fst")
+
 endfunction()
 
 download_openfst()
