@@ -54,7 +54,7 @@ static void PybindFstTableComposeTpl(py::module &m) {
         return std::move(composed_fst);
       },
       py::arg("fst1"), py::arg("fst2"), py::arg("match_side") = "left",
-      py::arg("compose_filter") = "sequence", py::arg("connect") = "true");
+      py::arg("compose_filter") = "sequence", py::arg("connect") = true);
 }
 
 void PybindFstTableCompose(py::module &m) {
