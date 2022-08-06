@@ -74,7 +74,7 @@ void PybindFstDraw(py::module &m) {
   m.def(
       "draw",
       [](const PyClass &fst, bool acceptor = false,
-         py::object isymbols = py::none(), py::object &osymbols = py::none(),
+         py::object isymbols = py::none(), py::object osymbols = py::none(),
          py::object ssymbols = py::none(), bool numeric = false,
          int32_t precision = 5, const std::string &float_format = "g",
          bool show_weight_one = false, const std::string &title = "",
