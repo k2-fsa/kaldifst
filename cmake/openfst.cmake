@@ -50,6 +50,11 @@ function(download_openfst)
   message(STATUS "openfst is downloaded to ${openfst_SOURCE_DIR}")
   add_subdirectory(${openfst_SOURCE_DIR} ${openfst_BINARY_DIR} EXCLUDE_FROM_ALL)
   set(openfst_SOURCE_DIR ${openfst_SOURCE_DIR} PARENT_SCOPE)
+
+  # Rename libfst.so.6 to libkaldifst_fst.so.6 to avoid potential conflicts
+  # when kaldifst is installed.
+  set_target_properties(fst PROPERTIES OUTPUT_NAME "kaldifst_fst")
+
 endfunction()
 
 download_openfst()
