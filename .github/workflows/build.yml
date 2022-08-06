@@ -45,4 +45,4 @@ jobs:
 
           ls -l lib
           ls -l bin
-          ctest --verbose --output-on-failure
+          ctest --verbose --output-on-failure -E k2
