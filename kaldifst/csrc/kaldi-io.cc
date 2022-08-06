@@ -9,6 +9,11 @@
 
 #include <string.h>
 
+#ifdef _MSC_VER
+#include <fcntl.h>
+#include <io.h>
+#endif
+
 #include "kaldifst/csrc/io-funcs.h"
 #include "kaldifst/csrc/kaldi-pipebuf.h"
 #include "kaldifst/csrc/kaldi-table.h"

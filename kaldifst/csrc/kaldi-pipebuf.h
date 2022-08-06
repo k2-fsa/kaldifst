@@ -29,7 +29,7 @@
 #if !defined(_LIBCPP_VERSION)  // libc++
 #include <fstream>
 #else
-#include "kaldifst/csrc/util/basic-filebuf.h"
+#include "kaldifst/csrc/basic-filebuf.h"
 #endif
 
 #include "kaldifst/csrc/log.h"
