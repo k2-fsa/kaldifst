@@ -12,6 +12,7 @@
 #ifdef _MSC_VER
 #include <fcntl.h>
 #include <io.h>
+#include <stdio.h>
 #endif
 
 #include "kaldifst/csrc/io-funcs.h"
@@ -22,6 +23,12 @@
 #include "kaldifst/csrc/text-utils.h"
 
 #define MapOsPath(x) x
+
+#if defined(_MSC_VER)
+static FILE *popen(const char *command, const char *mode) {
+  return _popen(command, mode);
+}
+#endif  // _MSC_VER
 
 namespace kaldifst {
 
