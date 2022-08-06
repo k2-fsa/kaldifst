@@ -49,7 +49,7 @@ jobs:
         run: |
           mkdir build_release
           cd build_release
-          cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+          cmake -DCMAKE_BUILD_TYPE=Release ..
           ls -lh
 
       - name: Build kaldifst
