@@ -46,3 +46,24 @@ jobs:
           ls -l lib
           ls -l bin
           ctest --verbose --output-on-failure -E k2
+
+
+      - name: Display dependencies ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        shell: bash
+        run: |
+          cd build
+
+          ldd lib/libkaldifst_core.so
+
+          readelf -d lib/libkaldifst_core.so
+
+      - name: Display dependencies macos
+        if: startsWith(matrix.os, 'macos')
+        shell: bash
+        run: |
+          cd build
+
+          otool -L lib/libkaldifst_core.dylib
+
+          otool -l lib/libkaldifst_core.dylib
