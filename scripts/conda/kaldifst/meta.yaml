@@ -1,0 +1,25 @@
+package:
+  name: kaldifst
+  version: "0.6"
+
+source:
+  path: "{{ environ.get('KALDIFST_ROOT_DIR') }}"
+
+build:
+  number: 0
+  string: py{{ environ.get('KALDIFST_PYTHON_VERSION') }}
+
+requirements:
+  host:
+    - cmake=3.18
+    - python
+  run:
+    - python
+
+about:
+  home: https://github.com/csukuangfj/kaldifst
+  license: Apache V2
+  license_file: LICENSE
+  summary: Python wrapper for OpenFST and its extensions from Kaldi
+  description: |
+    Python wrapper for OpenFST and its extensions from Kaldi

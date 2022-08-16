@@ -14,6 +14,7 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(kaldifst CXX)
 
+# Remember to change scripts/conda/kaldifst/meta.yaml
 set(KALDIFST_VERSION "0.6")
 
 set(ALLOWABLE_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
