@@ -8,10 +8,17 @@ source:
 build:
   number: 0
   string: py{{ environ.get('KALDIFST_PYTHON_VERSION') }}
+  script: {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
+  build:
+    - {{ compiler('c') }} # [win]
+    - {{ compiler('cxx') }} # [win]
+
   host:
-    - cmake=3.18
+    - anaconda-client
+    - conda-build
+    - cmake
     - python
   run:
     - python
