@@ -10,19 +10,29 @@ on:
 
 jobs:
   build-pip:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
+
+      # see https://github.com/microsoft/setup-msbuild
+      - name: Add msbuild to PATH
+        if: startsWith(matrix.os, 'windows')
+        uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python-version }}
 
       - name: Build
         shell: bash
         run: |
-          python3 -m pip install wheel
+          python3 -m pip install -U pip wheel numpy
           python3 setup.py bdist_wheel
           ls -lh dist
           python3 -m pip install ./dist/kaldifst*.whl
