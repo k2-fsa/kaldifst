@@ -27,4 +27,16 @@ pybind11_add_module(_kaldifst
 target_link_libraries(_kaldifst PRIVATE kaldifst_core fstscript)
 if(UNIX AND NOT APPLE)
   target_link_libraries(_kaldifst PUBLIC ${PYTHON_LIBRARY})
+elseif(WIN32)
+  target_link_libraries(_kaldifst PUBLIC ${PYTHON_LIBRARIES})
+endif()
+
+if(APPLE)
+  execute_process(
+    COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    OUTPUT_VARIABLE PYTHON_SITE_PACKAGE_DIR
+  )
+  message(STATUS "PYTHON_SITE_PACKAGE_DIR: ${PYTHON_SITE_PACKAGE_DIR}")
+  target_link_libraries(_kaldifst PRIVATE "-Wl,-rpath,${PYTHON_SITE_PACKAGE_DIR}")
 endif()
