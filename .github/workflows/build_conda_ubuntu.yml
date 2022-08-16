@@ -21,7 +21,7 @@ name: build_conda_ubuntu
 on:
   push:
     branches:
-      - master
+      - conda
     tags:
       - '*'
 

@@ -21,7 +21,7 @@ name: build_conda_windows
 on:
   push:
     branches:
-      - master
+      - conda
     tags:
       - '*'
 
