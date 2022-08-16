@@ -24,7 +24,7 @@ echo "CC is: $CC"
 echo "GCC is: $GCC"
 echo "gcc version: $($CC --version)"
 
-export KALDI_NATIVE_IO_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release"
-export KALDI_NATIVE_IO_MAKE_ARGS="-j"
+export KALDIFST_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release"
+export KALDIFST_MAKE_ARGS="-j"
 
 python3 setup.py install --single-version-externally-managed --record=record.txt
