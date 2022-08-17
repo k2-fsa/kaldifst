@@ -48,8 +48,8 @@ jobs:
       - name: Display Python version
         shell: bash -l {0}
         run: |
-          python3 -c "import sys; print(sys.version)"
-          which python3
+          python -c "import sys; print(sys.version)"
+          which python
 
       - name: Install conda dependencies
         shell: bash -l {0}
@@ -67,8 +67,8 @@ jobs:
 
       - name: Build kaldifst
         shell: bash -l {0}
-        # env:
-        #   KALDIFST_CONDA_TOKEN: ${{ secrets.KALDIFST_CONDA_TOKEN }}
+        env:
+          KALDIFST_CONDA_TOKEN: ${{ secrets.KALDIFST_CONDA_TOKEN }}
         run: |
           ./scripts/build_conda.sh
 

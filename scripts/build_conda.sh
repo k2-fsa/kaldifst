@@ -33,7 +33,7 @@ cd $kaldifst_dir
 export KALDIFST_ROOT_DIR=$kaldifst_dir
 echo "KALDIFST_DIR: $KALDIFST_ROOT_DIR"
 
-KALDIFST_PYTHON_VERSION=$(python3 -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+KALDIFST_PYTHON_VERSION=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
 
 # Example value: 3.8
 export KALDIFST_PYTHON_VERSION

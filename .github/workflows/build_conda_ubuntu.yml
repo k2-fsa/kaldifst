@@ -67,8 +67,8 @@ jobs:
 
       - name: Build kaldifst
         shell: bash -l {0}
-        # env:
-        #   KALDIFST_CONDA_TOKEN: ${{ secrets.KALDIFST_CONDA_TOKEN }}
+        env:
+          KALDIFST_CONDA_TOKEN: ${{ secrets.KALDIFST_CONDA_TOKEN }}
         run: |
           ./scripts/build_conda.sh
 
