@@ -5,6 +5,8 @@
 
 // Copyright 2009-2011  Saarland University;  Microsoft Corporation
 
+#include <errno.h>
+
 #include <limits>
 #include <string>
 #include <type_traits>
