@@ -137,8 +137,9 @@ setuptools.setup(
     author_email="csukuangfj@gmail.com",
     package_dir={
         package_name: "kaldifst/python/kaldifst",
+        "kaldifst.utils": "kaldifst/python/kaldifst/utils",
     },
-    packages=[package_name],
+    packages=[package_name, "kaldifst.utils"],
     url="https://github.com/csukuangfj/kaldifst",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",
