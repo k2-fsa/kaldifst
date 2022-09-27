@@ -14,3 +14,4 @@ Python wrapper for `OpenFst`_ and its extensions from  `Kaldi`_, e.g.,
    :caption: Contents:
 
    ./install/index
+   ./python_api/index

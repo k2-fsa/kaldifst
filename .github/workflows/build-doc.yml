@@ -53,6 +53,11 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
+      - name: Install kaldifst
+        shell: bash
+        run: |
+          python3 setup.py install
+
       - name: Build doc
         shell: bash
         run: |
