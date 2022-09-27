@@ -42,5 +42,9 @@ if(APPLE)
 endif()
 
 if(NOT WIN32)
-  target_link_libraries(_kaldifst PRIVATE "-Wl,-rpath,${kaldifst_rpath_origin}/kaldifst/${CMAKE_INSTALL_LIBDIR}")
+  target_link_libraries(_kaldifst PRIVATE "-Wl,-rpath,${kaldifst_rpath_origin}/kaldifst/lib")
 endif()
+
+install(TARGETS _kaldifst
+  DESTINATION ../
+)

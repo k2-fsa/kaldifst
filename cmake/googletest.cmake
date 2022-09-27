@@ -18,7 +18,7 @@ function(download_googltest)
     # FetchContent is available since 3.11,
     # we've copied it to ${CMAKE_SOURCE_DIR}/cmake/Modules
     # so that it can be used in lower CMake versions.
-    message(STATUS "Use FetchContent provided by k2")
+    message(STATUS "Use FetchContent provided by kaldifst")
     list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
   endif()
 
@@ -39,7 +39,7 @@ function(download_googltest)
 
   FetchContent_GetProperties(googletest)
   if(NOT googletest_POPULATED)
-    message(STATUS "Downloading googletest")
+    message(STATUS "Downloading googletest ${googletest_URL}")
     FetchContent_Populate(googletest)
   endif()
   message(STATUS "googletest is downloaded to ${googletest_SOURCE_DIR}")
