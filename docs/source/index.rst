@@ -3,18 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to kaldifst's documentation!
-====================================
+kaldifst
+========
+
+Python wrapper for `OpenFst`_ and its extensions from  `Kaldi`_, e.g.,
+``fstdeterminizestar``.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   ./install/index
