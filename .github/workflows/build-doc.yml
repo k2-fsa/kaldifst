@@ -53,11 +53,20 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
+      - name: Install kaldifst
+        shell: bash
+        run: |
+          python3 setup.py install
+
       - name: Build doc
         shell: bash
         run: |
           cd docs
           python3 -m pip install -r ./requirements.txt
+
+          sudo apt-get -qq install graphviz
+          python3 -m pip install graphviz
+
           make html
           touch build/html/.nojekyll
 
