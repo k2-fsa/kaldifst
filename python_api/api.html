@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kaldifst &mdash; kaldifst 0.8 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Python API reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> kaldifst
+          </a>
+              <div class="version">
+                0.8
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kaldifst</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arcsort">arcsort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compile">compile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compose">compose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#determinize">determinize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#determinize-star">determinize_star</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#divide">divide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#draw">draw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#info">info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#invert">invert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimize">minimize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimize-encoded">minimize_encoded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plus">plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reverse">reverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rmepsilon">rmepsilon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#times">times</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arciterator">ArcIterator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#done">done</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flags">flags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#position">position</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#value">value</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#floatweight">FloatWeight</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">value</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stateiterator">StateIterator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">done</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">value</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stdarc">StdArc</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#init">__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ilabel">ilabel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nextstate">nextstate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#olabel">olabel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#weight">weight</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stdconstfst">StdConstFst</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#copy">copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#input-symbols">input_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#is-ilabel-sorted">is_ilabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#is-olabel-sorted">is_olabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#num-states">num_states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output-symbols">output_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#start">start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#type">type</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stdvectorfst">StdVectorFst</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">input_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">is_ilabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">is_olabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">num_states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">output_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">type</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#symboltable">SymbolTable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#add-symbol">add_symbol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#find">find</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#check-sum">check_sum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#labeled-check-sum">labeled_check_sum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#name">name</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tropicalweight">TropicalWeight</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id12">value</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kaldifst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Python API reference</a> &raquo;</li>
+      <li>kaldifst</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/csukuangfj/kaldifst/blob/master/kaldifst/docs/source/python_api/api.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="kaldifst">
+<h1>kaldifst<a class="headerlink" href="#kaldifst" title="Permalink to this headline"></a></h1>
+<section id="arcsort">
+<h2>arcsort<a class="headerlink" href="#arcsort" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.arcsort">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">arcsort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ilabel'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.arcsort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="compile">
+<h2>compile<a class="headerlink" href="#compile" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.compile">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'standard'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fst_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'vector'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">osymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_isymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_osymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_state_numbering</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_negative_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#kaldifst.compile" title="Permalink to this definition"></a></dt>
+<dd><p>Create transducer/acceptor from simple text format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> – A string containing the text format of the FST.</p></li>
+<li><p><strong>acceptor</strong> – Input in acceptor format.</p></li>
+<li><p><strong>arc_type</strong> – Output arc type.</p></li>
+<li><p><strong>fst_type</strong> – Output FST type.</p></li>
+<li><p><strong>isymbols</strong> – Input label symbol table.</p></li>
+<li><p><strong>osymbols</strong> – Output label symbol table.</p></li>
+<li><p><strong>ssymbols</strong> – State label symbol table.</p></li>
+<li><p><strong>keep_isymbols</strong> – Store input label symbol table with FST.</p></li>
+<li><p><strong>keep_osymbols</strong> – Store output label symbol table with FST.</p></li>
+<li><p><strong>keep_state_numbering</strong> – Do not renumber input states.</p></li>
+<li><p><strong>allow_negative_labels</strong> – Allow negative labels (not recommended; may cause conflicts)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return an FST.</p>
+</dd>
+</dl>
+<p><strong>Example 1: Create an acceptor</strong></p>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">Create an acceptor</span><a class="headerlink" href="#id14" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 4</span><span class="s2">0 1 1 1.5</span>
+<span class="linenos"> 5</span><span class="s2">1 2 2 2.5</span>
+<span class="linenos"> 6</span><span class="s2">2 0.3</span>
+<span class="linenos"> 7</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="n">fsa</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">fsa_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fsa</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">10</span><span class="nb">print</span><span class="p">(</span><span class="n">fsa_dot</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fsa_dot</span><span class="p">)</span>
+<span class="linenos">15</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor1.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id15" style="width: 600px">
+<img alt="acceptor1.svg" src="../_images/acceptor1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Visualization of acceptor1.svg</span><a class="headerlink" href="#id15" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 2: Create an acceptor with symbol table</strong></p>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">Create an acceptor with symbol table</span><a class="headerlink" href="#id16" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 4</span><span class="s2">0 1 a 1.5</span>
+<span class="linenos"> 5</span><span class="s2">1 2 b 2.5</span>
+<span class="linenos"> 6</span><span class="s2">1 0.8</span>
+<span class="linenos"> 7</span><span class="s2">2 0.3</span>
+<span class="linenos"> 8</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 9</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;An arbitrary name&quot;</span><span class="p">)</span>
+<span class="linenos">10</span><span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">11</span><span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">fsa</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span> <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">13</span><span class="n">fsa</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">isym</span>
+<span class="linenos">14</span><span class="n">fsa_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fsa</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">15</span><span class="nb">print</span><span class="p">(</span><span class="n">fsa_dot</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fsa_dot</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id17" style="width: 600px">
+<img alt="acceptor2.svg" src="../_images/acceptor2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Visualization of acceptor2.svg</span><a class="headerlink" href="#id17" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
+
+</section>
+<section id="compose">
+<h2>compose<a class="headerlink" href="#compose" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.compose">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fst1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fst2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_side</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compose_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sequence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdMutableFst</span></span></span><a class="headerlink" href="#kaldifst.compose" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="determinize">
+<h2>determinize<a class="headerlink" href="#determinize" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.determinize">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">determinize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0009765625</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'functional'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment_subsequential_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nstate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsequential_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdVectorFst</span></span></span><a class="headerlink" href="#kaldifst.determinize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="determinize-star">
+<h2>determinize_star<a class="headerlink" href="#determinize-star" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.determinize_star">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">determinize_star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdVectorFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0009765625</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#kaldifst.determinize_star" title="Permalink to this definition"></a></dt>
+<dd><p>Caution, the return status is un-intuitive: this function will return
+false if determinization completed normally, and true if it was stopped
+early by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
+</dd></dl>
+
+</section>
+<section id="divide">
+<h2>divide<a class="headerlink" href="#divide" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.divide">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">divide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.TropicalWeight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.TropicalWeight</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.TropicalWeight</span></span></span><a class="headerlink" href="#kaldifst.divide" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="draw">
+<h2>draw<a class="headerlink" href="#draw" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.draw">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">osymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'g'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_weight_one</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portrait</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodesep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranksep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_negative_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#kaldifst.draw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="info">
+<h2>info<a class="headerlink" href="#info" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.info">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arc_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'any'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fst_verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.info" title="Permalink to this definition"></a></dt>
+<dd><p>–arc_filter: type = string, default = “any”
+Arc filter: one of: “any”, “epsilon”, “iepsilon”, “oepsilon”;
+this only affects the counts of (co)accessible states, connected states,
+and (strongly) connected components
+–fst_verify: type = bool, default = true
+Verify FST sanity
+–info_type: type = string, default = “auto”
+Info format: one of: “auto”, “long”, “short”
+–pipe: type = bool, default = false
+Send info to stderr, input to stdout
+–test_properties: type = bool, default = true
+Compute property values (if unknown to FST)</p>
+</dd></dl>
+
+</section>
+<section id="invert">
+<h2>invert<a class="headerlink" href="#invert" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.invert">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.invert" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="minimize">
+<h2>minimize<a class="headerlink" href="#minimize" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.minimize">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">minimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nondet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.minimize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="minimize-encoded">
+<h2>minimize_encoded<a class="headerlink" href="#minimize-encoded" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.minimize_encoded">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">minimize_encoded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0009765625</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.minimize_encoded" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="plus">
+<h2>plus<a class="headerlink" href="#plus" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.plus">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">plus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.TropicalWeight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.TropicalWeight</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.TropicalWeight</span></span></span><a class="headerlink" href="#kaldifst.plus" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="reverse">
+<h2>reverse<a class="headerlink" href="#reverse" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.reverse">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_superinitial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdVectorFst</span></span></span><a class="headerlink" href="#kaldifst.reverse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="rmepsilon">
+<h2>rmepsilon<a class="headerlink" href="#rmepsilon" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.rmepsilon">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">rmepsilon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nstate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.rmepsilon" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="times">
+<h2>times<a class="headerlink" href="#times" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.times">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.TropicalWeight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.TropicalWeight</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.TropicalWeight</span></span></span><a class="headerlink" href="#kaldifst.times" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="arciterator">
+<h2>ArcIterator<a class="headerlink" href="#arciterator" title="Permalink to this headline"></a></h2>
+<section id="done">
+<h3>done<a class="headerlink" href="#done" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.ArcIterator.done">
+<span class="sig-prename descclassname"><span class="pre">ArcIterator.</span></span><span class="sig-name descname"><span class="pre">done</span></span><a class="headerlink" href="#kaldifst.ArcIterator.done" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="flags">
+<h3>flags<a class="headerlink" href="#flags" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.ArcIterator.flags">
+<span class="sig-prename descclassname"><span class="pre">ArcIterator.</span></span><span class="sig-name descname"><span class="pre">flags</span></span><a class="headerlink" href="#kaldifst.ArcIterator.flags" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="position">
+<h3>position<a class="headerlink" href="#position" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.ArcIterator.position">
+<span class="sig-prename descclassname"><span class="pre">ArcIterator.</span></span><span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#kaldifst.ArcIterator.position" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="value">
+<h3>value<a class="headerlink" href="#value" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.ArcIterator.value">
+<span class="sig-prename descclassname"><span class="pre">ArcIterator.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.ArcIterator.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="floatweight">
+<h2>FloatWeight<a class="headerlink" href="#floatweight" title="Permalink to this headline"></a></h2>
+<section id="id1">
+<h3>value<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.FloatWeight.value">
+<span class="sig-prename descclassname"><span class="pre">FloatWeight.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.FloatWeight.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="stateiterator">
+<h2>StateIterator<a class="headerlink" href="#stateiterator" title="Permalink to this headline"></a></h2>
+<section id="id2">
+<h3>done<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StateIterator.done">
+<span class="sig-prename descclassname"><span class="pre">StateIterator.</span></span><span class="sig-name descname"><span class="pre">done</span></span><a class="headerlink" href="#kaldifst.StateIterator.done" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="id3">
+<h3>value<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StateIterator.value">
+<span class="sig-prename descclassname"><span class="pre">StateIterator.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.StateIterator.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="stdarc">
+<h2>StdArc<a class="headerlink" href="#stdarc" title="Permalink to this headline"></a></h2>
+<section id="init">
+<h3>__init__<a class="headerlink" href="#init" title="Permalink to this headline"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="kaldifst.StdArc.__init__">
+<span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.StdArc.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: _kaldifst.StdArc) -&gt; None</p></li>
+<li><p>__init__(self: _kaldifst.StdArc, ilabel: int, olabel: int, weight: _kaldifst.TropicalWeight, nextstate: int) -&gt; None</p></li>
+<li><p>__init__(self: _kaldifst.StdArc, ilabel: int, olabel: int, weight: float, nextstate: int) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+</section>
+<section id="ilabel">
+<h3>ilabel<a class="headerlink" href="#ilabel" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdArc.ilabel">
+<span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">ilabel</span></span><a class="headerlink" href="#kaldifst.StdArc.ilabel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="nextstate">
+<h3>nextstate<a class="headerlink" href="#nextstate" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdArc.nextstate">
+<span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">nextstate</span></span><a class="headerlink" href="#kaldifst.StdArc.nextstate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="olabel">
+<h3>olabel<a class="headerlink" href="#olabel" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdArc.olabel">
+<span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">olabel</span></span><a class="headerlink" href="#kaldifst.StdArc.olabel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="weight">
+<h3>weight<a class="headerlink" href="#weight" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdArc.weight">
+<span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">weight</span></span><a class="headerlink" href="#kaldifst.StdArc.weight" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="stdconstfst">
+<h2>StdConstFst<a class="headerlink" href="#stdconstfst" title="Permalink to this headline"></a></h2>
+<section id="copy">
+<h3>copy<a class="headerlink" href="#copy" title="Permalink to this headline"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.copy">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdFst</span></span></span><a class="headerlink" href="#kaldifst.StdConstFst.copy" title="Permalink to this definition"></a></dt>
+<dd><ol class="arabic simple">
+<li><p>The copying is constant time if safe = false or if safe = true and is on an otherwise unaccessed FST.</p></li>
+</ol>
+<p>(2) If safe = true, the copy is thread-safe in that the original
+and copy can be safely accessed (but not necessarily mutated) by
+separate threads. For some FST types, ‘Copy(true)’ should only
+be called on an FST that has not otherwise been accessed.
+Behavior is otherwise undefined.</p>
+<p>(3) If a MutableFst is copied and then mutated, then the original
+is unmodified and vice versa (often by a copy-on-write on the
+initial mutation, which may not be constant time).</p>
+</dd></dl>
+
+</section>
+<section id="input-symbols">
+<h3>input_symbols<a class="headerlink" href="#input-symbols" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.input_symbols">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">input_symbols</span></span><a class="headerlink" href="#kaldifst.StdConstFst.input_symbols" title="Permalink to this definition"></a></dt>
+<dd><p>Returns input label symbol table; return nullptr if not specified.</p>
+</dd></dl>
+
+</section>
+<section id="is-ilabel-sorted">
+<h3>is_ilabel_sorted<a class="headerlink" href="#is-ilabel-sorted" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.is_ilabel_sorted">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">is_ilabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdConstFst.is_ilabel_sorted" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="is-olabel-sorted">
+<h3>is_olabel_sorted<a class="headerlink" href="#is-olabel-sorted" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.is_olabel_sorted">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">is_olabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdConstFst.is_olabel_sorted" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="num-states">
+<h3>num_states<a class="headerlink" href="#num-states" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.num_states">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">num_states</span></span><a class="headerlink" href="#kaldifst.StdConstFst.num_states" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="output-symbols">
+<h3>output_symbols<a class="headerlink" href="#output-symbols" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.output_symbols">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">output_symbols</span></span><a class="headerlink" href="#kaldifst.StdConstFst.output_symbols" title="Permalink to this definition"></a></dt>
+<dd><p>Returns output label symbol table; return nullptr if not specified.</p>
+</dd></dl>
+
+</section>
+<section id="start">
+<h3>start<a class="headerlink" href="#start" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.start">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#kaldifst.StdConstFst.start" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="type">
+<h3>type<a class="headerlink" href="#type" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdConstFst.type">
+<span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#kaldifst.StdConstFst.type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="stdvectorfst">
+<h2>StdVectorFst<a class="headerlink" href="#stdvectorfst" title="Permalink to this headline"></a></h2>
+<section id="id4">
+<h3>copy<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.copy">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdFst</span></span></span><a class="headerlink" href="#kaldifst.StdVectorFst.copy" title="Permalink to this definition"></a></dt>
+<dd><ol class="arabic simple">
+<li><p>The copying is constant time if safe = false or if safe = true and is on an otherwise unaccessed FST.</p></li>
+</ol>
+<p>(2) If safe = true, the copy is thread-safe in that the original
+and copy can be safely accessed (but not necessarily mutated) by
+separate threads. For some FST types, ‘Copy(true)’ should only
+be called on an FST that has not otherwise been accessed.
+Behavior is otherwise undefined.</p>
+<p>(3) If a MutableFst is copied and then mutated, then the original
+is unmodified and vice versa (often by a copy-on-write on the
+initial mutation, which may not be constant time).</p>
+</dd></dl>
+
+</section>
+<section id="id5">
+<h3>input_symbols<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.input_symbols">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">input_symbols</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.input_symbols" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="id6">
+<h3>is_ilabel_sorted<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.is_ilabel_sorted">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">is_ilabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.is_ilabel_sorted" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="id7">
+<h3>is_olabel_sorted<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.is_olabel_sorted">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">is_olabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.is_olabel_sorted" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="id8">
+<h3>num_states<a class="headerlink" href="#id8" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.num_states">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">num_states</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.num_states" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="id9">
+<h3>output_symbols<a class="headerlink" href="#id9" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.output_symbols">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">output_symbols</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.output_symbols" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="id10">
+<h3>start<a class="headerlink" href="#id10" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.start">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.start" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="id11">
+<h3>type<a class="headerlink" href="#id11" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.StdVectorFst.type">
+<span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="symboltable">
+<h2>SymbolTable<a class="headerlink" href="#symboltable" title="Permalink to this headline"></a></h2>
+<section id="add-symbol">
+<h3>add_symbol<a class="headerlink" href="#add-symbol" title="Permalink to this headline"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="kaldifst.SymbolTable.add_symbol">
+<span class="sig-prename descclassname"><span class="pre">SymbolTable.</span></span><span class="sig-name descname"><span class="pre">add_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.SymbolTable.add_symbol" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>add_symbol(self: _kaldifst.SymbolTable, symbol: str, key: int) -&gt; int</p></li>
+</ol>
+<p>Adds a symbol with given key to table. A symbol table also keeps track of the last available key (highest key value in the symbol table).</p>
+<ol class="arabic simple" start="2">
+<li><p>add_symbol(self: _kaldifst.SymbolTable, symbol: str) -&gt; int</p></li>
+</ol>
+<p>Adds a symbol to the table. The associated value key is automatically assigned by the symbol table.</p>
+</dd></dl>
+
+</section>
+<section id="find">
+<h3>find<a class="headerlink" href="#find" title="Permalink to this headline"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="kaldifst.SymbolTable.find">
+<span class="sig-prename descclassname"><span class="pre">SymbolTable.</span></span><span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.SymbolTable.find" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>find(self: _kaldifst.SymbolTable, key: int) -&gt; str</p></li>
+</ol>
+<p>Returns the string associated with the key; if the key is out ofrange (&lt;0, &gt;max), returns an empty string.</p>
+<ol class="arabic simple" start="2">
+<li><p>find(self: _kaldifst.SymbolTable, symbol: str) -&gt; int</p></li>
+</ol>
+<p>Returns the key associated with the symbol; if the symbol does not exist, kNoSymbol is returned.</p>
+<ol class="arabic simple" start="3">
+<li><p>find(self: _kaldifst.SymbolTable, symbol: str) -&gt; int</p></li>
+</ol>
+<p>Returns the key associated with the symbol; if the symbol does not exist, kNoSymbol is returned.</p>
+</dd></dl>
+
+</section>
+<section id="check-sum">
+<h3>check_sum<a class="headerlink" href="#check-sum" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.SymbolTable.check_sum">
+<span class="sig-prename descclassname"><span class="pre">SymbolTable.</span></span><span class="sig-name descname"><span class="pre">check_sum</span></span><a class="headerlink" href="#kaldifst.SymbolTable.check_sum" title="Permalink to this definition"></a></dt>
+<dd><p>Return the label-agnostic MD5 check-sum for this table. All new symbols added to the table will result in an updated checksum. Deprecated.</p>
+</dd></dl>
+
+</section>
+<section id="labeled-check-sum">
+<h3>labeled_check_sum<a class="headerlink" href="#labeled-check-sum" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.SymbolTable.labeled_check_sum">
+<span class="sig-prename descclassname"><span class="pre">SymbolTable.</span></span><span class="sig-name descname"><span class="pre">labeled_check_sum</span></span><a class="headerlink" href="#kaldifst.SymbolTable.labeled_check_sum" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <cite>check_sum</cite>, but returns an label-dependent version.</p>
+</dd></dl>
+
+</section>
+<section id="name">
+<h3>name<a class="headerlink" href="#name" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.SymbolTable.name">
+<span class="sig-prename descclassname"><span class="pre">SymbolTable.</span></span><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#kaldifst.SymbolTable.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="tropicalweight">
+<h2>TropicalWeight<a class="headerlink" href="#tropicalweight" title="Permalink to this headline"></a></h2>
+<section id="id12">
+<h3>value<a class="headerlink" href="#id12" title="Permalink to this headline"></a></h3>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.TropicalWeight.value">
+<span class="sig-prename descclassname"><span class="pre">TropicalWeight.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.TropicalWeight.value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Python API reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Fangjun Kuang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
