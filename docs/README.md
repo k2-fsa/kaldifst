@@ -2,7 +2,7 @@
 ## Usage
 
 ```bash
-cd /path/to/sherpa/docs
+cd /path/to/kaldifst/docs
 pip install -r requirements.txt
 make clean
 make html
