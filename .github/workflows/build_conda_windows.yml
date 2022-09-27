@@ -20,10 +20,21 @@ name: build_conda_windows
 
 on:
   push:
-    branches:
-      - conda
     tags:
       - '*'
+    paths:
+      - '.github/workflows/build_conda_windows.yml'
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - 'scripts/build_conda.sh'
+      - 'scripts/conda/**'
+      - 'kaldifst/csrc/**'
+      - 'kaldifst/python/**'
+      - 'setup.py'
+
+concurrency:
+  group: build_conda_windows-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build_conda_windows:

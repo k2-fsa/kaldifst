@@ -4,9 +4,27 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '.github/workflows/build-windows.yml'
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - 'kaldifst/csrc/**'
+      - 'kaldifst/python/**'
+      - 'setup.py'
   pull_request:
     branches:
       - master
+    paths:
+      - '.github/workflows/build-windows.yml'
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - 'kaldifst/csrc/**'
+      - 'kaldifst/python/**'
+      - 'setup.py'
+
+concurrency:
+  group: build-windows-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-windows:
