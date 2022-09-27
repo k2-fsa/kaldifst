@@ -2,6 +2,10 @@
 
 function(download_openfst)
   if(CMAKE_VERSION VERSION_LESS 3.11)
+    # FetchContent is available since 3.11,
+    # we've copied it to ${CMAKE_SOURCE_DIR}/cmake/Modules
+    # so that it can be used in lower CMake versions.
+    message(STATUS "Use FetchContent provided by kaldifst")
     list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
   endif()
 
@@ -44,7 +48,7 @@ function(download_openfst)
 
   FetchContent_GetProperties(openfst)
   if(NOT openfst_POPULATED)
-    message(STATUS "Downloading openfst")
+    message(STATUS "Downloading openfst ${openfst_URL}")
     FetchContent_Populate(openfst)
   endif()
   message(STATUS "openfst is downloaded to ${openfst_SOURCE_DIR}")
@@ -54,6 +58,11 @@ function(download_openfst)
   # Rename libfst.so.6 to libkaldifst_fst.so.6 to avoid potential conflicts
   # when kaldifst is installed.
   set_target_properties(fst PROPERTIES OUTPUT_NAME "kaldifst_fst")
+  set_target_properties(fstscript PROPERTIES OUTPUT_NAME "kaldifst_fstscript")
+
+  install(TARGETS fst fstscript
+    DESTINATION lib
+  )
 
 endfunction()
 

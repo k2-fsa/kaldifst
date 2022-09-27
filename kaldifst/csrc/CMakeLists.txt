@@ -15,6 +15,17 @@ set(srcs
 add_library(kaldifst_core ${srcs})
 target_link_libraries(kaldifst_core PUBLIC fst)
 
+if(APPLE)
+  execute_process(
+    COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    OUTPUT_VARIABLE PYTHON_SITE_PACKAGE_DIR
+  )
+  message(STATUS "PYTHON_SITE_PACKAGE_DIR: ${PYTHON_SITE_PACKAGE_DIR}")
+  target_link_libraries(kaldifst_core PUBLIC "-L ${PYTHON_SITE_PACKAGE_DIR}/../..")
+endif()
+
+
 function(kaldifst_add_test source)
   get_filename_component(name ${source} NAME_WE)
   add_executable(${name} "${source}")
@@ -41,3 +52,7 @@ if(KALDIFST_BUILD_TESTS)
     kaldifst_add_test(${source})
   endforeach()
 endif()
+
+install(TARGETS kaldifst_core
+  DESTINATION lib
+)
