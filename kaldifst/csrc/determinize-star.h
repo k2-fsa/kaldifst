@@ -36,9 +36,10 @@ namespace fst {
     reaching the 'max-states' limit, and a partial FST was generated.
 */
 template <class F>
-bool DeterminizeStar(F &ifst, MutableFst<typename F::Arc> *ofst,
-                     float delta = kDelta, bool *debug_ptr = NULL,
-                     int max_states = -1, bool allow_partial = false);
+bool DeterminizeStar(F &ifst,  // NOLINT
+                     MutableFst<typename F::Arc> *ofst, float delta = kDelta,
+                     bool *debug_ptr = NULL, int max_states = -1,
+                     bool allow_partial = false);
 }  // namespace fst
 
 #include "kaldifst/csrc/determinize-star-inl.h"

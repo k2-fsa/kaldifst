@@ -8,7 +8,7 @@
 
 namespace kaldifst {
 
-static void PybindTropicalWeight(py::module &m) {
+static void PybindTropicalWeight(py::module &m) {  // NOLINT
   using PyClass = fst::TropicalWeight;
   py::class_<PyClass, fst::FloatWeight>(m, "TropicalWeight")
       .def(py::init<>())
@@ -40,7 +40,7 @@ static void PybindTropicalWeight(py::module &m) {
   });
 }
 
-void PybindFloatWeight(py::module &m) {
+void PybindFloatWeight(py::module &m) {  // NOLINT
   using PyClass = fst::FloatWeight;
   py::class_<PyClass>(m, "FloatWeight")
       .def(py::init<>())

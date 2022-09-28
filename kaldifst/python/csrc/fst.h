@@ -5,16 +5,20 @@
 #ifndef KALDIFST_PYTHON_CSRC_FST_H_
 #define KALDIFST_PYTHON_CSRC_FST_H_
 
+#include <memory>
+#include <string>
+
 #include "fst/fst.h"
 #include "fst/script/print.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 
-void PybindFst(py::module &m);
+void PybindFst(py::module &m);  // NOLINT
 
 template <typename A>
-void PybindStateIteratorBaseImpl(py::module &m, const std::string &class_name,
+void PybindStateIteratorBaseImpl(py::module &m,  // NOLINT
+                                 const std::string &class_name,
                                  const std::string &class_help_doc = "") {
   using PyClass = fst::StateIteratorBase<A>;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
@@ -26,7 +30,8 @@ void PybindStateIteratorBaseImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename A>
-void PybindStateIteratorDataImpl(py::module &m, const std::string &class_name,
+void PybindStateIteratorDataImpl(py::module &m,  // NOLINT
+                                 const std::string &class_name,
                                  const std::string &class_help_doc = "") {
   using PyClass = fst::StateIteratorData<A>;
   py::class_<PyClass, std::unique_ptr<PyClass, py::nodelete>>(
@@ -39,7 +44,8 @@ void PybindStateIteratorDataImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename A>
-void PybindArcIteratorBaseImpl(py::module &m, const std::string &class_name,
+void PybindArcIteratorBaseImpl(py::module &m,  // NOLINT
+                               const std::string &class_name,
                                const std::string &class_help_doc = "") {
   using PyClass = fst::ArcIteratorBase<A>;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
@@ -58,7 +64,8 @@ void PybindArcIteratorBaseImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename A>
-void PybindArcIteratorDataImpl(py::module &m, const std::string &class_name,
+void PybindArcIteratorDataImpl(py::module &m,  // NOLINT
+                               const std::string &class_name,
                                const std::string &class_help_doc = "") {
   using PyClass = fst::ArcIteratorData<A>;
   py::class_<PyClass, std::unique_ptr<PyClass, py::nodelete>>(
@@ -73,7 +80,8 @@ void PybindArcIteratorDataImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename FST>
-void PybindStateIteratorImpl(py::module &m, const std::string &class_name,
+void PybindStateIteratorImpl(py::module &m,  // NOLINT
+                             const std::string &class_name,
                              const std::string &class_help_doc = "") {
   using PyClass = fst::StateIterator<FST>;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
@@ -85,7 +93,8 @@ void PybindStateIteratorImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename FST>
-void PybindArcIteratorImpl(py::module &m, const std::string &class_name,
+void PybindArcIteratorImpl(py::module &m,  // NOLINT
+                           const std::string &class_name,
                            const std::string &class_help_doc = "") {
   using PyClass = fst::ArcIterator<FST>;
   using StateId = typename FST::StateId;
@@ -103,7 +112,8 @@ void PybindArcIteratorImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename A>
-void PybindFst(py::module &m, const std::string &class_name,
+void PybindFst(py::module &m,  // NOLINT
+               const std::string &class_name,
                const std::string &class_help_doc = "") {
   using PyClass = fst::Fst<A>;
   using Arc = typename PyClass::Arc;
@@ -214,11 +224,11 @@ void PybindFst(py::module &m, const std::string &class_name,
           py::arg("is_acceptor") = false, py::arg("show_weight_one") = false,
           py::arg("fst_field_separator") = "      ",
           py::arg("missing_symbol") = "", py::arg("dest") = "stardard output");
-  ;
 }
 
 template <typename A>
-void PybindFstImpl(py::module &m, const std::string &class_name,
+void PybindFstImpl(py::module &m,  // NOLINT
+                   const std::string &class_name,
                    const std::string &class_help_doc = "") {
   using PyClass = fst::internal::FstImpl<A>;
 
@@ -253,7 +263,8 @@ void PybindFstImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename Impl, typename FST = fst::Fst<typename Impl::Arc>>
-void PybindImplToFst(py::module &m, const std::string &class_name,
+void PybindImplToFst(py::module &m,  // NOLINT
+                     const std::string &class_name,
                      const std::string &class_help_doc = "") {
   using PyClass = fst::ImplToFst<Impl, FST>;
   using Parent = FST;

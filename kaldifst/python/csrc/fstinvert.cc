@@ -8,8 +8,8 @@
 
 namespace kaldifst {
 
-void PybindFstInvert(py::module &m) {
-  m.def("invert",  // in-place
+void PybindFstInvert(py::module &m) {  // NOLINT
+  m.def("invert",                      // in-place
         [](fst::MutableFst<fst::StdArc> *in_out) { fst::Invert(in_out); });
 }
 

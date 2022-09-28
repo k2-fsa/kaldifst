@@ -5,10 +5,11 @@
 #include "kaldifst/csrc/fstext-utils.h"
 
 #include "kaldifst/python/csrc/fstarcsort.h"
+#include "kaldifst/python/csrc/fstext-utils.h"
 
 namespace kaldifst {
 
-void PybindFstExtUtils(py::module &m) {
+void PybindFstExtUtils(py::module &m) {  // NOLINT
   m.def(
       "minimize_encoded",
       [](fst::MutableFst<fst::StdArc> *in_out, double delta = fst::kDelta) {

@@ -5,12 +5,14 @@
 #ifndef KALDIFST_PYTHON_CSRC_FSTDRAW_H_
 #define KALDIFST_PYTHON_CSRC_FSTDRAW_H_
 
+#include <string>
+
 #include "fst/script/draw.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 
-void PybindFstDraw(py::module &m);
+void PybindFstDraw(py::module &m);  // NOLINT
 
 struct FstDrawParams {
   // Input in acceptor format
@@ -68,7 +70,8 @@ std::string FstDrawImpl(const fst::script::FstClass &fst,
                         const FstDrawParams &params);
 
 template <typename A>
-void PybindFstDraw(py::module &m, const char *doc = "") {
+void PybindFstDraw(py::module &m,  // NOLINT
+                   const char *doc = "") {
   using PyClass = fst::Fst<A>;
 
   m.def(

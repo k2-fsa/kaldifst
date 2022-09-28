@@ -10,7 +10,7 @@
 
 namespace kaldifst {
 
-void PybindVectorFst(py::module &m) {
+void PybindVectorFst(py::module &m) {  // NOLINT
   PybindVectorState<fst::StdArc>(m, "_StdVectorState");
   PybindVectorFstBaseImpl<fst::VectorState<fst::StdArc>>(
       m, "_StdVectorFstBaseImpl");

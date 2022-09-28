@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindFstInvert(py::module &m);
+void PybindFstInvert(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

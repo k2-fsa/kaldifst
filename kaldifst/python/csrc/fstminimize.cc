@@ -2,6 +2,8 @@
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+#include "kaldifst/python/csrc/fstminimize.h"
+
 #include "fst/minimize.h"
 #include "fst/shortest-distance.h"
 #include "kaldifst/csrc/log.h"
@@ -9,7 +11,7 @@
 
 namespace kaldifst {
 
-void PybindFstMinimize(py::module &m) {
+void PybindFstMinimize(py::module &m) {  // NOLINT
   m.def(
       "minimize",
       [](fst::MutableFst<fst::StdArc> *in_out, double delta = 1e-6,

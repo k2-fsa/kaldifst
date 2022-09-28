@@ -4,11 +4,13 @@
 
 #include "kaldifst/python/csrc/fst.h"
 
+#include <string>
+
 #include "fst/fst.h"
 
 namespace kaldifst {
 
-static void PybindFstHeader(py::module &m) {
+static void PybindFstHeader(py::module &m) {  // NOLINT
   using PyClass = fst::FstHeader;
   py::class_<PyClass>(m, "FstHeader")
       .def(py::init<>())
@@ -23,7 +25,7 @@ static void PybindFstHeader(py::module &m) {
       .def("__str__", &PyClass::DebugString);
 }
 
-static void PybindFstWriteOptions(py::module &m) {
+static void PybindFstWriteOptions(py::module &m) {  // NOLINT
   using PyClass = fst::FstWriteOptions;
   py::class_<PyClass>(m, "FstWriteOptions")
       .def_readwrite("source", &PyClass::source, "Where you're writing to.")
@@ -53,7 +55,7 @@ static void PybindFstWriteOptions(py::module &m) {
       });
 }
 
-static void PybindFstReadOptions(py::module &m) {
+static void PybindFstReadOptions(py::module &m) {  // NOLINT
   using PyClass = fst::FstReadOptions;
   auto fst_read_options =
       py::class_<fst::FstReadOptions>(m, "FstReadOptions")
@@ -103,7 +105,7 @@ static void PybindFstReadOptions(py::module &m) {
       .value("MAP", fst::FstReadOptions::FileReadMode::MAP)
       .export_values();
 }
-void PybindMatchType(py::module &m) {
+void PybindMatchType(py::module &m) {  // NOLINT
   py::enum_<fst::MatchType>(m, "MatchType", py::arithmetic(),
                             "Specifies matcher action.")
       .value("MATCH_INPUT", fst::MatchType::MATCH_INPUT, "Match input label.")
@@ -117,7 +119,7 @@ void PybindMatchType(py::module &m) {
       .export_values();
 }
 
-void PybindFst(py::module &m) {
+void PybindFst(py::module &m) {  // NOLINT
   PybindFstHeader(m);
   PybindFstWriteOptions(m);
   PybindFstReadOptions(m);

@@ -4,12 +4,16 @@
 
 #include "kaldifst/python/csrc/arc.h"
 
+#include <memory>
+#include <string>
+
 #include "fst/arc.h"
 
 namespace kaldifst {
 
 template <typename W>
-static void PybindArcImpl(py::module &m, const std::string &class_name,
+static void PybindArcImpl(py::module &m,  // NOLINT
+                          const std::string &class_name,
                           const std::string &class_help_doc = "") {
   using PyClass = fst::ArcTpl<W>;
   using Weight = typename PyClass::Weight;
@@ -53,7 +57,7 @@ static void PybindArcImpl(py::module &m, const std::string &class_name,
           py::return_value_policy::reference);
 }
 
-void PybindArc(py::module &m) {
+void PybindArc(py::module &m) {  // NOLINT
   PybindArcImpl<fst::TropicalWeight>(m, "StdArc");
 }
 

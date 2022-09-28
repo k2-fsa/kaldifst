@@ -9,8 +9,8 @@
 //           2014  Telepoint Global Hosting Service, LLC.
 //                 (Author: David Snyder)
 
-#ifndef KALDIFST_CSRC_KALDI_FSTEXT_UTILS_INL_H_
-#define KALDIFST_CSRC_KALDI_FSTEXT_UTILS_INL_H_
+#ifndef KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
+#define KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 
 #include "kaldifst/csrc/determinize-star.h"
 
@@ -37,4 +37,4 @@ inline bool DeterminizeStarInLog(VectorFst<StdArc> *fst, float delta,
   return status;
 }
 }  // namespace fst
-#endif  // KALDIFST_CSRC_KALDI_FSTEXT_UTILS_INL_H_
+#endif  // KALDIFST_CSRC_FSTEXT_UTILS_INL_H_

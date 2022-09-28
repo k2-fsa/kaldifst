@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindFstMinimize(py::module &m);
+void PybindFstMinimize(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

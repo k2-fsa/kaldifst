@@ -9,6 +9,8 @@
 #ifndef KALDIFST_CSRC_KALDI_TABLE_H_
 #define KALDIFST_CSRC_KALDI_TABLE_H_
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "kaldifst/csrc/kaldi-holder.h"
 

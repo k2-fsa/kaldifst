@@ -6,6 +6,7 @@ all:
 	$(MAKE) -C determinize
 	$(MAKE) -C determinizestar
 	$(MAKE) -C draw
+	$(MAKE) -C connect
 
 clean:
 	$(MAKE) -C fstcompile clean
@@ -14,3 +15,4 @@ clean:
 	$(MAKE) -C determinize clean
 	$(MAKE) -C determinizestar clean
 	$(MAKE) -C draw clean
+	$(MAKE) -C connect clean

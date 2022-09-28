@@ -5,16 +5,20 @@
 #ifndef KALDIFST_PYTHON_CSRC_VECTOR_FST_H_
 #define KALDIFST_PYTHON_CSRC_VECTOR_FST_H_
 
+#include <string>
+#include <vector>
+
 #include "fst/fst.h"
 #include "fst/vector-fst.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 
-void PybindVectorFst(py::module &m);
+void PybindVectorFst(py::module &m);  // NOLINT
 
 template <typename A>
-void PybindVectorState(py::module &m, const std::string &class_name,
+void PybindVectorState(py::module &m,  // NOLINT
+                       const std::string &class_name,
                        const std::string &class_help_doc = "") {
   using PyClass = fst::VectorState<A>;
 
@@ -25,7 +29,8 @@ void PybindVectorState(py::module &m, const std::string &class_name,
 }
 
 template <typename S>
-void PybindVectorFstBaseImpl(py::module &m, const std::string &class_name,
+void PybindVectorFstBaseImpl(py::module &m,  // NOLINT
+                             const std::string &class_name,
                              const std::string &class_help_doc = "") {
   using PyClass = fst::internal::VectorFstBaseImpl<S>;
   using Parent = fst::internal::FstImpl<typename S::Arc>;
@@ -57,7 +62,8 @@ void PybindVectorFstBaseImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename S>
-void PybindVectorFstImpl(py::module &m, const std::string &class_name,
+void PybindVectorFstImpl(py::module &m,  // NOLINT
+                         const std::string &class_name,
                          const std::string &class_help_doc = "") {
   using PyClass = fst::internal::VectorFstImpl<S>;
   using Parent = fst::internal::VectorFstBaseImpl<S>;
@@ -68,7 +74,8 @@ void PybindVectorFstImpl(py::module &m, const std::string &class_name,
 }
 
 template <typename A, typename S = fst::VectorState<A>>
-void PybindVectorFst(py::module &m, const std::string &class_name,
+void PybindVectorFst(py::module &m,  // NOLINT
+                     const std::string &class_name,
                      const std::string &class_help_doc = "") {
   using PyClass = fst::VectorFst<A>;
   using Parent = fst::ImplToMutableFst<fst::internal::VectorFstImpl<S>>;
@@ -84,7 +91,8 @@ void PybindVectorFst(py::module &m, const std::string &class_name,
 }
 
 template <typename Arc, typename State>
-void PybindStateIteratorVectorFst(py::module &m, const std::string &class_name,
+void PybindStateIteratorVectorFst(py::module &m,  // NOLINT
+                                  const std::string &class_name,
                                   const std::string &class_help_doc = "") {
   using PyClass = fst::StateIterator<fst::VectorFst<Arc, State>>;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
@@ -96,7 +104,8 @@ void PybindStateIteratorVectorFst(py::module &m, const std::string &class_name,
 }
 
 template <typename Arc, typename State>
-void PybindArcIteratorVectorFst(py::module &m, const std::string &class_name,
+void PybindArcIteratorVectorFst(py::module &m,  // NOLINT
+                                const std::string &class_name,
                                 const std::string &class_help_doc = "") {
   using PyClass = fst::ArcIterator<fst::VectorFst<Arc, State>>;
   using StateId = typename PyClass::StateId;

@@ -4,6 +4,10 @@
 
 #include "kaldifst/python/csrc/fstdeterminize.h"
 
+#include <memory>
+#include <string>
+#include <utility>
+
 #include "fst/determinize.h"
 #include "fst/script/determinize.h"
 #include "fst/script/getters.h"
@@ -63,7 +67,7 @@ Returns:
 
 namespace kaldifst {
 
-void PybindFstDeterminize(py::module &m) {
+void PybindFstDeterminize(py::module &m) {  // NOLINT
   m.def(
       "determinize",
       [](const fst::StdFst &ifst, double delta = fst::kDelta,

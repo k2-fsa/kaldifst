@@ -11,6 +11,7 @@
 #define KALDIFST_CSRC_KALDI_FST_IO_H_
 
 #include <string>
+#include <utility>
 
 #include "fst/fst.h"
 #include "fst/vector-fst.h"

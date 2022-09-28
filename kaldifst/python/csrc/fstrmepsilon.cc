@@ -4,13 +4,15 @@
 
 #include "kaldifst/python/csrc/fstrmepsilon.h"
 
+#include <string>
+
 #include "fst/script/getters.h"
 #include "fst/script/rmepsilon.h"
 #include "kaldifst/csrc/log.h"
 
 namespace kaldifst {
 
-void PybindFstRmEpsilon(py::module &m) {
+void PybindFstRmEpsilon(py::module &m) {  // NOLINT
   m.def(
       "rmepsilon",
       [](fst::MutableFst<fst::StdArc> *in_out, bool connect = true,

@@ -12,6 +12,7 @@
 #include "kaldifst/python/csrc/fst.h"
 #include "kaldifst/python/csrc/fstarcsort.h"
 #include "kaldifst/python/csrc/fstcompile.h"
+#include "kaldifst/python/csrc/fstconnect.h"
 #include "kaldifst/python/csrc/fstdeterminize.h"
 #include "kaldifst/python/csrc/fstdraw.h"
 #include "kaldifst/python/csrc/fstext-utils.h"
@@ -53,6 +54,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindDeterminizeStar(m);
   PybindFstRmEpsilon(m);
   PybindFstReverse(m);
+  PybindFstConnect(m);
 }
 
 }  // namespace kaldifst

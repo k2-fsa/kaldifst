@@ -10,6 +10,7 @@ pybind11_add_module(_kaldifst
   fst.cc
   fstarcsort.cc
   fstcompile.cc
+  fstconnect.cc
   fstdeterminize.cc
   fstdraw.cc
   fstext-utils.cc

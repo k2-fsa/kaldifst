@@ -8,6 +8,9 @@
 #ifndef KALDIFST_CSRC_TABLE_MATCHER_H_
 #define KALDIFST_CSRC_TABLE_MATCHER_H_
 
+#include <memory>
+#include <vector>
+
 #include "fst/fst-decl.h"
 #include "fst/fstlib.h"
 
@@ -145,9 +148,9 @@ class TableMatcherImpl : public MatcherBase<typename F::Arc> {
   }
 
   bool Find(Label match_label) {
-    if (!aiter_)
+    if (!aiter_) {
       return backoff_matcher_.Find(match_label);
-    else {
+    } else {
       match_label_ = match_label;
       current_loop_ = (match_label == 0);
       // kNoLabel means the implicit loop on the other FST --
@@ -170,29 +173,37 @@ class TableMatcherImpl : public MatcherBase<typename F::Arc> {
 
   void Next() {
     if (aiter_) {
-      if (current_loop_)
+      if (current_loop_) {
         current_loop_ = false;
-      else
+      } else {
         aiter_->Next();
-    } else
+      }
+    } else {
       backoff_matcher_.Next();
+    }
   }
 
   bool Done() const {
     if (aiter_ != NULL) {
-      if (current_loop_) return false;
-      if (aiter_->Done()) return true;
+      if (current_loop_) {
+        return false;
+      }
+      if (aiter_->Done()) {
+        return true;
+      }
       Label label = (match_type_ == MATCH_OUTPUT ? aiter_->Value().olabel
                                                  : aiter_->Value().ilabel);
       return (label != match_label_);
-    } else
+    } else {
       return backoff_matcher_.Done();
+    }
   }
   const Arc &Value() {
     if (aiter_ != NULL) {
       return (current_loop_ ? loop_ : aiter_->Value());
-    } else
+    } else {
       return backoff_matcher_.Value();
+    }
   }
 
   virtual TableMatcherImpl<FST> *Copy(bool safe = false) const {
@@ -332,7 +343,8 @@ template <class F>
 struct TableComposeCache {
   TableMatcher<F> *matcher;
   TableComposeOptions opts;
-  TableComposeCache(const TableComposeOptions &opts = TableComposeOptions())
+  explicit TableComposeCache(
+      const TableComposeOptions &opts = TableComposeOptions())
       : matcher(NULL), opts(opts) {}
   ~TableComposeCache() { delete (matcher); }
 };

@@ -65,12 +65,13 @@ RspecifierType ClassifyRspecifier(const std::string &rspecifier,
     const std::string &str = split_first_part[i];  // e.g. "b", "t", "f", "ark",
     // "scp".
     const char *c = str.c_str();
-    if (!strcmp(c, "b"))
-      ;  // Ignore this option.  It's so we can use the same
-    // specifiers for rspecifiers and wspecifiers.
-    else if (!strcmp(c, "t"))
-      ;  // Ignore this option too.
-    else if (!strcmp(c, "o")) {
+    if (!strcmp(c, "b")) {
+      // Ignore this option.  It's so we can use the same
+    } else if (!strcmp(c, "t")) {
+      // specifiers for rspecifiers and wspecifiers.
+      //
+      // Ignore this option too.
+    } else if (!strcmp(c, "o")) {
       if (opts) opts->once = true;
     } else if (!strcmp(c, "no")) {
       if (opts) opts->once = false;
