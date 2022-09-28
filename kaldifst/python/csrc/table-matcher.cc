@@ -14,6 +14,8 @@ This operation computes the composition of two transducers. If A transduces
 string x to y with weight a and B transduces y to z with weight b, then their
 composition transduces string x to z with weight a ⊗ b.
 
+See also `<https://www.openfst.org/twiki/bin/view/FST/ComposeDoc>`_
+
 .. caution::
 
   The output labels of the first transducer or the input labels of the

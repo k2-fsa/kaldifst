@@ -10,6 +10,7 @@
 static constexpr const char *kFstArcSortDoc = R"doc(
 Sort arcs of an FST **in-place**.
 
+See also `<https://www.openfst.org/twiki/bin/view/FST/ArcSortDoc>`_
 
 .. caution::
 

@@ -68,7 +68,7 @@ std::string FstDrawImpl(const fst::script::FstClass &fst,
                         const FstDrawParams &params);
 
 template <typename A>
-void PybindFstDraw(py::module &m) {
+void PybindFstDraw(py::module &m, const char *doc = "") {
   using PyClass = fst::Fst<A>;
 
   m.def(
@@ -111,7 +111,7 @@ void PybindFstDraw(py::module &m) {
       py::arg("portrait") = false, py::arg("vertical") = false,
       py::arg("fontsize") = 14, py::arg("height") = 11, py::arg("width") = 8.5,
       py::arg("nodesep") = 0.25, py::arg("ranksep") = 0.40,
-      py::arg("allow_negative_labels") = false);
+      py::arg("allow_negative_labels") = false, doc);
 }
 
 }  // namespace kaldifst

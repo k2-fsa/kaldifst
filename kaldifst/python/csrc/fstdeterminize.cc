@@ -9,6 +9,58 @@
 #include "fst/script/getters.h"
 #include "kaldifst/csrc/log.h"
 
+static constexpr const char *kFstDeterminizeDoc = R"doc(
+This operation determinizes a weighted transducer.
+
+The result will be an equivalent FST that has the property that no state has
+two transitions with the same input label. For this algorithm, epsilon
+transitions are treated as regular symbols (cf. RmEpsilon).
+
+See also `<https://www.openfst.org/twiki/bin/view/FST/DeterminizeDoc>`_
+
+Args:
+  ifst:
+    The input FST.
+  delta:
+    Comparison/quantization delta.
+  det_type:
+    Type of determinization: "functional", "nonfunctional", "disambiguate".
+  increment_subsequential_label:
+    Increment subsequential_label to obtain distinct labels for  subsequential
+    arcs at a given state
+  nstate:
+    State number threshold
+  subsequential_label:
+    Input label of arc corresponding to residual final output when producing a
+    subsequential transducer
+  weight:
+    Weight threshold
+
+Returns:
+  Return the determinized FST.
+
+**Example 1: Determinize a transducer**
+
+.. literalinclude:: ./code/determinize/ex.py
+   :language: python
+   :linenos:
+   :caption: Determinize a transducer.
+
+.. figure:: ./code/determinize/transducer.svg
+    :alt: transducer.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of transducer.svg (before determinization)
+
+.. figure:: ./code/determinize/transducer2.svg
+    :alt: transducer2.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of transducer2.svg (after determinization)
+)doc";
+
 namespace kaldifst {
 
 void PybindFstDeterminize(py::module &m) {
@@ -47,7 +99,7 @@ void PybindFstDeterminize(py::module &m) {
       py::arg("det_type") = "functional",
       py::arg("increment_subsequential_label") = false,
       py::arg("nstate") = fst::kNoStateId, py::arg("subsequential_label") = 0,
-      py::arg("weight") = "");
+      py::arg("weight") = "", kFstDeterminizeDoc);
 }
 
 }  // namespace kaldifst
