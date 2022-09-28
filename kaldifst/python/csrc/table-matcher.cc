@@ -4,6 +4,10 @@
 
 #include "kaldifst/python/csrc/table-matcher.h"
 
+#include <memory>
+#include <string>
+#include <utility>
+
 #include "kaldifst/csrc/log.h"
 #include "kaldifst/csrc/table-matcher.h"
 
@@ -69,7 +73,7 @@ Returns:
 namespace kaldifst {
 
 template <class Arc>
-static void PybindFstTableComposeTpl(py::module &m) {
+static void PybindFstTableComposeTpl(py::module &m) {  // NOLINT
   m.def(
       "compose",
       [](const fst::Fst<Arc> &fst1, const fst::Fst<Arc> &fst2,
@@ -117,7 +121,7 @@ static void PybindFstTableComposeTpl(py::module &m) {
       kFstArcSortDoc);
 }
 
-void PybindFstTableCompose(py::module &m) {
+void PybindFstTableCompose(py::module &m) {  // NOLINT
   PybindFstTableComposeTpl<fst::StdArc>(m);
 }
 

@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindArc(py::module &m);
+void PybindArc(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

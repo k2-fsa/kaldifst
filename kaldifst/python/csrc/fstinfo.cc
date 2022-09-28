@@ -6,6 +6,8 @@
 
 namespace kaldifst {
 
-void PybindFstInfo(py::module &m) { PybindFstInfo<fst::StdArc>(m); }
+void PybindFstInfo(py::module &m) {  // NOLINT
+  PybindFstInfo<fst::StdArc>(m);
+}
 
 }  // namespace kaldifst

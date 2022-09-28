@@ -5,15 +5,18 @@
 #ifndef KALDIFST_PYTHON_CSRC_FSTINFO_H_
 #define KALDIFST_PYTHON_CSRC_FSTINFO_H_
 
+#include <string>
+
 #include "fst/script/info.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 
-void PybindFstInfo(py::module &m);
+void PybindFstInfo(py::module &m);  // NOLINT
 
 template <typename A>
-void PybindFstInfo(py::module &m, const std::string &class_help_doc = "") {
+void PybindFstInfo(py::module &m,  // NOLINT
+                   const std::string &class_help_doc = "") {
   using PyClass = fst::Fst<A>;
   m.def(
       "info",

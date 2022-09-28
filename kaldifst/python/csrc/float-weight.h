@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindFloatWeight(py::module &m);
+void PybindFloatWeight(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

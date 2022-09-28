@@ -8,7 +8,7 @@
 
 namespace kaldifst {
 
-void PybindExpandedFst(py::module &m) {
+void PybindExpandedFst(py::module &m) {  // NOLINT
   PybindExpandedFst<fst::StdArc>(m, "StdExpandedFst");
   //
 }

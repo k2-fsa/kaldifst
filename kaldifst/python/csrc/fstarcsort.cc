@@ -4,6 +4,8 @@
 
 #include "kaldifst/python/csrc/fstarcsort.h"
 
+#include <string>
+
 #include "fst/arcsort.h"
 #include "kaldifst/csrc/log.h"
 
@@ -90,7 +92,7 @@ Returns:
 
 namespace kaldifst {
 
-void PybindFstArcSort(py::module &m) {
+void PybindFstArcSort(py::module &m) {  // NOLINT
   m.def(
       "arcsort",
       [](fst::MutableFst<fst::StdArc> *in_out,

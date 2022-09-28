@@ -5,26 +5,29 @@
 #ifndef KALDIFST_PYTHON_CSRC_MUTABLE_FST_H_
 #define KALDIFST_PYTHON_CSRC_MUTABLE_FST_H_
 
+#include <string>
+#include <vector>
+
 #include "fst/mutable-fst.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 
-void PybindMutableFst(py::module &m);
+void PybindMutableFst(py::module &m);  // NOLINT
 
 template <typename A>
-void PybindMutableArcIteratorBase(py::module &m, const std::string &class_name,
+void PybindMutableArcIteratorBase(py::module &m,  // NOLINT
+                                  const std::string &class_name,
                                   const std::string &class_help_doc = "") {
   using PyClass = fst::MutableArcIteratorBase<A>;
   using Parent = fst::ArcIteratorBase<A>;
   py::class_<PyClass, Parent>(m, class_name.c_str(), class_help_doc.c_str())
-      .def_property("value", &PyClass::Value, &PyClass::SetValue)
-      //
-      ;
+      .def_property("value", &PyClass::Value, &PyClass::SetValue);
 }
 
 template <typename FST>
-void PybindMutableArcIterator(py::module &m, const std::string &class_name,
+void PybindMutableArcIterator(py::module &m,  // NOLINT
+                              const std::string &class_name,
                               const std::string &class_help_doc = "") {
   using PyClass = fst::MutableArcIterator<FST>;
   using StateId = typename PyClass::StateId;
@@ -41,7 +44,8 @@ void PybindMutableArcIterator(py::module &m, const std::string &class_name,
 }
 
 template <typename A>
-void PybindMutableFst(py::module &m, const std::string &class_name,
+void PybindMutableFst(py::module &m,  // NOLINT
+                      const std::string &class_name,
                       const std::string &class_help_doc = "") {
   using PyClass = fst::MutableFst<A>;
   using Parent = fst::ExpandedFst<A>;
@@ -86,7 +90,8 @@ void PybindMutableFst(py::module &m, const std::string &class_name,
 }
 
 template <class Impl, class FST = fst::MutableFst<typename Impl::Arc>>
-void PybindImplToMutableFst(py::module &m, const std::string &class_name,
+void PybindImplToMutableFst(py::module &m,  // NOLINT
+                            const std::string &class_name,
                             const std::string &class_help_doc = "") {
   using PyClass = fst::ImplToMutableFst<Impl, FST>;
   using Parent = fst::ImplToExpandedFst<Impl, FST>;

@@ -9,8 +9,8 @@
 //                2014  Telepoint Global Hosting Service, LLC. (Author: David
 //                Snyder)
 
-#ifndef KALDIFST_CSRC_KALDI_FSTEXT_UTILS_H_
-#define KALDIFST_CSRC_KALDI_FSTEXT_UTILS_H_
+#ifndef KALDIFST_CSRC_FSTEXT_UTILS_H_
+#define KALDIFST_CSRC_FSTEXT_UTILS_H_
 
 #include "fst/fst.h"
 #include "fst/map.h"
@@ -41,4 +41,4 @@ inline bool DeterminizeStarInLog(VectorFst<StdArc> *fst, float delta = kDelta,
 
 #include "kaldifst/csrc/fstext-utils-inl.h"
 
-#endif  // KALDIFST_CSRC_KALDI_FSTEXT_UTILS_H_
+#endif  // KALDIFST_CSRC_FSTEXT_UTILS_H_

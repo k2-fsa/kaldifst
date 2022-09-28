@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindFstTableCompose(py::module &m);
+void PybindFstTableCompose(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindFstRmEpsilon(py::module &m);
+void PybindFstRmEpsilon(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

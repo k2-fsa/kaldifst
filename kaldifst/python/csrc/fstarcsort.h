@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindFstArcSort(py::module &m);
+void PybindFstArcSort(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

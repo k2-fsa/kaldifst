@@ -61,11 +61,11 @@ OutputType ClassifyWxfilename(const std::string &filename) {
        last_char = (length == 0 ? '\0' : c[filename.length() - 1]);
 
   // if 'filename' is "" or "-", return kStandardOutput.
-  if (length == 0 || (length == 1 && first_char == '-'))
+  if (length == 0 || (length == 1 && first_char == '-')) {
     return kStandardOutput;
-  else if (first_char == '|')
+  } else if (first_char == '|') {
     return kPipeOutput;  // An output pipe like "|blah".
-  else if (isspace(first_char) || isspace(last_char) || last_char == '|') {
+  } else if (isspace(first_char) || isspace(last_char) || last_char == '|') {
     return kNoOutput;  // Leading or trailing space: can't interpret this.
                        // Final '|' would represent an input pipe, not an
                        // output pipe.
@@ -652,9 +652,9 @@ class OffsetFileInputImpl : public InputImplBase {
 
   bool Seek(size_t offset) {
     size_t cur_pos = is_.tellg();
-    if (cur_pos == offset)
+    if (cur_pos == offset) {
       return true;
-    else if (cur_pos < offset && cur_pos + 100 > offset) {
+    } else if (cur_pos < offset && cur_pos + 100 > offset) {
       // We're close enough that it may be faster to just
       // read that data, rather than seek.
       for (size_t i = cur_pos; i < offset; i++) is_.get();

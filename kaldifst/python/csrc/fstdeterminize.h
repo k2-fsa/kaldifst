@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindFstDeterminize(py::module &m);
+void PybindFstDeterminize(py::module &m);  // NOLINT
 
 }  // namespace kaldifst
 

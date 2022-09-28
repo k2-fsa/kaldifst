@@ -4,11 +4,14 @@
 
 #include "kaldifst/python/csrc/fstreverse.h"
 
+#include <memory>
+#include <utility>
+
 #include "fst/reverse.h"
 
 namespace kaldifst {
 
-void PybindFstReverse(py::module &m) {
+void PybindFstReverse(py::module &m) {  // NOLINT
   m.def(
       "reverse",
       [](const fst::StdFst &ifst, bool require_superinitial = true)

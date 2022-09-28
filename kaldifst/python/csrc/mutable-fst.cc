@@ -6,7 +6,7 @@
 
 namespace kaldifst {
 
-void PybindMutableFst(py::module &m) {
+void PybindMutableFst(py::module &m) {  // NOLINT
   PybindMutableFst<fst::StdArc>(m, "StdMutableFst");
 }
 

@@ -55,7 +55,7 @@ Returns:
 
 namespace kaldifst {
 
-void PybindDeterminizeStar(py::module &m) {
+void PybindDeterminizeStar(py::module &m) {  // NOLINT
   m.def(
       "determinize_star",
       [](fst::VectorFst<fst::StdArc> *in_out, float delta = fst::kDelta,

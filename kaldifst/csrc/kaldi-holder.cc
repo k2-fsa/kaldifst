@@ -8,6 +8,8 @@
 
 #include "kaldifst/csrc/kaldi-holder.h"
 
+#include <vector>
+
 #include "kaldifst/csrc/log.h"
 #include "kaldifst/csrc/text-utils.h"
 

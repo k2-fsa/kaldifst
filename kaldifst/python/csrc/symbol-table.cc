@@ -4,11 +4,14 @@
 
 #include "kaldifst/python/csrc/symbol-table.h"
 
+#include <utility>
+#include <vector>
+
 #include "fst/symbol-table.h"
 
 namespace kaldifst {
 
-static void PybindSymbolTableReadOptions(py::module &m) {
+static void PybindSymbolTableReadOptions(py::module &m) {  // NOLINT
   using PyClass = fst::SymbolTableReadOptions;
   py::class_<PyClass>(m, "SymbolTableReadOptions")
       .def(py::init<>())
@@ -19,7 +22,7 @@ static void PybindSymbolTableReadOptions(py::module &m) {
       .def_readwrite("source", &PyClass::source);
 }
 
-static void PybindSymbolTableTextOptions(py::module &m) {
+static void PybindSymbolTableTextOptions(py::module &m) {  // NOLINT
   using PyClass = fst::SymbolTableTextOptions;
   py::class_<PyClass>(m, "SymbolTableTextOptions")
       .def(py::init<bool>(), py::arg("allow_negative_labels") = false)
@@ -27,7 +30,7 @@ static void PybindSymbolTableTextOptions(py::module &m) {
       .def_readwrite("fst_field_separator", &PyClass::fst_field_separator);
 }
 
-void PybindSymbolTable(py::module &m) {
+void PybindSymbolTable(py::module &m) {  // NOLINT
   PybindSymbolTableReadOptions(m);
   PybindSymbolTableTextOptions(m);
   using PyClass = fst::SymbolTable;

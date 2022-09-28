@@ -9,7 +9,7 @@
 
 namespace kaldifst {
 
-void PybindConstFst(py::module &m) {
+void PybindConstFst(py::module &m) {  // NOLINT
   PybindConstFstImpl<fst::StdArc>(m, "_ConstFstImpl");
 
   PybindImplToFst<fst::internal::ConstFstImpl<fst::StdArc, uint32_t>,

@@ -5,15 +5,18 @@
 #ifndef KALDIFST_PYTHON_CSRC_CONST_FST_H_
 #define KALDIFST_PYTHON_CSRC_CONST_FST_H_
 
+#include <string>
+
 #include "fst/const-fst.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 
-void PybindConstFst(py::module &m);
+void PybindConstFst(py::module &m);  // NOLINT
 
 template <class A, class U = uint32_t>
-void PybindConstFstImpl(py::module &m, const std::string &class_name,
+void PybindConstFstImpl(py::module &m,  // NOLINT
+                        const std::string &class_name,
                         const std::string &class_help_doc = "") {
   using PyClass = fst::internal::ConstFstImpl<A, U>;
   using Parent = fst::internal::FstImpl<A>;
@@ -29,7 +32,8 @@ void PybindConstFstImpl(py::module &m, const std::string &class_name,
 }
 
 template <class A, class U = uint32_t>
-void PybindConstFst(py::module &m, const std::string &class_name,
+void PybindConstFst(py::module &m,  // NOLINT
+                    const std::string &class_name,
                     const std::string &class_help_doc = "") {
   using PyClass = fst::ConstFst<A, U>;
   using Parent = fst::ImplToExpandedFst<fst::internal::ConstFstImpl<A, U>>;
@@ -41,7 +45,8 @@ void PybindConstFst(py::module &m, const std::string &class_name,
 }
 
 template <typename Arc, typename U = uint32_t>
-void PybindStateIteratorConstFst(py::module &m, const std::string &class_name,
+void PybindStateIteratorConstFst(py::module &m,  // NOLINT
+                                 const std::string &class_name,
                                  const std::string &class_help_doc = "") {
   using PyClass = fst::StateIterator<fst::ConstFst<Arc, U>>;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
@@ -53,7 +58,8 @@ void PybindStateIteratorConstFst(py::module &m, const std::string &class_name,
 }
 
 template <typename Arc, typename U = uint32_t>
-void PybindArcIteratorConstFst(py::module &m, const std::string &class_name,
+void PybindArcIteratorConstFst(py::module &m,  // NOLINT
+                               const std::string &class_name,
                                const std::string &class_help_doc = "") {
   using PyClass = fst::ArcIterator<fst::ConstFst<Arc, U>>;
   using StateId = typename PyClass::StateId;

@@ -4,6 +4,10 @@
 
 #include "kaldifst/python/csrc/fstcompile.h"
 
+#include <memory>
+#include <string>
+#include <utility>
+
 #include "fst/script/compile.h"
 #include "kaldifst/csrc/log.h"
 
@@ -182,7 +186,7 @@ py::object FstCompileImpl(const FstCompileParams &params,
   }
 }
 
-void PybindFstCompile(py::module &m) {
+void PybindFstCompile(py::module &m) {  // NOLINT
   m.def(
       "compile",
       [](const std::string &s, bool acceptor = false,

@@ -4,6 +4,9 @@
 
 #include "kaldifst/python/csrc/fstdraw.h"
 
+#include <memory>
+#include <string>
+
 #include "kaldifst/csrc/log.h"
 
 static constexpr const char *kFstDrawDoc = R"doc(
@@ -135,7 +138,7 @@ std::string FstDrawImpl(const fst::script::FstClass &fst,
   return os.str();
 }
 
-void PybindFstDraw(py::module &m) {
+void PybindFstDraw(py::module &m) {  // NOLINT
   PybindFstDraw<fst::StdArc>(m, kFstDrawDoc);
 }
 
