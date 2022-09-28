@@ -75,7 +75,7 @@ class BuildExtension(build_ext):
                     "\nBuild kaldifst failed. Please check the error message.\n"
                     "You can ask for help by creating an issue on GitHub.\n"
                     "\nClick:\n"
-                    "    https://github.com/csukuangfj/kaldifst/issues/new\n"
+                    "    https://github.com/k2-fsa/kaldifst/issues/new\n"
                 )
             return
 
@@ -123,14 +123,14 @@ package_name = "kaldifst"
 setuptools.setup(
     name=package_name,
     version=get_package_version(),
-    author="Fangjun Kuang",
+    author="Next-gen Kaldi development team",
     author_email="csukuangfj@gmail.com",
     package_dir={
         package_name: "kaldifst/python/kaldifst",
         "kaldifst.utils": "kaldifst/python/kaldifst/utils",
     },
     packages=[package_name, "kaldifst.utils"],
-    url="https://github.com/csukuangfj/kaldifst",
+    url="https://github.com/k2-fsa/kaldifst",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",
     ext_modules=[cmake_extension("_kaldifst")],

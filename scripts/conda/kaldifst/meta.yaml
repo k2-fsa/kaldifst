@@ -24,7 +24,7 @@ requirements:
     - python
 
 about:
-  home: https://github.com/csukuangfj/kaldifst
+  home: https://github.com/k2-fsa/kaldifst
   license: Apache V2
   license_file: LICENSE
   summary: Python wrapper for OpenFST and its extensions from Kaldi

@@ -20,8 +20,8 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = "kaldifst"
-copyright = "2022, Fangjun Kuang"
-author = "Fangjun Kuang"
+copyright = "2022, Next-gen Kaldi development team"
+author = "Next-gen Kaldi development team"
 
 
 def get_version():
@@ -88,7 +88,7 @@ numfig = True
 
 html_context = {
     "display_github": True,
-    "github_user": "csukuangfj",
+    "github_user": "k2-fsa",
     "github_repo": "kaldifst",
     "github_version": "master",
     "conf_py_path": "/kaldifst/docs/source/",
@@ -104,7 +104,7 @@ html_theme_options = {
 }
 
 rst_epilog = """
-.. _kaldifst: https://github.com/csukuangfj/kaldifst
+.. _kaldifst: https://github.com/k2-fsa/kaldifst
 .. _OpenFst: https://www.openfst.org/
 .. _Kaldi: https://github.com/kaldi-asr/kaldi
 """
