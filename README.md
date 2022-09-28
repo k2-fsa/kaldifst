@@ -8,7 +8,7 @@ Kaldi to use this repo.
 
 ## Documentation
 
-Please refer to <https://csukuangfj.github.io/kaldifst>
+Please refer to <https://k2-fsa.github.io/kaldifst>
 for installation and usage.
 
 [openfst]: https://www.openfst.org/
