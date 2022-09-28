@@ -42,7 +42,7 @@ From source
 
 .. code-block::
 
-   git clone https://github.com/csukuangfj/kaldifst
+   git clone https://github.com/k2-fsa/kaldifst
    cd kaldifst
    python3 setup.py install
 

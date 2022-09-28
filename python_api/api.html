@@ -140,7 +140,7 @@
           <li><a href="index.html">Python API reference</a> &raquo;</li>
       <li>kaldifst</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/csukuangfj/kaldifst/blob/master/kaldifst/docs/source/python_api/api.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/k2-fsa/kaldifst/blob/master/kaldifst/docs/source/python_api/api.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -156,6 +156,7 @@
 <dt class="sig sig-object py" id="kaldifst.arcsort">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">arcsort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ilabel'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.arcsort" title="Permalink to this definition"></a></dt>
 <dd><p>Sort arcs of an FST <strong>in-place</strong>.</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/ArcSortDoc">https://www.openfst.org/twiki/bin/view/FST/ArcSortDoc</a></p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>The FST is modified in-place.</p>
@@ -464,6 +465,7 @@
 <p>This operation computes the composition of two transducers. If A transduces
 string x to y with weight a and B transduces y to z with weight b, then their
 composition transduces string x to z with weight a ⊗ b.</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/ComposeDoc">https://www.openfst.org/twiki/bin/view/FST/ComposeDoc</a></p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>The output labels of the first transducer or the input labels of the
@@ -571,7 +573,86 @@ second transducer must be <code class="docutils literal notranslate"><span class
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.determinize">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">determinize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0009765625</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">det_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'functional'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment_subsequential_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nstate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsequential_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdVectorFst</span></span></span><a class="headerlink" href="#kaldifst.determinize" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This operation determinizes a weighted transducer.</p>
+<p>The result will be an equivalent FST that has the property that no state has
+two transitions with the same input label. For this algorithm, epsilon
+transitions are treated as regular symbols (cf. RmEpsilon).</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/DeterminizeDoc">https://www.openfst.org/twiki/bin/view/FST/DeterminizeDoc</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifst</strong> – The input FST.</p></li>
+<li><p><strong>delta</strong> – Comparison/quantization delta.</p></li>
+<li><p><strong>det_type</strong> – Type of determinization: “functional”, “nonfunctional”, “disambiguate”.</p></li>
+<li><p><strong>increment_subsequential_label</strong> – Increment subsequential_label to obtain distinct labels for  subsequential
+arcs at a given state</p></li>
+<li><p><strong>nstate</strong> – State number threshold</p></li>
+<li><p><strong>subsequential_label</strong> – Input label of arc corresponding to residual final output when producing a
+subsequential transducer</p></li>
+<li><p><strong>weight</strong> – Weight threshold</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return the determinized FST.</p>
+</dd>
+</dl>
+<p><strong>Example 1: Determinize a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id35">
+<div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id35" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span><span class="s2">0 1 a p 1</span>
+<span class="linenos"> 7</span><span class="s2">0 2 a q 2</span>
+<span class="linenos"> 8</span><span class="s2">0 1 eps q 3</span>
+<span class="linenos"> 9</span><span class="s2">1 3 c r 5</span>
+<span class="linenos">10</span><span class="s2">1 3 c r 4</span>
+<span class="linenos">11</span><span class="s2">2 3 d s 6</span>
+<span class="linenos">12</span><span class="s2">3 0</span>
+<span class="linenos">13</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">16</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">17</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">23</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">24</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">26</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">,</span> <span class="n">osymbols</span><span class="o">=</span><span class="n">sym2</span><span class="p">)</span>
+<span class="linenos">29</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">30</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">33</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">34</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer.svg&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">determinize</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">39</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">40</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id36" style="width: 600px">
+<img alt="transducer.svg" src="../_images/transducer.svg" /><figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id36" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id37" style="width: 600px">
+<img alt="transducer2.svg" src="../_images/transducer22.svg" /><figcaption>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id37" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
 
 </section>
 <section id="determinize-star">
@@ -579,9 +660,86 @@ second transducer must be <code class="docutils literal notranslate"><span class
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.determinize_star">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">determinize_star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdVectorFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0009765625</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#kaldifst.determinize_star" title="Permalink to this definition"></a></dt>
-<dd><p>Caution, the return status is un-intuitive: this function will return
-false if determinization completed normally, and true if it was stopped
-early by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
+<dd><p>Removes epsilons and determinizes in one step.</p>
+<p>See also <a class="reference external" href="https://github.com/kaldi-asr/kaldi/blob/master/src/fstbin/fstdeterminizestar.cc">https://github.com/kaldi-asr/kaldi/blob/master/src/fstbin/fstdeterminizestar.cc</a></p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The input FST is modified in-place.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_out</strong> – The input/output FST. Note it is modified in-place.</p></li>
+<li><p><strong>delta</strong> – Delta value used to determine equivalence of weights.</p></li>
+<li><p><strong>max_states</strong> – Maximum number of states in determinized FST before it will abort.</p></li>
+<li><p><strong>use_log</strong> – Determinize in log semiring.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>this function will return <code class="docutils literal notranslate"><span class="pre">False</span></code>
+if determinization completed normally, and true if it was stopped early
+by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>The return status is un-intuitive</p>
+</dd>
+</dl>
+<p><strong>Example 1: Determinize a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id38">
+<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id38" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span><span class="s2">0 1 a p 1</span>
+<span class="linenos"> 7</span><span class="s2">0 2 a q 2</span>
+<span class="linenos"> 8</span><span class="s2">0 1 eps q 3</span>
+<span class="linenos"> 9</span><span class="s2">1 3 c r 5</span>
+<span class="linenos">10</span><span class="s2">1 3 c r 4</span>
+<span class="linenos">11</span><span class="s2">2 3 d s 6</span>
+<span class="linenos">12</span><span class="s2">3 0</span>
+<span class="linenos">13</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">16</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">17</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">23</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">24</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">26</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">,</span> <span class="n">osymbols</span><span class="o">=</span><span class="n">sym2</span><span class="p">)</span>
+<span class="linenos">29</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">30</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">33</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">34</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer.svg&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">determinize_star</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">39</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">40</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id39" style="width: 600px">
+<img alt="transducer.svg" src="../_images/transducer3.svg" /><figcaption>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id39" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id40" style="width: 600px">
+<img alt="transducer2.svg" src="../_images/transducer23.svg" /><figcaption>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id40" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 </dd></dl>
 
 </section>
@@ -598,7 +756,103 @@ early by reaching the ‘max-states’ limit, and a partial FST was generated.</
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.draw">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">osymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'g'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_weight_one</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portrait</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodesep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranksep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_negative_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#kaldifst.draw" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Prints FSTs in dot text format.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can use the Python package <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> to visualize it.</p>
+<p>You can also post the dot format output to
+<a class="reference external" href="https://dreampuf.github.io/GraphvizOnline/">https://dreampuf.github.io/GraphvizOnline/</a> to visualize it within
+your browser. You can also share the URL to others.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fst</strong> – The FST to be printed.</p></li>
+<li><p><strong>acceptor</strong> – Input in acceptor format</p></li>
+<li><p><strong>isymbols</strong> – Input label symbol table</p></li>
+<li><p><strong>osymbols</strong> – Output label symbol table</p></li>
+<li><p><strong>ssymbols</strong> – State label symbol table</p></li>
+<li><p><strong>numeric</strong> – Print numeric labels</p></li>
+<li><p><strong>precision</strong> – Set precision (number of char/float)</p></li>
+<li><p><strong>float_format</strong> – Floating-point format, one of: “e”, “f”, or “g”</p></li>
+<li><p><strong>show_weight_one</strong> – Print/draw arc weights and final weights equal to Weight::One()</p></li>
+<li><p><strong>title</strong> – Set figure title</p></li>
+<li><p><strong>portrait</strong> – Portrait mode (def: landscape)</p></li>
+<li><p><strong>vertical</strong> – Draw bottom-to-top instead of left-to-right</p></li>
+<li><p><strong>fontsize</strong> – Set fontsize</p></li>
+<li><p><strong>height</strong> – Set height</p></li>
+<li><p><strong>width</strong> – Set width</p></li>
+<li><p><strong>nodesep</strong> – Set minimum separation between nodes (see dot documentation)</p></li>
+<li><p><strong>ranksep</strong> – Set minimum separation between ranks (see dot documentation)</p></li>
+<li><p><strong>allow_negative_labels</strong> – Allow negative labels (not recommended; may cause conflicts)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a string.</p>
+</dd>
+</dl>
+<p><strong>Example 1: Draw a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id41">
+<div class="code-block-caption"><span class="caption-number">Listing 11 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id41" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span><span class="s2">0 1 a q 1</span>
+<span class="linenos"> 7</span><span class="s2">0 2 a r 2.5</span>
+<span class="linenos"> 8</span><span class="s2">1 1 c s 1</span>
+<span class="linenos"> 9</span><span class="s2">1 0</span>
+<span class="linenos">10</span><span class="s2">2 2.5</span>
+<span class="linenos">11</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">14</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">15</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">,</span> <span class="n">osymbols</span><span class="o">=</span><span class="n">sym2</span><span class="p">)</span>
+<span class="linenos">23</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">24</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">27</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;fst_dot.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="linenos">28</span>    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">31</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;fst.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id42">
+<div class="code-block-caption"><span class="caption-number">Listing 12 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id42" title="Permalink to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">digraph</span> <span class="n">FST</span> <span class="p">{</span>
+<span class="linenos"> 2</span><span class="n">rankdir</span> <span class="o">=</span> <span class="n">LR</span><span class="p">;</span>
+<span class="linenos"> 3</span><span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;8.5,11&quot;</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="n">center</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="linenos"> 5</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">Portrait</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="n">ranksep</span> <span class="o">=</span> <span class="s2">&quot;0.4&quot;</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="n">nodesep</span> <span class="o">=</span> <span class="s2">&quot;0.25&quot;</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="mi">0</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">circle</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="n">bold</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">]</span>
+<span class="linenos"> 9</span>	<span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;a:q/1&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">];</span>
+<span class="linenos">10</span>	<span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">2</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;a:r/2.5&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">];</span>
+<span class="linenos">11</span><span class="mi">1</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">doublecircle</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="n">solid</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">]</span>
+<span class="linenos">12</span>	<span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;c:s/1&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">];</span>
+<span class="linenos">13</span><span class="mi">2</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;2/2.5&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">doublecircle</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="n">solid</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">]</span>
+<span class="linenos">14</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id43" style="width: 600px">
+<img alt="fst.svg" src="../_images/fst.svg" /><figcaption>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id43" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
 
 </section>
 <section id="info">
@@ -1039,7 +1293,7 @@ initial mutation, which may not be constant time).</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Fangjun Kuang.</p>
+    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
