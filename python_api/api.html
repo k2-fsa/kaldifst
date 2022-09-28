@@ -47,6 +47,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#arcsort">arcsort</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compile">compile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compose">compose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connect">connect</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#determinize">determinize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#determinize-star">determinize_star</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#divide">divide</a></li>
@@ -568,6 +569,88 @@ second transducer must be <code class="docutils literal notranslate"><span class
 </dd></dl>
 
 </section>
+<section id="connect">
+<h2>connect<a class="headerlink" href="#connect" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.connect">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.connect" title="Permalink to this definition"></a></dt>
+<dd><p>This operation trims an FST, removing states and arcs that are not on
+successful paths.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The input FST is modified in-place.</p>
+</div>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/ConnectDoc">https://www.openfst.org/twiki/bin/view/FST/ConnectDoc</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_out</strong> – The FST to be connected. Note it is modified in-place.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+<p><strong>Example 1: Connect a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id35">
+<div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">Connect a transducer</span><a class="headerlink" href="#id35" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span><span class="s2">0 1 a p</span>
+<span class="linenos"> 7</span><span class="s2">1</span>
+<span class="linenos"> 8</span><span class="s2">1 2 b q</span>
+<span class="linenos"> 9</span><span class="s2">2 3 c r</span>
+<span class="linenos">10</span><span class="s2">3 4 f t</span>
+<span class="linenos">11</span><span class="s2">3 0 d s</span>
+<span class="linenos">12</span><span class="s2">5 0 f t</span>
+<span class="linenos">13</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">17</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">21</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos">24</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">26</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">27</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">28</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">,</span> <span class="n">osymbols</span><span class="o">=</span><span class="n">sym2</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">33</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">36</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">37</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;fst.svg&quot;</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">42</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">43</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;fst-connect.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id36" style="width: 600px">
+<img alt="fst.svg" src="../_images/fst.svg" /><figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Visualization of fst.svg (before connect)</span><a class="headerlink" href="#id36" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id37" style="width: 600px">
+<img alt="fst-connect.svg" src="../_images/fst-connect.svg" /><figcaption>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Visualization of fst-connect.svg (after connect)</span><a class="headerlink" href="#id37" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
+
+</section>
 <section id="determinize">
 <h2>determinize<a class="headerlink" href="#determinize" title="Permalink to this headline"></a></h2>
 <dl class="py function">
@@ -597,8 +680,8 @@ subsequential transducer</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Determinize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id35">
-<div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id35" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id38">
+<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id38" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -642,14 +725,14 @@ subsequential transducer</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id36" style="width: 600px">
+<figure class="align-center" id="id39" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer.svg" /><figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id36" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id39" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id37" style="width: 600px">
+<figure class="align-center" id="id40" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer22.svg" /><figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id37" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id40" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -685,8 +768,8 @@ by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Determinize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id38">
-<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id38" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id41">
+<div class="code-block-caption"><span class="caption-number">Listing 11 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id41" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -730,14 +813,14 @@ by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id39" style="width: 600px">
+<figure class="align-center" id="id42" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer3.svg" /><figcaption>
-<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id39" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id42" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id40" style="width: 600px">
+<figure class="align-center" id="id43" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer23.svg" /><figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id40" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id43" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -792,8 +875,8 @@ your browser. You can also share the URL to others.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Draw a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id41">
-<div class="code-block-caption"><span class="caption-number">Listing 11 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id41" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id44">
+<div class="code-block-caption"><span class="caption-number">Listing 12 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id44" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -828,8 +911,8 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id42">
-<div class="code-block-caption"><span class="caption-number">Listing 12 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id42" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id45">
+<div class="code-block-caption"><span class="caption-number">Listing 13 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id45" title="Permalink to this code"></a></div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">digraph</span> <span class="n">FST</span> <span class="p">{</span>
 <span class="linenos"> 2</span><span class="n">rankdir</span> <span class="o">=</span> <span class="n">LR</span><span class="p">;</span>
 <span class="linenos"> 3</span><span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;8.5,11&quot;</span><span class="p">;</span>
@@ -847,9 +930,9 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id43" style="width: 600px">
-<img alt="fst.svg" src="../_images/fst.svg" /><figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id43" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id46" style="width: 600px">
+<img alt="fst.svg" src="../_images/fst1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id46" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
