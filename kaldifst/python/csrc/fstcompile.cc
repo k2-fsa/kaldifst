@@ -36,9 +36,6 @@ Args:
 Return:
   Return an FST.
 
-Usage examples
-^^^^^^^^^^^^^^
-
 **Example 1: Create an acceptor**
 
 .. literalinclude:: ./code/fstcompile/acceptor1.py
@@ -66,6 +63,34 @@ Usage examples
     :figwidth: 600px
 
     Visualization of acceptor2.svg
+
+**Example 3: Create a transducer**
+
+.. literalinclude:: ./code/fstcompile/transducer1.py
+   :language: python
+   :linenos:
+   :caption: Create a transducer
+
+.. figure:: ./code/fstcompile/transducer1.svg
+    :alt: transducer1.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of transducer1.svg
+
+**Example 4: Create a transducer with symbol table**
+
+.. literalinclude:: ./code/fstcompile/transducer2.py
+   :language: python
+   :linenos:
+   :caption: Create a transducer with symbol table
+
+.. figure:: ./code/fstcompile/transducer2.svg
+    :alt: transducer2.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of transducer2.svg
 )doc";
 
 namespace kaldifst {

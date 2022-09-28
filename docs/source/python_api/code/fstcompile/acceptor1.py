@@ -6,7 +6,7 @@ s1 = """
 2 0.3
 """
 fsa = kaldifst.compile(s=s1, acceptor=True)
-fsa_dot = kaldifst.draw(fsa, portrait=True)
+fsa_dot = kaldifst.draw(fsa, acceptor=True, portrait=True)
 print(fsa_dot)
 
 import graphviz
