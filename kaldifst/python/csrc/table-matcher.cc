@@ -7,6 +7,63 @@
 #include "kaldifst/csrc/log.h"
 #include "kaldifst/csrc/table-matcher.h"
 
+static constexpr const char *kFstArcSortDoc = R"doc(
+Compose two FSTs.
+
+This operation computes the composition of two transducers. If A transduces
+string x to y with weight a and B transduces y to z with weight b, then their
+composition transduces string x to z with weight a ⊗ b.
+
+.. caution::
+
+  The output labels of the first transducer or the input labels of the
+  second transducer must be ``sorted``.
+
+
+Args:
+  fst1:
+    The first FST.
+  fst2:
+    The second FST.
+  match_side:
+    Defaults to left.
+  compose_filter:
+    Composition filter, one of: "alt_sequence", "auto", "match",
+    "no_match", "null", "sequence", "trivial".
+  connect:
+    Trim output.
+Returns:
+  Return the composition result.
+
+**Example 1: Compose two transducers.**
+
+.. literalinclude:: ./code/compose/ex.py
+   :language: python
+   :linenos:
+   :caption: Compose two transducers
+
+.. figure:: ./code/compose/a.svg
+    :alt: a.svg
+    :align: center
+    :figwidth: 600px
+
+    The first transducer a.
+
+.. figure:: ./code/compose/b.svg
+    :alt: b.svg
+    :align: center
+    :figwidth: 600px
+
+    The second transducer b
+
+.. figure:: ./code/compose/c.svg
+    :alt: c.svg
+    :align: center
+    :figwidth: 600px
+
+    The composition result c.
+)doc";
+
 namespace kaldifst {
 
 template <class Arc>
@@ -54,7 +111,8 @@ static void PybindFstTableComposeTpl(py::module &m) {
         return std::move(composed_fst);
       },
       py::arg("fst1"), py::arg("fst2"), py::arg("match_side") = "left",
-      py::arg("compose_filter") = "sequence", py::arg("connect") = true);
+      py::arg("compose_filter") = "sequence", py::arg("connect") = true,
+      kFstArcSortDoc);
 }
 
 void PybindFstTableCompose(py::module &m) {
