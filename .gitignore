@@ -4,3 +4,6 @@ bak-*
 Testing
 dist
 *.egg-info
+*.svg
+*.gv
+*.fst
