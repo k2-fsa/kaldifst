@@ -107,4 +107,5 @@ rst_epilog = """
 .. _kaldifst: https://github.com/k2-fsa/kaldifst
 .. _OpenFst: https://www.openfst.org/
 .. _Kaldi: https://github.com/kaldi-asr/kaldi
+.. _k2: https://github.com/k2-fsa/k2
 """
