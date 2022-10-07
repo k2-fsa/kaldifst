@@ -38,6 +38,13 @@ void PybindSymbolTable(py::module &m) {  // NOLINT
   sym.attr("kNoSymbol") = PyClass::kNoSymbol;
   sym.def(py::init<>())
       .def(py::init<const fst::string &>(), py::arg("name"))
+      .def_static(
+          "from_str",
+          [](const std::string &s) -> PyClass * {
+            std::stringstream ss(s);
+            return PyClass::ReadText(ss, "from_str");
+          },
+          py::arg("s"), py::return_value_policy::take_ownership)
       .def_static("read_text",
                   overload_cast_<const fst::string &,
                                  const fst::SymbolTableTextOptions &>()(
