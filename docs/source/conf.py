@@ -91,7 +91,7 @@ html_context = {
     "github_user": "k2-fsa",
     "github_repo": "kaldifst",
     "github_version": "master",
-    "conf_py_path": "/kaldifst/docs/source/",
+    "conf_py_path": "/docs/source/",
 }
 
 # refer to
