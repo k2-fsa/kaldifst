@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import kaldifst
 import graphviz
+
+import kaldifst
 
 
 def main():
