@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating FSTs using constructors and mutators &mdash; kaldifst 0.8 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Creating FSTs from strings" href="quick-start-2.html" />
+    <link rel="prev" title="Quick start" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> kaldifst
+          </a>
+              <div class="version">
+                0.8
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Quick start</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating FSTs using constructors and mutators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start-2.html">Creating FSTs from strings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start-3.html">Iterating FSTs</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/index.html">Python API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kaldifst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Quick start</a> &raquo;</li>
+      <li>Creating FSTs using constructors and mutators</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/k2-fsa/kaldifst/blob/master/kaldifst/docs/source/quick_start/quick-start.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-fsts-using-constructors-and-mutators">
+<span id="quick-start"></span><h1>Creating FSTs using constructors and mutators<a class="headerlink" href="#creating-fsts-using-constructors-and-mutators" title="Permalink to this headline"></a></h1>
+<p>In this tutorial, we demonstrate how to create the following FST using constructors
+and mutators from Python.</p>
+<figure class="align-center" id="id1" style="width: 600px">
+<img alt="quick-start.svg" src="../_images/quick-start.svg" /><figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">quick-start.svg</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">Create an FST using constructors and mutators in Python</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 9</span>    <span class="c1"># A vector FST is a general mutable FST</span>
+<span class="linenos">10</span>    <span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="p">()</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>    <span class="c1"># Adds state 0 to the initially empty FST and make it the start state.</span>
+<span class="linenos">13</span>    <span class="n">s0</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>  <span class="c1"># 1st state will be state 0 (returned by add_state)</span>
+<span class="linenos">14</span>    <span class="k">assert</span> <span class="n">s0</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="linenos">15</span>    <span class="n">fst</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># set the start state to 0</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>    <span class="c1"># Adds two arcs exiting state 0.</span>
+<span class="linenos">18</span>    <span class="c1"># Arc constructor args: ilabel, olabel, weight, dest state ID.</span>
+<span class="linenos">19</span>    <span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">20</span>        <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">21</span>        <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">StdArc</span><span class="p">(</span><span class="n">ilabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">olabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">nextstate</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="linenos">22</span>    <span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>    <span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">25</span>        <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">26</span>        <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">StdArc</span><span class="p">(</span><span class="n">ilabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">olabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">nextstate</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="linenos">27</span>    <span class="p">)</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span>    <span class="c1"># Adds state 1 and its arc.</span>
+<span class="linenos">30</span>    <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">31</span>    <span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">32</span>        <span class="n">state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos">33</span>        <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">StdArc</span><span class="p">(</span><span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">olabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">nextstate</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<span class="linenos">34</span>    <span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>    <span class="c1"># Adds state 2 and set its final weight.</span>
+<span class="linenos">37</span>    <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">38</span>    <span class="n">fst</span><span class="o">.</span><span class="n">set_final</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">3.5</span><span class="p">)</span>  <span class="c1"># 1st arg is state ID, 2nd arg weight</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span>    <span class="c1"># Add an input symbol table</span>
+<span class="linenos">41</span>    <span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">()</span>
+<span class="linenos">42</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">43</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">44</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">45</span>    <span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">isym</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span>    <span class="c1"># Add an output symbol table</span>
+<span class="linenos">48</span>    <span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">()</span>
+<span class="linenos">49</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">50</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">51</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">52</span>    <span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">osym</span>
+<span class="linenos">53</span>
+<span class="linenos">54</span>    <span class="c1"># We can save this FST to a file with</span>
+<span class="linenos">55</span>    <span class="n">fst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;binary.fst&quot;</span><span class="p">)</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>    <span class="c1"># We can read it back</span>
+<span class="linenos">58</span>    <span class="n">fst2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;binary.fst&quot;</span><span class="p">)</span>
+<span class="linenos">59</span>    <span class="nb">print</span><span class="p">(</span><span class="n">fst2</span><span class="p">)</span>
+<span class="linenos">60</span>    <span class="nb">print</span><span class="p">(</span><span class="n">fst2</span><span class="o">.</span><span class="n">to_str</span><span class="p">())</span>
+<span class="linenos">61</span>
+<span class="linenos">62</span>    <span class="c1"># Get a dot format of the FST for visualization</span>
+<span class="linenos">63</span>    <span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">64</span>    <span class="nb">print</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">65</span>    <span class="c1"># You can use</span>
+<span class="linenos">66</span>    <span class="c1"># https://dreampuf.github.io/GraphvizOnline</span>
+<span class="linenos">67</span>    <span class="c1"># to visualize it and share the link to others</span>
+<span class="linenos">68</span>
+<span class="linenos">69</span>    <span class="c1"># Alternatively, you can use graphviz to visualize it</span>
+<span class="linenos">70</span>    <span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">71</span>    <span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;quick-start.svg&quot;</span><span class="p">)</span>
+<span class="linenos">72</span>    <span class="c1"># Done. quick-start.svg is the figure we showed at the start of this section</span>
+<span class="linenos">73</span>
+<span class="linenos">74</span>
+<span class="linenos">75</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">76</span>    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Quick start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quick-start-2.html" class="btn btn-neutral float-right" title="Creating FSTs from strings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
