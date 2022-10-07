@@ -37,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [macos-latest]
         python-version: [3.8]
     steps:
       # refer to https://github.com/actions/checkout
@@ -64,7 +64,8 @@ jobs:
           cd docs
           python3 -m pip install -r ./requirements.txt
 
-          sudo apt-get -qq install graphviz
+          brew install graphviz
+          python3 -m pip install k2
           python3 -m pip install graphviz
 
           make html

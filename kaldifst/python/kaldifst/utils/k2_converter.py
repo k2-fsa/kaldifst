@@ -7,7 +7,7 @@ from typing import Optional
 
 import k2
 import torch
-from _kaldifst import StdArc, StdVectorFst
+from _kaldifst import StdArc, StdVectorFst, SymbolTable
 
 
 def _k2_acceptor_to_openfst(fsa: k2.Fsa) -> StdVectorFst:
@@ -53,6 +53,8 @@ def _k2_acceptor_to_openfst(fsa: k2.Fsa) -> StdVectorFst:
 
     fst.start = 0
     fst.set_final(num_states - 1, 0)
+    if hasattr(fsa, "labels_sym"):
+        fst.input_symbols = SymbolTable.from_str(fsa.labels_sym.to_str())
 
     return fst
 
@@ -119,6 +121,14 @@ def _k2_transducer_to_openfst(fsa: k2.Fsa, olabels: str) -> StdVectorFst:
 
     fst.start = 0
     fst.set_final(num_states - 1, 0)
+
+    if hasattr(fsa, "labels_sym"):
+        fst.input_symbols = SymbolTable.from_str(fsa.labels_sym.to_str())
+
+    if hasattr(fsa, f"{olabels}_sym"):
+        fst.output_symbols = SymbolTable.from_str(
+            getattr(fsa, f"{olabels}_sym").to_str()
+        )
 
     return fst
 
