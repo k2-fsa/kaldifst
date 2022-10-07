@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convert acceptors &mdash; kaldifst 0.8 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Convert transducers" href="convert-transducer.html" />
+    <link rel="prev" title="Convert FST from k2 to OpenFST" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> kaldifst
+          </a>
+              <div class="version">
+                0.8
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start/index.html">Quick start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Convert FST from k2 to OpenFST</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Convert acceptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="convert-transducer.html">Convert transducers</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/index.html">Python API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kaldifst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Convert FST from k2 to OpenFST</a> &raquo;</li>
+      <li>Convert acceptors</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/k2-fsa/kaldifst/blob/master/docs/source/convert-k2-to-openfst/convert-acceptor.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="convert-acceptors">
+<h1>Convert acceptors<a class="headerlink" href="#convert-acceptors" title="Permalink to this headline"></a></h1>
+<p>This section demonstrates how to convert an acceptor from <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a> to <a class="reference external" href="https://www.openfst.org/">OpenFST</a>.</p>
+<figure class="align-center" id="id1" style="width: 600px">
+<img alt="k2-acceptor.svg" src="../_images/k2-acceptor.svg" /><figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">An acceptor in <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a>.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2" style="width: 600px">
+<img alt="openfst-acceptor.svg" src="../_images/openfst-acceptor.svg" /><figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">The above acceptor converted to <a class="reference external" href="https://www.openfst.org/">OpenFST</a>.
+Pay attention to the <code class="docutils literal notranslate"><span class="pre">negative</span></code> sign for numbers on the arcs.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">Convert an acceptor from <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a> to <a class="reference external" href="https://www.openfst.org/">OpenFST</a></span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span><span class="kn">import</span> <span class="nn">k2</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">kaldifst.utils</span> <span class="kn">import</span> <span class="n">k2_to_openfst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="linenos">11</span>    <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">12</span><span class="s2">    0 1 1 0.5</span>
+<span class="linenos">13</span><span class="s2">    0 1 2 1.5</span>
+<span class="linenos">14</span><span class="s2">    1 2 3 2.5</span>
+<span class="linenos">15</span><span class="s2">    1 3 -1 3.0</span>
+<span class="linenos">16</span><span class="s2">    2 3 -1 3.5</span>
+<span class="linenos">17</span><span class="s2">    3</span>
+<span class="linenos">18</span><span class="s2">    &quot;&quot;&quot;</span>
+<span class="linenos">19</span>    <span class="n">sym</span> <span class="o">=</span> <span class="n">k2</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">20</span>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">21</span><span class="sd">        a 1</span>
+<span class="linenos">22</span><span class="sd">        b 2</span>
+<span class="linenos">23</span><span class="sd">        c 3</span>
+<span class="linenos">24</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">25</span>    <span class="p">)</span>
+<span class="linenos">26</span>    <span class="n">fsa</span> <span class="o">=</span> <span class="n">k2</span><span class="o">.</span><span class="n">Fsa</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">27</span>    <span class="n">fsa</span><span class="o">.</span><span class="n">labels_sym</span> <span class="o">=</span> <span class="n">sym</span>
+<span class="linenos">28</span>    <span class="n">fsa</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s2">&quot;k2-acceptor.svg&quot;</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>    <span class="n">fst</span> <span class="o">=</span> <span class="n">k2_to_openfst</span><span class="p">(</span><span class="n">fsa</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span>    <span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">33</span>    <span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">34</span>    <span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;openfst-acceptor.svg&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">38</span>    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Convert FST from k2 to OpenFST" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="convert-transducer.html" class="btn btn-neutral float-right" title="Convert transducers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
