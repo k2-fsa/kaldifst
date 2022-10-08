@@ -31,6 +31,7 @@ set(py_test_files
   test_std_const_fst.py
   test_std_vector_fst.py
   test_symbol_table.py
+  test_vector_fst_io.py
   #
   test_k2_converter.py
 )
