@@ -23,9 +23,6 @@ on:
     branches:
       - master
       - doc
-    paths:
-      - '.github/workflows/build-doc.yml'
-      - 'docs/**'
 
 concurrency:
   group: build-doc-${{ github.ref }}
