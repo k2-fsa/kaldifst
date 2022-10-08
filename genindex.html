@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; kaldifst 0.8 documentation</title>
+  <title>Index &mdash; kaldifst 1.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                0.8
+                1.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -40,6 +40,11 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="install/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start/index.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert-k2-to-openfst/index.html">Convert FST from k2 to OpenFST</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="python_api/index.html">Python API reference</a></li>
 </ul>
 
@@ -59,7 +64,7 @@
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
       <li>Index</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/csukuangfj/kaldifst/blob/master/kaldifst/docs/source/genindex" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/k2-fsa/kaldifst/blob/master/docs/source/genindex" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -77,6 +82,7 @@
  | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -116,9 +122,11 @@
 </li>
       <li><a href="python_api/api.html#kaldifst.compile">compile() (in module kaldifst)</a>
 </li>
+      <li><a href="python_api/api.html#kaldifst.compose">compose() (in module kaldifst)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="python_api/api.html#kaldifst.compose">compose() (in module kaldifst)</a>
+      <li><a href="python_api/api.html#kaldifst.connect">connect() (in module kaldifst)</a>
 </li>
       <li><a href="python_api/api.html#kaldifst.StdConstFst.copy">copy() (kaldifst.StdConstFst method)</a>
 
@@ -143,6 +151,8 @@
       <li><a href="python_api/api.html#kaldifst.ArcIterator.done">done (kaldifst.ArcIterator attribute)</a>
 
       <ul>
+        <li><a href="python_api/api.html#kaldifst.SequentialVectorFstReader.done">(kaldifst.SequentialVectorFstReader attribute)</a>
+</li>
         <li><a href="python_api/api.html#kaldifst.StateIterator.done">(kaldifst.StateIterator attribute)</a>
 </li>
       </ul></li>
@@ -176,8 +186,6 @@
         <li><a href="python_api/api.html#kaldifst.StdVectorFst.input_symbols">(kaldifst.StdVectorFst attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python_api/api.html#kaldifst.invert">invert() (in module kaldifst)</a>
 </li>
       <li><a href="python_api/api.html#kaldifst.StdConstFst.is_ilabel_sorted">is_ilabel_sorted (kaldifst.StdConstFst attribute)</a>
@@ -186,12 +194,30 @@
         <li><a href="python_api/api.html#kaldifst.StdVectorFst.is_ilabel_sorted">(kaldifst.StdVectorFst attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python_api/api.html#kaldifst.StdConstFst.is_olabel_sorted">is_olabel_sorted (kaldifst.StdConstFst attribute)</a>
 
       <ul>
         <li><a href="python_api/api.html#kaldifst.StdVectorFst.is_olabel_sorted">(kaldifst.StdVectorFst attribute)</a>
 </li>
       </ul></li>
+      <li><a href="python_api/api.html#kaldifst.RandomAccessVectorFstReader.is_open">is_open (kaldifst.RandomAccessVectorFstReader attribute)</a>
+
+      <ul>
+        <li><a href="python_api/api.html#kaldifst.SequentialVectorFstReader.is_open">(kaldifst.SequentialVectorFstReader attribute)</a>
+</li>
+        <li><a href="python_api/api.html#kaldifst.VectorFstWriter.is_open">(kaldifst.VectorFstWriter attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python_api/api.html#kaldifst.SequentialVectorFstReader.key">key (kaldifst.SequentialVectorFstReader attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -309,6 +335,8 @@
       <ul>
         <li><a href="python_api/api.html#kaldifst.FloatWeight.value">(kaldifst.FloatWeight attribute)</a>
 </li>
+        <li><a href="python_api/api.html#kaldifst.SequentialVectorFstReader.value">(kaldifst.SequentialVectorFstReader attribute)</a>
+</li>
         <li><a href="python_api/api.html#kaldifst.StateIterator.value">(kaldifst.StateIterator attribute)</a>
 </li>
         <li><a href="python_api/api.html#kaldifst.TropicalWeight.value">(kaldifst.TropicalWeight attribute)</a>
@@ -323,6 +351,10 @@
       <li><a href="python_api/api.html#kaldifst.StdArc.weight">weight (kaldifst.StdArc attribute)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python_api/api.html#kaldifst.VectorFstWriter.write">write() (kaldifst.VectorFstWriter method)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 
@@ -334,7 +366,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Fangjun Kuang.</p>
+    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python API reference &mdash; kaldifst 0.8 documentation</title>
+  <title>Python API reference &mdash; kaldifst 1.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="kaldifst" href="api.html" />
-    <link rel="prev" title="Installation" href="../install/index.html" /> 
+    <link rel="prev" title="Convert transducers" href="../convert-k2-to-openfst/convert-transducer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                0.8
+                1.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -41,8 +41,13 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start/index.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../convert-k2-to-openfst/index.html">Convert FST from k2 to OpenFST</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Python API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html">kaldifst</a></li>
 </ul>
@@ -65,7 +70,7 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>Python API reference</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/csukuangfj/kaldifst/blob/master/kaldifst/docs/source/python_api/index.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/k2-fsa/kaldifst/blob/master/docs/source/python_api/index.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -81,6 +86,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html#arcsort">arcsort</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#compile">compile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#compose">compose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#connect">connect</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#determinize">determinize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#determinize-star">determinize_star</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#divide">divide</a></li>
@@ -95,12 +101,15 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html#times">times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#arciterator">ArcIterator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#floatweight">FloatWeight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#randomaccessvectorfstreader">RandomAccessVectorFstReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#sequentialvectorfstreader">SequentialVectorFstReader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#stateiterator">StateIterator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#stdarc">StdArc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#stdconstfst">StdConstFst</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#stdvectorfst">StdVectorFst</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#symboltable">SymbolTable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#tropicalweight">TropicalWeight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#vectorfstwriter">VectorFstWriter</a></li>
 </ul>
 </li>
 </ul>
@@ -111,14 +120,14 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../install/index.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../convert-k2-to-openfst/convert-transducer.html" class="btn btn-neutral float-left" title="Convert transducers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="api.html" class="btn btn-neutral float-right" title="kaldifst" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Fangjun Kuang.</p>
+    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

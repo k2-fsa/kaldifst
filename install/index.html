@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; kaldifst 0.8 documentation</title>
+  <title>Installation &mdash; kaldifst 1.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +18,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Python API reference" href="../python_api/index.html" />
+    <link rel="next" title="Quick start" href="../quick_start/index.html" />
     <link rel="prev" title="kaldifst" href="../index.html" /> 
 </head>
 
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                0.8
+                1.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +49,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#check-kaldifst">Check kaldifst</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start/index.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../convert-k2-to-openfst/index.html">Convert FST from k2 to OpenFST</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../python_api/index.html">Python API reference</a></li>
 </ul>
 
@@ -68,7 +73,7 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>Installation</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/csukuangfj/kaldifst/blob/master/kaldifst/docs/source/install/index.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/k2-fsa/kaldifst/blob/master/docs/source/install/index.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -78,14 +83,14 @@
              
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
-<p>You can use the following methods to install <a class="reference external" href="https://github.com/csukuangfj/kaldifst">kaldifst</a> on Windows, Linux, and
+<p>You can use the following methods to install <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a> on Windows, Linux, and
 macOS. <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">&gt;=</span> <span class="pre">3.6</span></code> is known to work.</p>
 <section id="using-conda">
 <h2>Using conda<a class="headerlink" href="#using-conda" title="Permalink to this headline"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c kaldifst kaldifst
 </pre></div>
 </div>
-<p>To uninstall <a class="reference external" href="https://github.com/csukuangfj/kaldifst">kaldifst</a>, use:</p>
+<p>To uninstall <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda remove kaldifst
 </pre></div>
 </div>
@@ -99,30 +104,30 @@ macOS. <code class="docutils literal notranslate"><span class="pre">Python</span
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install --verbose -U git+https://github.com/kaldifst/kaldifst.git
 </pre></div>
 </div>
-<p>To uninstall <a class="reference external" href="https://github.com/csukuangfj/kaldifst">kaldifst</a>, use:</p>
+<p>To uninstall <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip uninstall kaldifst
 </pre></div>
 </div>
 </section>
 <section id="from-source">
 <h2>From source<a class="headerlink" href="#from-source" title="Permalink to this headline"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">csukuangfj</span><span class="o">/</span><span class="n">kaldifst</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">k2</span><span class="o">-</span><span class="n">fsa</span><span class="o">/</span><span class="n">kaldifst</span>
 <span class="n">cd</span> <span class="n">kaldifst</span>
 <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
-<p>To uninstall <a class="reference external" href="https://github.com/csukuangfj/kaldifst">kaldifst</a>, use:</p>
+<p>To uninstall <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip uninstall kaldifst
 </pre></div>
 </div>
 </section>
 <section id="check-kaldifst">
 <h2>Check kaldifst<a class="headerlink" href="#check-kaldifst" title="Permalink to this headline"></a></h2>
-<p>To check that <a class="reference external" href="https://github.com/csukuangfj/kaldifst">kaldifst</a> was installed successfully, use:</p>
+<p>To check that <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a> was installed successfully, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -c <span class="s2">&quot;import kaldifst; print(kaldifst.__version__)&quot;</span>
 </pre></div>
 </div>
-<p>It should print the version of <a class="reference external" href="https://github.com/csukuangfj/kaldifst">kaldifst</a>, e.g., <code class="docutils literal notranslate"><span class="pre">0.8</span></code>.</p>
+<p>It should print the version of <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, e.g., <code class="docutils literal notranslate"><span class="pre">0.8</span></code>.</p>
 </section>
 </section>
 
@@ -131,13 +136,13 @@ macOS. <code class="docutils literal notranslate"><span class="pre">Python</span
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="kaldifst" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../python_api/index.html" class="btn btn-neutral float-right" title="Python API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../quick_start/index.html" class="btn btn-neutral float-right" title="Quick start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Fangjun Kuang.</p>
+    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
