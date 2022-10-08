@@ -967,8 +967,92 @@ Compute property values (if unknown to FST)</p>
 <h2>invert<a class="headerlink" href="#invert" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.invert">
-<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.invert" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.invert" title="Permalink to this definition"></a></dt>
+<dd><p>This operation inverts the transduction corresponding to an FST by
+exchanging the FST’s input and output labels.</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/InvertDoc">https://www.openfst.org/twiki/bin/view/FST/InvertDoc</a></p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The FST is modified in-place.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_out</strong> – A transducer. It is modified in-place.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+<p><strong>Example Invert a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id47">
+<div class="code-block-caption"><span class="caption-number">Listing 19 </span><span class="caption-text">Invert a transducer</span><a class="headerlink" href="#id47" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a y 1</span>
+<span class="linenos"> 9</span><span class="s2">0 1 b x 3</span>
+<span class="linenos">10</span><span class="s2">1 1 d v 7</span>
+<span class="linenos">11</span><span class="s2">1 2 c w 5</span>
+<span class="linenos">12</span><span class="s2">2 3 f u 9</span>
+<span class="linenos">13</span><span class="s2">3 2</span>
+<span class="linenos">14</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">15</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">16</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">17</span><span class="sd">        a 1</span>
+<span class="linenos">18</span><span class="sd">        b 2</span>
+<span class="linenos">19</span><span class="sd">        c 3</span>
+<span class="linenos">20</span><span class="sd">        d 4</span>
+<span class="linenos">21</span><span class="sd">        f 5</span>
+<span class="linenos">22</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">23</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">26</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">27</span><span class="sd">        x 1</span>
+<span class="linenos">28</span><span class="sd">        y 2</span>
+<span class="linenos">29</span><span class="sd">        u 3</span>
+<span class="linenos">30</span><span class="sd">        w 4</span>
+<span class="linenos">31</span><span class="sd">        v 5</span>
+<span class="linenos">32</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">33</span><span class="p">)</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">36</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">37</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">38</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">39</span>    <span class="n">osymbols</span><span class="o">=</span><span class="n">osym</span><span class="p">,</span>
+<span class="linenos">40</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">41</span>    <span class="n">keep_osymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">42</span><span class="p">)</span>
+<span class="linenos">43</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">46</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">47</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;before-invert.svg&quot;</span><span class="p">)</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">50</span>
+<span class="linenos">51</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">52</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">53</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;after-invert.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id48" style="width: 600px">
+<img alt="before-invert.svg" src="../_images/before-invert.svg" /><figcaption>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Visualization of before-invert.svg</span><a class="headerlink" href="#id48" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id49" style="width: 600px">
+<img alt="after-invert.svg" src="../_images/after-invert.svg" /><figcaption>
+<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Visualization of after-invert.svg</span><a class="headerlink" href="#id49" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
 
 </section>
 <section id="minimize">
@@ -976,7 +1060,164 @@ Compute property values (if unknown to FST)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.minimize">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">minimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nondet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.minimize" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This operation performs the minimization of deterministic weighted automata
+and transducers.</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/MinimizeDoc">https://www.openfst.org/twiki/bin/view/FST/MinimizeDoc</a>.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The FST is modified in-place.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_out</strong> – An acceptor or a transducer. It is modified in-place.</p></li>
+<li><p><strong>delta</strong> – Comparison/quantization delta</p></li>
+<li><p><strong>allow_nondet</strong> – type = bool, default = false
+True to minimize non-deterministic FSTs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+<p><strong>Example 1: Minimize an acceptor</strong></p>
+<div class="literal-block-wrapper docutils container" id="id50">
+<div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">Minimize an acceptor</span><a class="headerlink" href="#id50" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a 2</span>
+<span class="linenos"> 9</span><span class="s2">0 1 b 2</span>
+<span class="linenos">10</span><span class="s2">0 1 c 3</span>
+<span class="linenos">11</span><span class="s2">0 2 d 3</span>
+<span class="linenos">12</span><span class="s2">0 2 f 1</span>
+<span class="linenos">13</span><span class="s2">1 3 f 3</span>
+<span class="linenos">14</span><span class="s2">1 3 g 2</span>
+<span class="linenos">15</span><span class="s2">3 1</span>
+<span class="linenos">16</span><span class="s2">2 4 f 5</span>
+<span class="linenos">17</span><span class="s2">2 4 g 4</span>
+<span class="linenos">18</span><span class="s2">4 3</span>
+<span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">23</span><span class="sd">        a 1</span>
+<span class="linenos">24</span><span class="sd">        b 2</span>
+<span class="linenos">25</span><span class="sd">        c 3</span>
+<span class="linenos">26</span><span class="sd">        d 4</span>
+<span class="linenos">27</span><span class="sd">        f 5</span>
+<span class="linenos">28</span><span class="sd">        g 6</span>
+<span class="linenos">29</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">30</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">33</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">34</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">35</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">36</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">37</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">40</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">41</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor.svg&quot;</span><span class="p">)</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">46</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">47</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor-minimized.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id51" style="width: 600px">
+<img alt="acceptor.svg" src="../_images/acceptor3.svg" /><figcaption>
+<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Visualization of acceptor.svg (before minimize)</span><a class="headerlink" href="#id51" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id52" style="width: 600px">
+<img alt="acceptor-minimized.svg" src="../_images/acceptor-minimized.svg" /><figcaption>
+<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Visualization of acceptor-minimized.svg (after minimize)</span><a class="headerlink" href="#id52" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 2: Minimize a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id53">
+<div class="code-block-caption"><span class="caption-number">Listing 21 </span><span class="caption-text">Minimize a transducer</span><a class="headerlink" href="#id53" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a a 2</span>
+<span class="linenos"> 9</span><span class="s2">0 1 b a 2</span>
+<span class="linenos">10</span><span class="s2">0 1 c a 3</span>
+<span class="linenos">11</span><span class="s2">0 2 d a 3</span>
+<span class="linenos">12</span><span class="s2">0 2 f a 1</span>
+<span class="linenos">13</span><span class="s2">1 3 f b 3</span>
+<span class="linenos">14</span><span class="s2">1 3 g b 2</span>
+<span class="linenos">15</span><span class="s2">3 1</span>
+<span class="linenos">16</span><span class="s2">2 4 f c 5</span>
+<span class="linenos">17</span><span class="s2">2 4 g c 4</span>
+<span class="linenos">18</span><span class="s2">4 3</span>
+<span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">23</span><span class="sd">        a 1</span>
+<span class="linenos">24</span><span class="sd">        b 2</span>
+<span class="linenos">25</span><span class="sd">        c 3</span>
+<span class="linenos">26</span><span class="sd">        d 4</span>
+<span class="linenos">27</span><span class="sd">        f 5</span>
+<span class="linenos">28</span><span class="sd">        g 6</span>
+<span class="linenos">29</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">30</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">33</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">34</span><span class="sd">        a 1</span>
+<span class="linenos">35</span><span class="sd">        b 2</span>
+<span class="linenos">36</span><span class="sd">        c 3</span>
+<span class="linenos">37</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">38</span><span class="p">)</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">42</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">43</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">44</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">45</span>    <span class="n">osymbols</span><span class="o">=</span><span class="n">osym</span><span class="p">,</span>
+<span class="linenos">46</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">47</span>    <span class="n">keep_osymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">48</span><span class="p">)</span>
+<span class="linenos">49</span>
+<span class="linenos">50</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">51</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">52</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer.svg&quot;</span><span class="p">)</span>
+<span class="linenos">53</span>
+<span class="linenos">54</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">55</span>
+<span class="linenos">56</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">57</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">58</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer-minimized.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id54" style="width: 600px">
+<img alt="transducer.svg" src="../_images/transducer4.svg" /><figcaption>
+<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Visualization of transducer.svg (before minimize)</span><a class="headerlink" href="#id54" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id55" style="width: 600px">
+<img alt="transducer-minimized.svg" src="../_images/transducer-minimized.svg" /><figcaption>
+<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Visualization of transducer-minimized.svg (after minimize)</span><a class="headerlink" href="#id55" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
 
 </section>
 <section id="minimize-encoded">
@@ -984,7 +1225,170 @@ Compute property values (if unknown to FST)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.minimize_encoded">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">minimize_encoded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0009765625</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.minimize_encoded" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Minimizes after encoding; applicable to all FSTs.</p>
+<p>Its implementation is from <a class="reference external" href="https://github.com/kaldi-asr/kaldi">Kaldi</a>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Map</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="n">QuantizeMapper</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&gt;</span><span class="p">(</span><span class="n">delta</span><span class="p">));</span><span class="w"></span>
+<span class="n">EncodeMapper</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encoder</span><span class="p">(</span><span class="n">kEncodeLabels</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">kEncodeWeights</span><span class="p">,</span><span class="w"> </span><span class="n">ENCODE</span><span class="p">);</span><span class="w"></span>
+<span class="n">Encode</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">encoder</span><span class="p">);</span><span class="w"></span>
+<span class="n">internal</span><span class="o">::</span><span class="n">AcceptorMinimize</span><span class="p">(</span><span class="n">fst</span><span class="p">);</span><span class="w"></span>
+<span class="n">Decode</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="n">encoder</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>See also <a class="reference external" href="https://github.com/kaldi-asr/kaldi/blob/master/src/fstbin/fstminimizeencoded.cc">https://github.com/kaldi-asr/kaldi/blob/master/src/fstbin/fstminimizeencoded.cc</a>.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The FST is modified in-place.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_out</strong> – An acceptor or a transducer. It is modified in-place.</p></li>
+<li><p><strong>delta</strong> – Comparison/quantization delta</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+<p><strong>Example 1: Minimize encode an acceptor</strong></p>
+<div class="literal-block-wrapper docutils container" id="id56">
+<div class="code-block-caption"><span class="caption-number">Listing 22 </span><span class="caption-text">Minimize encode an acceptor</span><a class="headerlink" href="#id56" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a 2</span>
+<span class="linenos"> 9</span><span class="s2">0 1 b 2</span>
+<span class="linenos">10</span><span class="s2">0 1 c 3</span>
+<span class="linenos">11</span><span class="s2">0 2 d 3</span>
+<span class="linenos">12</span><span class="s2">0 2 f 1</span>
+<span class="linenos">13</span><span class="s2">1 3 f 3</span>
+<span class="linenos">14</span><span class="s2">1 3 g 2</span>
+<span class="linenos">15</span><span class="s2">3 1</span>
+<span class="linenos">16</span><span class="s2">2 4 f 5</span>
+<span class="linenos">17</span><span class="s2">2 4 g 4</span>
+<span class="linenos">18</span><span class="s2">4 3</span>
+<span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">23</span><span class="sd">        a 1</span>
+<span class="linenos">24</span><span class="sd">        b 2</span>
+<span class="linenos">25</span><span class="sd">        c 3</span>
+<span class="linenos">26</span><span class="sd">        d 4</span>
+<span class="linenos">27</span><span class="sd">        f 5</span>
+<span class="linenos">28</span><span class="sd">        g 6</span>
+<span class="linenos">29</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">30</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">33</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">34</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">35</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">36</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">37</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">40</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">41</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor.svg&quot;</span><span class="p">)</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span><span class="n">fst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;acceptor.fst&quot;</span><span class="p">)</span>
+<span class="linenos">44</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">minimize_encoded</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">47</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">48</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor-minimize-encoded.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id57" style="width: 600px">
+<img alt="acceptor.svg" src="../_images/acceptor4.svg" /><figcaption>
+<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Visualization of acceptor.svg (before minimize_encoded)</span><a class="headerlink" href="#id57" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id58" style="width: 600px">
+<img alt="acceptor-minimize-encoded.svg" src="../_images/acceptor-minimize-encoded.svg" /><figcaption>
+<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Visualization of acceptor-minimize-encoded.svg (after minimize_encoded)</span><a class="headerlink" href="#id58" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 2: Minimize encode a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id59">
+<div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">Minimize encode a transducer</span><a class="headerlink" href="#id59" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a a 2</span>
+<span class="linenos"> 9</span><span class="s2">0 1 b a 2</span>
+<span class="linenos">10</span><span class="s2">0 1 c a 3</span>
+<span class="linenos">11</span><span class="s2">0 2 d a 3</span>
+<span class="linenos">12</span><span class="s2">0 2 f a 1</span>
+<span class="linenos">13</span><span class="s2">1 3 f b 3</span>
+<span class="linenos">14</span><span class="s2">1 3 g b 2</span>
+<span class="linenos">15</span><span class="s2">3 1</span>
+<span class="linenos">16</span><span class="s2">2 4 f c 5</span>
+<span class="linenos">17</span><span class="s2">2 4 g c 4</span>
+<span class="linenos">18</span><span class="s2">4 3</span>
+<span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">23</span><span class="sd">        a 1</span>
+<span class="linenos">24</span><span class="sd">        b 2</span>
+<span class="linenos">25</span><span class="sd">        c 3</span>
+<span class="linenos">26</span><span class="sd">        d 4</span>
+<span class="linenos">27</span><span class="sd">        f 5</span>
+<span class="linenos">28</span><span class="sd">        g 6</span>
+<span class="linenos">29</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">30</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">33</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">34</span><span class="sd">        a 1</span>
+<span class="linenos">35</span><span class="sd">        b 2</span>
+<span class="linenos">36</span><span class="sd">        c 3</span>
+<span class="linenos">37</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">38</span><span class="p">)</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">42</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">43</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">44</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">45</span>    <span class="n">osymbols</span><span class="o">=</span><span class="n">osym</span><span class="p">,</span>
+<span class="linenos">46</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">47</span>    <span class="n">keep_osymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">48</span><span class="p">)</span>
+<span class="linenos">49</span>
+<span class="linenos">50</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">51</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">52</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer.svg&quot;</span><span class="p">)</span>
+<span class="linenos">53</span>
+<span class="linenos">54</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">minimize_encoded</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">55</span>
+<span class="linenos">56</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">57</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">58</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer-minimize-encoded.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id60" style="width: 600px">
+<img alt="transducer.svg" src="../_images/transducer5.svg" /><figcaption>
+<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Visualization of transducer.svg (before minimize_encoded)</span><a class="headerlink" href="#id60" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id61" style="width: 600px">
+<img alt="transducer-minimize-encoded.svg" src="../_images/transducer-minimize-encoded.svg" /><figcaption>
+<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Visualization of transducer-minimize-encoded.svg (after minimize encoded)</span><a class="headerlink" href="#id61" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
 
 </section>
 <section id="plus">
@@ -1000,7 +1404,256 @@ Compute property values (if unknown to FST)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.reverse">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_superinitial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdVectorFst</span></span></span><a class="headerlink" href="#kaldifst.reverse" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This operation reverses an FST. If A transduces string x to y with weight a,
+then the reverse of A transduces the reverse of x to the reverse of y
+with weight a.Reverse().</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/ReverseDoc">https://www.openfst.org/twiki/bin/view/FST/ReverseDoc</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifst</strong> – The input FST.</p></li>
+<li><p><strong>require_superinitial</strong> – True to create a superinitial state.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return the reversed FST.</p>
+</dd>
+</dl>
+<p><strong>Example 1 Revert an acceptor (require_superinitial=True)</strong></p>
+<div class="literal-block-wrapper docutils container" id="id62">
+<div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">Revert an acceptor using require_superinitial=True</span><a class="headerlink" href="#id62" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 0 a 2</span>
+<span class="linenos"> 9</span><span class="s2">0 1 a 1</span>
+<span class="linenos">10</span><span class="s2">1 3</span>
+<span class="linenos">11</span><span class="s2">1 2 b 3</span>
+<span class="linenos">12</span><span class="s2">1 2 b 4</span>
+<span class="linenos">13</span><span class="s2">2 2 d 5</span>
+<span class="linenos">14</span><span class="s2">2 3 d 6</span>
+<span class="linenos">15</span><span class="s2">3 3 f 2</span>
+<span class="linenos">16</span><span class="s2">3 2</span>
+<span class="linenos">17</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">18</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">19</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">20</span><span class="sd">        eps 0</span>
+<span class="linenos">21</span><span class="sd">        a 1</span>
+<span class="linenos">22</span><span class="sd">        b 2</span>
+<span class="linenos">23</span><span class="sd">        c 3</span>
+<span class="linenos">24</span><span class="sd">        d 4</span>
+<span class="linenos">25</span><span class="sd">        f 5</span>
+<span class="linenos">26</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">27</span><span class="p">)</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">30</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">31</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">32</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">33</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">34</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">37</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">38</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor-before-reverse.svg&quot;</span><span class="p">)</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">require_superinitial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">43</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">44</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor-after-reverse.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id63" style="width: 600px">
+<img alt="acceptor-before-reverse.svg" src="../_images/acceptor-before-reverse.svg" /><figcaption>
+<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Visualization of acceptor-before-reverse.svg</span><a class="headerlink" href="#id63" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id64" style="width: 600px">
+<img alt="acceptor-after-reverse.svg" src="../_images/acceptor-after-reverse.svg" /><figcaption>
+<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Visualization of acceptor-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id64" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 2 Revert an acceptor (require_superinitial=False)</strong></p>
+<div class="literal-block-wrapper docutils container" id="id65">
+<div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">Revert an acceptor using require_superinitial=False</span><a class="headerlink" href="#id65" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 0 a 2</span>
+<span class="linenos"> 9</span><span class="s2">0 1 a 1</span>
+<span class="linenos">10</span><span class="s2">1 3</span>
+<span class="linenos">11</span><span class="s2">1 2 b 3</span>
+<span class="linenos">12</span><span class="s2">1 2 b 4</span>
+<span class="linenos">13</span><span class="s2">2 2 d 5</span>
+<span class="linenos">14</span><span class="s2">2 3 d 6</span>
+<span class="linenos">15</span><span class="s2">3 3 f 2</span>
+<span class="linenos">16</span><span class="s2">3 2</span>
+<span class="linenos">17</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">18</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">19</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">20</span><span class="sd">        eps 0</span>
+<span class="linenos">21</span><span class="sd">        a 1</span>
+<span class="linenos">22</span><span class="sd">        b 2</span>
+<span class="linenos">23</span><span class="sd">        c 3</span>
+<span class="linenos">24</span><span class="sd">        d 4</span>
+<span class="linenos">25</span><span class="sd">        f 5</span>
+<span class="linenos">26</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">27</span><span class="p">)</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">30</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">31</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">32</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">33</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">34</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">37</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">38</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor-before-reverse-2.svg&quot;</span><span class="p">)</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">require_superinitial</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">43</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">44</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;acceptor-after-reverse-2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id66" style="width: 600px">
+<img alt="acceptor-before-reverse-2.svg" src="../_images/acceptor-before-reverse-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Visualization of acceptor-before-reverse-2.svg</span><a class="headerlink" href="#id66" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id67" style="width: 600px">
+<img alt="acceptor-after-reverse-2.svg" src="../_images/acceptor-after-reverse-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Visualization of acceptor-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id67" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 3 Revert a transducer  (require_superinitial=False)</strong></p>
+<div class="literal-block-wrapper docutils container" id="id68">
+<div class="code-block-caption"><span class="caption-number">Listing 26 </span><span class="caption-text">Revert a transducer using require_superinitial=True</span><a class="headerlink" href="#id68" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a a</span>
+<span class="linenos"> 9</span><span class="s2">1 2 b b</span>
+<span class="linenos">10</span><span class="s2">1 3 c c</span>
+<span class="linenos">11</span><span class="s2">2 4 eps eps</span>
+<span class="linenos">12</span><span class="s2">3 4 eps eps</span>
+<span class="linenos">13</span><span class="s2">4</span>
+<span class="linenos">14</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">15</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">16</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">17</span><span class="sd">        eps 0</span>
+<span class="linenos">18</span><span class="sd">        a 1</span>
+<span class="linenos">19</span><span class="sd">        b 2</span>
+<span class="linenos">20</span><span class="sd">        c 3</span>
+<span class="linenos">21</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">22</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">25</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">26</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">27</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">28</span>    <span class="n">osymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">29</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">30</span>    <span class="n">keep_osymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">31</span><span class="p">)</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">34</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">35</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer-before-reverse.svg&quot;</span><span class="p">)</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">require_superinitial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">40</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">41</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer-after-reverse.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id69" style="width: 600px">
+<img alt="transducer-before-reverse.svg" src="../_images/transducer-before-reverse.svg" /><figcaption>
+<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Visualization of transducer-before-reverse.svg</span><a class="headerlink" href="#id69" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id70" style="width: 600px">
+<img alt="transducer-after-reverse.svg" src="../_images/transducer-after-reverse.svg" /><figcaption>
+<p><span class="caption-number">Fig. 44 </span><span class="caption-text">Visualization of transducer-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id70" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 4 Revert a transducer (require_superinitial=False)</strong></p>
+<div class="literal-block-wrapper docutils container" id="id71">
+<div class="code-block-caption"><span class="caption-number">Listing 27 </span><span class="caption-text">Revert a transducer using require_superinitial=False</span><a class="headerlink" href="#id71" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a a</span>
+<span class="linenos"> 9</span><span class="s2">1 2 b b</span>
+<span class="linenos">10</span><span class="s2">1 3 c c</span>
+<span class="linenos">11</span><span class="s2">2 4 eps eps</span>
+<span class="linenos">12</span><span class="s2">3 4 eps eps</span>
+<span class="linenos">13</span><span class="s2">4</span>
+<span class="linenos">14</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">15</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">16</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">17</span><span class="sd">        eps 0</span>
+<span class="linenos">18</span><span class="sd">        a 1</span>
+<span class="linenos">19</span><span class="sd">        b 2</span>
+<span class="linenos">20</span><span class="sd">        c 3</span>
+<span class="linenos">21</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">22</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">25</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">26</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">27</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">28</span>    <span class="n">osymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">29</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">30</span>    <span class="n">keep_osymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">31</span><span class="p">)</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">34</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">35</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer-before-reverse-2.svg&quot;</span><span class="p">)</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">require_superinitial</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">40</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">41</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer-after-reverse-2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id72" style="width: 600px">
+<img alt="transducer-before-reverse-2.svg" src="../_images/transducer-before-reverse-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 45 </span><span class="caption-text">Visualization of transducer-before-reverse-2.svg</span><a class="headerlink" href="#id72" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id73" style="width: 600px">
+<img alt="transducer-after-reverse-2.svg" src="../_images/transducer-after-reverse-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 46 </span><span class="caption-text">Visualization of transducer-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id73" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
 
 </section>
 <section id="rmepsilon">
@@ -1008,7 +1661,94 @@ Compute property values (if unknown to FST)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.rmepsilon">
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">rmepsilon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nstate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.rmepsilon" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This operation removes epsilon-transitions (when both the input and output
+label are an epsilon) from a transducer. The result will be an equivalent FST
+that has no such epsilon transitions.</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/RmEpsilonDoc">https://www.openfst.org/twiki/bin/view/FST/RmEpsilonDoc</a></p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The FST is modified in-place.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_out</strong> – An FST. It is modified in-place.</p></li>
+<li><p><strong>connect</strong> – Trim output</p></li>
+<li><p><strong>delta</strong> – Comparison/quantization delta</p></li>
+<li><p><strong>nstate</strong> – State number threshold</p></li>
+<li><p><strong>queue_type</strong> – Queue type: one of: “auto”, “fifo”, “lifo”, “shortest”, “state”, “top”</p></li>
+<li><p><strong>weight</strong> – Weight threshold</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+<p><strong>Example Remove epsilon of a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id74">
+<div class="code-block-caption"><span class="caption-number">Listing 28 </span><span class="caption-text">Remove epsilon of transducer</span><a class="headerlink" href="#id74" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 eps eps 1</span>
+<span class="linenos"> 9</span><span class="s2">1 2 a eps 2</span>
+<span class="linenos">10</span><span class="s2">1 2 eps p 3</span>
+<span class="linenos">11</span><span class="s2">1 2 eps eps 4</span>
+<span class="linenos">12</span><span class="s2">2 2 eps eps 5</span>
+<span class="linenos">13</span><span class="s2">2 3 eps eps 6</span>
+<span class="linenos">14</span><span class="s2">3 7</span>
+<span class="linenos">15</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">16</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">17</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">18</span><span class="sd">        eps 0</span>
+<span class="linenos">19</span><span class="sd">        a 1</span>
+<span class="linenos">20</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">21</span><span class="p">)</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="linenos">24</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">25</span><span class="sd">        eps 0</span>
+<span class="linenos">26</span><span class="sd">        p 1</span>
+<span class="linenos">27</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">28</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="linenos">31</span>    <span class="n">s</span><span class="p">,</span>
+<span class="linenos">32</span>    <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">33</span>    <span class="n">isymbols</span><span class="o">=</span><span class="n">isym</span><span class="p">,</span>
+<span class="linenos">34</span>    <span class="n">osymbols</span><span class="o">=</span><span class="n">osym</span><span class="p">,</span>
+<span class="linenos">35</span>    <span class="n">keep_isymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">36</span>    <span class="n">keep_osymbols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">37</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">41</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">42</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer.svg&quot;</span><span class="p">)</span>
+<span class="linenos">43</span>
+<span class="linenos">44</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">rmepsilon</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">47</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">48</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;transducer-after-rmepsilon.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id75" style="width: 600px">
+<img alt="transducer.svg" src="../_images/transducer6.svg" /><figcaption>
+<p><span class="caption-number">Fig. 47 </span><span class="caption-text">Visualization of transducer.svg</span><a class="headerlink" href="#id75" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id76" style="width: 600px">
+<img alt="transducer-after-rmepislon.svg" src="../_images/transducer-after-rmepsilon.svg" /><figcaption>
+<p><span class="caption-number">Fig. 48 </span><span class="caption-text">Visualization of transducer-after-rmepsilon.svg</span><a class="headerlink" href="#id76" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
 
 </section>
 <section id="times">
