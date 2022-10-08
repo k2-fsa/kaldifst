@@ -9,6 +9,7 @@ all:
 	$(MAKE) -C connect
 	$(MAKE) -C invert
 	$(MAKE) -C reverse
+	$(MAKE) -C minimize
 
 clean:
 	$(MAKE) -C fstcompile clean
@@ -20,3 +21,4 @@ clean:
 	$(MAKE) -C connect clean
 	$(MAKE) -C invert clean
 	$(MAKE) -C reverse clean
+	$(MAKE) -C minimize clean
