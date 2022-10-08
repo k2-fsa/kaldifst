@@ -43,7 +43,6 @@ Returns:
     :figwidth: 600px
 
     Visualization of after-invert.svg
-
 )doc";
 
 namespace kaldifst {

@@ -11,6 +11,7 @@ all:
 	$(MAKE) -C reverse
 	$(MAKE) -C minimize
 	$(MAKE) -C minimize_encoded
+	$(MAKE) -C rmepsilon
 
 clean:
 	$(MAKE) -C fstcompile clean
@@ -24,3 +25,4 @@ clean:
 	$(MAKE) -C reverse clean
 	$(MAKE) -C minimize clean
 	$(MAKE) -C minimize_encoded clean
+	$(MAKE) -C rmepsilon clean
