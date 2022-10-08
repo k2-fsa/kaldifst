@@ -24,3 +24,8 @@ from _kaldifst import (
 )
 
 from .iterator import ArcIterator, StateIterator
+from .table_types import (
+    RandomAccessVectorFstReader,
+    SequentialVectorFstReader,
+    VectorFstWriter,
+)

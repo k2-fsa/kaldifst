@@ -21,6 +21,7 @@
 #include "kaldifst/python/csrc/fstminimize.h"
 #include "kaldifst/python/csrc/fstreverse.h"
 #include "kaldifst/python/csrc/fstrmepsilon.h"
+#include "kaldifst/python/csrc/kaldi-table.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/symbol-table.h"
 #include "kaldifst/python/csrc/table-matcher.h"
@@ -55,6 +56,8 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstRmEpsilon(m);
   PybindFstReverse(m);
   PybindFstConnect(m);
+
+  PybindKaldiTable(m);
 }
 
 }  // namespace kaldifst
