@@ -5,30 +5,19 @@ import graphviz
 import kaldifst
 
 s = """
-0 1 a y 1
-0 1 b x 3
-1 1 d v 7
-1 2 c w 5
-2 3 f u 9
-3 2
+0 1 a a
+1 2 b b
+1 3 c c
+2 4 eps eps
+3 4 eps eps
+4
 """
 isym = kaldifst.SymbolTable.from_str(
     """
+        eps 0
         a 1
         b 2
         c 3
-        d 4
-        f 5
-"""
-)
-
-osym = kaldifst.SymbolTable.from_str(
-    """
-        x 1
-        y 2
-        u 3
-        w 4
-        v 5
 """
 )
 
@@ -36,18 +25,17 @@ fst = kaldifst.compile(
     s,
     acceptor=False,
     isymbols=isym,
-    osymbols=osym,
+    osymbols=isym,
     keep_isymbols=True,
     keep_osymbols=True,
 )
 
+fst_dot = kaldifst.draw(fst, acceptor=False, portrait=True)
+fst_source = graphviz.Source(fst_dot)
+fst_source.render(outfile="transducer-before-reverse.svg")
+
+fst = kaldifst.reverse(fst, require_superinitial=True)
 
 fst_dot = kaldifst.draw(fst, acceptor=False, portrait=True)
 fst_source = graphviz.Source(fst_dot)
-fst_source.render(outfile="before-invert.svg")
-
-kaldifst.invert(fst)
-
-fst_dot = kaldifst.draw(fst, acceptor=False, portrait=True)
-fst_source = graphviz.Source(fst_dot)
-fst_source.render(outfile="after-invert.svg")
+fst_source.render(outfile="transducer-after-reverse.svg")
