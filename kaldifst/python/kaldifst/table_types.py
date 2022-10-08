@@ -2,9 +2,8 @@
 # See ../../../LICENSE for clarification regarding multiple authors
 
 
-from typing import Any, List, Tuple, Union
+from typing import Any, Tuple
 
-import numpy as np
 from _kaldifst import (
     _RandomAccessVectorFstReader,
     _SequentialVectorFstReader,
