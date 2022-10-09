@@ -1,12 +1,12 @@
 .. _quick-start-4:
 
-Read and write arc/scp files from Kaldi
+Read and write ark/scp files from Kaldi
 =======================================
 
 In this section, we demonstrate
 
-  - how to generate arc/scp files that can be read by `Kaldi`_
-  - how to read arc/scp files from Kaldi
+  - how to generate ark/scp files that can be read by `Kaldi`_
+  - how to read ark/scp files from Kaldi
 
 Generate ark/scp files
 ----------------------
