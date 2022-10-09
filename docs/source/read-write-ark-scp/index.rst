@@ -1,4 +1,4 @@
-.. _quick-start-4:
+.. _read-write-ark-scp:
 
 Read and write ark/scp files from Kaldi
 =======================================
@@ -14,7 +14,7 @@ Generate ark/scp files
 We provide ``kaldifst.VectorFstWriter`` to save FSTs to ark/scp files.
 The following is an example:
 
-.. literalinclude:: ./code/quick-start-4/writer.py
+.. literalinclude:: ./code/writer.py
    :language: python
    :linenos:
    :caption: Create ark/scp files with ``kaldifst.VectorFstWriter``.
@@ -52,7 +52,7 @@ Read ark/scp files sequentially
 We provide ``kaldifst.SequentialVectorFstReader`` to read FSTs from ark/scp files
 sequentially. The following is an example:
 
-.. literalinclude:: ./code/quick-start-4/sequential-reader.py
+.. literalinclude:: ./code/sequential-reader.py
    :language: python
    :linenos:
    :caption: Read ark/scp files sequentially with ``kaldifst.SequentialVectorFstReader``.
@@ -79,7 +79,7 @@ Read ark/scp files randomly
 We provide ``kaldifst.RandomAccessVectorFstReader`` to read FSTs from ark/scp files
 randomly. The following is an example:
 
-.. literalinclude:: ./code/quick-start-4/random-access-reader.py
+.. literalinclude:: ./code/random-access-reader.py
    :language: python
    :linenos:
    :caption: Read ark/scp files randomly with ``kaldifst.RandomAccessVectorFstReader``.
