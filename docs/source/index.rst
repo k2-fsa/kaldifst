@@ -16,6 +16,7 @@ Python wrapper for `OpenFst`_ and its extensions from  `Kaldi`_, e.g.,
    ./install/index
    ./quick_start/index
    ./convert-k2-to-openfst/index
+   ./read-write-ark-scp/index
 
 .. toctree::
    :maxdepth: 2

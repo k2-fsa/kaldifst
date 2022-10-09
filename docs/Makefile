@@ -24,9 +24,11 @@ source/python_api/api.rst:
 	$(MAKE) -C ./source/python_api/code
 	$(MAKE) -C ./source/quick_start/code
 	$(MAKE) -C ./source/convert-k2-to-openfst/code
+	$(MAKE) -C ./source/read-write-ark-scp/code
 
 
 clean:
 	$(RM) -v source/python_api/api.rst
 	$(MAKE) -C ./source/python_api/code clean
 	$(MAKE) -C ./source/convert-k2-to-openfst/code clean
+	$(MAKE) -C ./source/read-write-ark-scp/code clean

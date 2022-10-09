@@ -1,7 +1,7 @@
-Convert FST from k2 to OpenFST
+Convert FST from k2 to OpenFst
 ==============================
 
-This section describes how to convert an FST from `k2`_ to `OpenFST`_.
+This section describes how to convert an FST from `k2`_ to `OpenFst`_.
 
 .. toctree::
 
