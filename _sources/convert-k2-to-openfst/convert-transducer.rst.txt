@@ -1,7 +1,7 @@
 Convert transducers
 ===================
 
-This section demonstrates how to convert a transducer from `k2`_ to `OpenFST`_.
+This section demonstrates how to convert a transducer from `k2`_ to `OpenFst`_.
 
 .. figure:: ./code/k2-transducer.svg
     :alt: k2-transducer.svg
@@ -15,10 +15,10 @@ This section demonstrates how to convert a transducer from `k2`_ to `OpenFST`_.
     :align: center
     :figwidth: 600px
 
-    The above transducer converted to `OpenFST`_.
+    The above transducer converted to `OpenFst`_.
     Pay attention to the ``negative`` sign for numbers on the arcs.
 
 .. literalinclude:: ./code/convert-transducer.py
    :language: python
    :linenos:
-   :caption: Convert a transducer from `k2`_ to `OpenFST`_
+   :caption: Convert a transducer from `k2`_ to `OpenFst`_

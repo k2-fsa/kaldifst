@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Convert transducers" href="convert-transducer.html" />
-    <link rel="prev" title="Convert FST from k2 to OpenFST" href="index.html" /> 
+    <link rel="prev" title="Convert FST from k2 to OpenFst" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,11 +44,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start/index.html">Quick start</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Convert FST from k2 to OpenFST</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Convert FST from k2 to OpenFst</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Convert acceptors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="convert-transducer.html">Convert transducers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../read-write-ark-scp/index.html">Read and write ark/scp files from Kaldi</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -69,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Convert FST from k2 to OpenFST</a> &raquo;</li>
+          <li><a href="index.html">Convert FST from k2 to OpenFst</a> &raquo;</li>
       <li>Convert acceptors</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com/k2-fsa/kaldifst/blob/master/docs/source/convert-k2-to-openfst/convert-acceptor.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -82,7 +83,7 @@
              
   <section id="convert-acceptors">
 <h1>Convert acceptors<a class="headerlink" href="#convert-acceptors" title="Permalink to this headline"></a></h1>
-<p>This section demonstrates how to convert an acceptor from <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a> to <a class="reference external" href="https://www.openfst.org/">OpenFST</a>.</p>
+<p>This section demonstrates how to convert an acceptor from <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a> to <a class="reference external" href="https://www.openfst.org/">OpenFst</a>.</p>
 <figure class="align-center" id="id1" style="width: 600px">
 <img alt="k2-acceptor.svg" src="../_images/k2-acceptor.svg" /><figcaption>
 <p><span class="caption-number">Fig. 5 </span><span class="caption-text">An acceptor in <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a>.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
@@ -90,12 +91,12 @@
 </figure>
 <figure class="align-center" id="id2" style="width: 600px">
 <img alt="openfst-acceptor.svg" src="../_images/openfst-acceptor.svg" /><figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">The above acceptor converted to <a class="reference external" href="https://www.openfst.org/">OpenFST</a>.
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">The above acceptor converted to <a class="reference external" href="https://www.openfst.org/">OpenFst</a>.
 Pay attention to the <code class="docutils literal notranslate"><span class="pre">negative</span></code> sign for numbers on the arcs.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-number">Listing 7 </span><span class="caption-text">Convert an acceptor from <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a> to <a class="reference external" href="https://www.openfst.org/">OpenFST</a></span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">Convert an acceptor from <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a> to <a class="reference external" href="https://www.openfst.org/">OpenFst</a></span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -143,7 +144,7 @@ Pay attention to the <code class="docutils literal notranslate"><span class="pre
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Convert FST from k2 to OpenFST" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Convert FST from k2 to OpenFst" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="convert-transducer.html" class="btn btn-neutral float-right" title="Convert transducers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

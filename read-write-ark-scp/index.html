@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Read and write arc/scp files from Kaldi &mdash; kaldifst 1.2 documentation</title>
+  <title>Read and write ark/scp files from Kaldi &mdash; kaldifst 1.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Convert FST from k2 to OpenFST" href="../convert-k2-to-openfst/index.html" />
-    <link rel="prev" title="Iterating FSTs" href="quick-start-3.html" /> 
+    <link rel="next" title="Python API reference" href="../python_api/index.html" />
+    <link rel="prev" title="Convert transducers" href="../convert-k2-to-openfst/convert-transducer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,19 +43,14 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Quick start</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="quick-start.html">Creating FSTs using constructors and mutators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quick-start-2.html">Creating FSTs from strings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quick-start-3.html">Iterating FSTs</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Read and write arc/scp files from Kaldi</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#generate-ark-scp-files">Generate ark/scp files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#read-ark-scp-files-sequentially">Read ark/scp files sequentially</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#read-ark-scp-files-randomly">Read ark/scp files randomly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start/index.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../convert-k2-to-openfst/index.html">Convert FST from k2 to OpenFst</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Read and write ark/scp files from Kaldi</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generate-ark-scp-files">Generate ark/scp files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#read-ark-scp-files-sequentially">Read ark/scp files sequentially</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#read-ark-scp-files-randomly">Read ark/scp files randomly</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../convert-k2-to-openfst/index.html">Convert FST from k2 to OpenFST</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -76,10 +71,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Quick start</a> &raquo;</li>
-      <li>Read and write arc/scp files from Kaldi</li>
+      <li>Read and write ark/scp files from Kaldi</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/k2-fsa/kaldifst/blob/master/docs/source/quick_start/quick-start-4.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/k2-fsa/kaldifst/blob/master/docs/source/read-write-ark-scp/index.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -87,13 +81,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="read-and-write-arc-scp-files-from-kaldi">
-<span id="quick-start-4"></span><h1>Read and write arc/scp files from Kaldi<a class="headerlink" href="#read-and-write-arc-scp-files-from-kaldi" title="Permalink to this headline"></a></h1>
+  <section id="read-and-write-ark-scp-files-from-kaldi">
+<span id="read-write-ark-scp"></span><h1>Read and write ark/scp files from Kaldi<a class="headerlink" href="#read-and-write-ark-scp-files-from-kaldi" title="Permalink to this headline"></a></h1>
 <p>In this section, we demonstrate</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>how to generate arc/scp files that can be read by <a class="reference external" href="https://github.com/kaldi-asr/kaldi">Kaldi</a></p></li>
-<li><p>how to read arc/scp files from Kaldi</p></li>
+<li><p>how to generate ark/scp files that can be read by <a class="reference external" href="https://github.com/kaldi-asr/kaldi">Kaldi</a></p></li>
+<li><p>how to read ark/scp files from Kaldi</p></li>
 </ul>
 </div></blockquote>
 <section id="generate-ark-scp-files">
@@ -101,7 +95,7 @@
 <p>We provide <code class="docutils literal notranslate"><span class="pre">kaldifst.VectorFstWriter</span></code> to save FSTs to ark/scp files.
 The following is an example:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">Create ark/scp files with <code class="docutils literal notranslate"><span class="pre">kaldifst.VectorFstWriter</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">Create ark/scp files with <code class="docutils literal notranslate"><span class="pre">kaldifst.VectorFstWriter</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 3</span>
@@ -205,7 +199,7 @@ LOG <span class="o">(</span>fstcopy<span class="o">[</span><span class="m">5</sp
 <p>We provide <code class="docutils literal notranslate"><span class="pre">kaldifst.SequentialVectorFstReader</span></code> to read FSTs from ark/scp files
 sequentially. The following is an example:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-number">Listing 5 </span><span class="caption-text">Read ark/scp files sequentially with <code class="docutils literal notranslate"><span class="pre">kaldifst.SequentialVectorFstReader</span></code>.</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 7 </span><span class="caption-text">Read ark/scp files sequentially with <code class="docutils literal notranslate"><span class="pre">kaldifst.SequentialVectorFstReader</span></code>.</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 3</span>
@@ -248,7 +242,7 @@ sequentially. The following is an example:</p>
 <p>We provide <code class="docutils literal notranslate"><span class="pre">kaldifst.RandomAccessVectorFstReader</span></code> to read FSTs from ark/scp files
 randomly. The following is an example:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">Read ark/scp files randomly with <code class="docutils literal notranslate"><span class="pre">kaldifst.RandomAccessVectorFstReader</span></code>.</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 8 </span><span class="caption-text">Read ark/scp files randomly with <code class="docutils literal notranslate"><span class="pre">kaldifst.RandomAccessVectorFstReader</span></code>.</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 3</span>
@@ -291,8 +285,8 @@ randomly. The following is an example:</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="quick-start-3.html" class="btn btn-neutral float-left" title="Iterating FSTs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../convert-k2-to-openfst/index.html" class="btn btn-neutral float-right" title="Convert FST from k2 to OpenFST" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../convert-k2-to-openfst/convert-transducer.html" class="btn btn-neutral float-left" title="Convert transducers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../python_api/index.html" class="btn btn-neutral float-right" title="Python API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
