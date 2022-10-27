@@ -11,7 +11,7 @@ function(download_openfst)
 
   include(FetchContent)
 
-  set(openfst_URL  "https://github.com/kkm000/openfst/archive/refs/tags/win/1.6.5.1.tar.gz")
+  set(openfst_URL  "http://github.com/kkm000/openfst/archive/refs/tags/win/1.6.5.1.tar.gz")
   set(openfst_HASH "SHA256=02c49b559c3976a536876063369efc0e41ab374be1035918036474343877046e")
 
   set(HAVE_BIN OFF CACHE BOOL "" FORCE)
