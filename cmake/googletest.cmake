@@ -14,17 +14,9 @@
 # limitations under the License.
 
 function(download_googltest)
-  if(CMAKE_VERSION VERSION_LESS 3.11)
-    # FetchContent is available since 3.11,
-    # we've copied it to ${CMAKE_SOURCE_DIR}/cmake/Modules
-    # so that it can be used in lower CMake versions.
-    message(STATUS "Use FetchContent provided by kaldifst")
-    list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
-  endif()
-
   include(FetchContent)
 
-  set(googletest_URL  "http://github.com/google/googletest/archive/release-1.10.0.tar.gz")
+  set(googletest_URL  "https://github.com/google/googletest/archive/release-1.10.0.tar.gz")
   set(googletest_HASH "SHA256=9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb")
 
   set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
