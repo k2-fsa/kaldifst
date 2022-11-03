@@ -1,6 +1,6 @@
 package:
   name: kaldifst
-  version: "1.4"
+  version: "1.5"
 
 source:
   path: "{{ environ.get('KALDIFST_ROOT_DIR') }}"
