@@ -19,6 +19,12 @@ function(download_googltest)
   set(googletest_URL  "https://github.com/google/googletest/archive/release-1.10.0.tar.gz")
   set(googletest_HASH "SHA256=9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb")
 
+  # If you don't have access to the Internet, please download the file to your
+  # local drive and replace with the line below (you need to change it accordingly.
+  # I am placing it in /mypath/release-1.10.0.tar.gz, but you can place it
+  # anywhere you like)
+  # set(googletest_URL  "/mypath/release-1.10.0.tar.gz")
+
   set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
   set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
   set(gtest_disable_pthreads ON CACHE BOOL "" FORCE)

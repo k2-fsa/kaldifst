@@ -6,6 +6,12 @@ function(download_openfst)
   set(openfst_URL  "https://github.com/kkm000/openfst/archive/refs/tags/win/1.6.5.1.tar.gz")
   set(openfst_HASH "SHA256=02c49b559c3976a536876063369efc0e41ab374be1035918036474343877046e")
 
+  # If you don't have access to the Internet, please download the file to your
+  # local drive and replace with the line below (you need to change it accordingly.
+  # I am placing it in /mypath/openfst-win-1.6.5.1.tar.gz, but you can place it
+  # anywhere you like)
+  # set(openfst_URL  "/mypath/openfst-win-1.6.5.1.tar.gz")
+
   set(HAVE_BIN OFF CACHE BOOL "" FORCE)
   set(HAVE_SCRIPT ON CACHE BOOL "" FORCE)
   set(HAVE_COMPACT OFF CACHE BOOL "" FORCE)
