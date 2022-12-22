@@ -18,6 +18,12 @@ function(download_pybind11)
 
   set(pybind11_URL  "https://github.com/pybind/pybind11/archive/v2.6.0.tar.gz")
   set(pybind11_HASH "SHA256=90b705137b69ee3b5fc655eaca66d0dc9862ea1759226f7ccd3098425ae69571")
+  
+  # If you don't have access to the Internet, please download the file to your
+  # local drive and replace with the line below (you need to change it accordingly.
+  # I am placing it in /mypath/pybind11-2.6.0.tar.gz, but you can place it
+  # anywhere you like)
+  # set(pybind11_URL  "/mypath/pybind11-2.6.0.tar.gz")
 
   set(double_quotes "\"")
   set(dollar "\$")
