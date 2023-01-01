@@ -14,21 +14,17 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(kaldifst CXX)
 
 # Remember to also change ./scripts/conda/kaldifst/meta.yaml
-set(KALDIFST_VERSION "1.5.1")
+set(KALDIFST_VERSION "1.5.2")
 
-set(ALLOWABLE_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
-set(DEFAULT_BUILD_TYPE "Release")
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "${ALLOWABLE_BUILD_TYPES}")
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  # CMAKE_CONFIGURATION_TYPES: with config type values from other generators (IDE).
-  message(STATUS "No CMAKE_BUILD_TYPE given, default to ${DEFAULT_BUILD_TYPE}")
-  set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}")
-elseif(NOT CMAKE_BUILD_TYPE IN_LIST ALLOWABLE_BUILD_TYPES)
-  message(FATAL_ERROR "Invalid build type: ${CMAKE_BUILD_TYPE}, \
-    choose one from ${ALLOWABLE_BUILD_TYPES}")
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "No CMAKE_BUILD_TYPE given, default to Release")
+  set(CMAKE_BUILD_TYPE Release)
 endif()
+message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+
 
 option(KALDIFST_BUILD_TESTS "Whether to build tests or not" OFF)
+option(KALDIFST_BUILD_PYTHON "Whether to build Python" ON)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
@@ -72,7 +68,10 @@ endif()
 
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
-include(pybind11)
+if(KALDIFST_BUILD_PYTHON)
+  include(pybind11)
+endif()
+
 include(openfst)
 if(KALDIFST_BUILD_TESTS)
   enable_testing()
