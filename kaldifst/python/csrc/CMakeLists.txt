@@ -28,12 +28,6 @@ pybind11_add_module(_kaldifst
 )
 target_link_libraries(_kaldifst PRIVATE kaldifst_core fstscript)
 
-# if(PYTHON_LIBRARY)
-#   target_link_libraries(_kaldifst PUBLIC ${PYTHON_LIBRARY})
-# elseif(PYTHON_LIBRARIES)
-#   target_link_libraries(_kaldifst PUBLIC ${PYTHON_LIBRARIES})
-# endif()
-
 if(APPLE)
   execute_process(
     COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"

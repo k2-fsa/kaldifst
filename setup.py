@@ -65,8 +65,6 @@ class BuildExtension(build_ext):
 
                 cmake {cmake_args} {kaldifst_dir}
 
-                cat CMakeCache.txt
-
                 make {make_args} install
             """
             print(f"build command is:\n{build_cmd}")
