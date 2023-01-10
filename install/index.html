@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; kaldifst 1.5.2 documentation</title>
+  <title>Installation &mdash; kaldifst 1.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.5.2
+                1.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -88,25 +88,25 @@
 macOS. <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">&gt;=</span> <span class="pre">3.6</span></code> is known to work.</p>
 <section id="using-conda">
 <h2>Using conda<a class="headerlink" href="#using-conda" title="Permalink to this headline"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c kaldifst kaldifst
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>kaldifst<span class="w"> </span>kaldifst
 </pre></div>
 </div>
 <p>To uninstall <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda remove kaldifst
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>remove<span class="w"> </span>kaldifst
 </pre></div>
 </div>
 </section>
 <section id="using-pip">
 <h2>Using pip<a class="headerlink" href="#using-pip" title="Permalink to this headline"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install --verbose kaldifst
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--verbose<span class="w"> </span>kaldifst
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install --verbose -U git+https://github.com/kaldifst/kaldifst.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--verbose<span class="w"> </span>-U<span class="w"> </span>git+https://github.com/kaldifst/kaldifst.git
 </pre></div>
 </div>
 <p>To uninstall <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip uninstall kaldifst
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>uninstall<span class="w"> </span>kaldifst
 </pre></div>
 </div>
 </section>
@@ -118,14 +118,14 @@ macOS. <code class="docutils literal notranslate"><span class="pre">Python</span
 </pre></div>
 </div>
 <p>To uninstall <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip uninstall kaldifst
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>uninstall<span class="w"> </span>kaldifst
 </pre></div>
 </div>
 </section>
 <section id="check-kaldifst">
 <h2>Check kaldifst<a class="headerlink" href="#check-kaldifst" title="Permalink to this headline"></a></h2>
 <p>To check that <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a> was installed successfully, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -c <span class="s2">&quot;import kaldifst; print(kaldifst.__version__)&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import kaldifst; print(kaldifst.__version__)&quot;</span>
 </pre></div>
 </div>
 <p>It should print the version of <a class="reference external" href="https://github.com/k2-fsa/kaldifst">kaldifst</a>, e.g., <code class="docutils literal notranslate"><span class="pre">0.8</span></code>.</p>

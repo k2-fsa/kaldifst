@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kaldifst &mdash; kaldifst 1.5.2 documentation</title>
+  <title>kaldifst &mdash; kaldifst 1.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.5.2
+                1.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -1018,7 +1018,7 @@ exchanging the FST’s input and output labels.</p>
 <span class="linenos">13</span><span class="s2">3 2</span>
 <span class="linenos">14</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">15</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">16</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">16</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">17</span><span class="sd">        a 1</span>
 <span class="linenos">18</span><span class="sd">        b 2</span>
 <span class="linenos">19</span><span class="sd">        c 3</span>
@@ -1028,7 +1028,7 @@ exchanging the FST’s input and output labels.</p>
 <span class="linenos">23</span><span class="p">)</span>
 <span class="linenos">24</span>
 <span class="linenos">25</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">26</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">26</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">27</span><span class="sd">        x 1</span>
 <span class="linenos">28</span><span class="sd">        y 2</span>
 <span class="linenos">29</span><span class="sd">        u 3</span>
@@ -1121,7 +1121,7 @@ True to minimize non-deterministic FSTs</p></li>
 <span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">20</span>
 <span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">22</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">23</span><span class="sd">        a 1</span>
 <span class="linenos">24</span><span class="sd">        b 2</span>
 <span class="linenos">25</span><span class="sd">        c 3</span>
@@ -1184,7 +1184,7 @@ True to minimize non-deterministic FSTs</p></li>
 <span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">20</span>
 <span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">22</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">23</span><span class="sd">        a 1</span>
 <span class="linenos">24</span><span class="sd">        b 2</span>
 <span class="linenos">25</span><span class="sd">        c 3</span>
@@ -1195,7 +1195,7 @@ True to minimize non-deterministic FSTs</p></li>
 <span class="linenos">30</span><span class="p">)</span>
 <span class="linenos">31</span>
 <span class="linenos">32</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">33</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">33</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">34</span><span class="sd">        a 1</span>
 <span class="linenos">35</span><span class="sd">        b 2</span>
 <span class="linenos">36</span><span class="sd">        c 3</span>
@@ -1244,11 +1244,11 @@ True to minimize non-deterministic FSTs</p></li>
 <span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">minimize_encoded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdMutableFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0009765625</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.minimize_encoded" title="Permalink to this definition"></a></dt>
 <dd><p>Minimizes after encoding; applicable to all FSTs.</p>
 <p>Its implementation is from <a class="reference external" href="https://github.com/kaldi-asr/kaldi">Kaldi</a>:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Map</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="n">QuantizeMapper</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&gt;</span><span class="p">(</span><span class="n">delta</span><span class="p">));</span><span class="w"></span>
-<span class="n">EncodeMapper</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encoder</span><span class="p">(</span><span class="n">kEncodeLabels</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">kEncodeWeights</span><span class="p">,</span><span class="w"> </span><span class="n">ENCODE</span><span class="p">);</span><span class="w"></span>
-<span class="n">Encode</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">encoder</span><span class="p">);</span><span class="w"></span>
-<span class="n">internal</span><span class="o">::</span><span class="n">AcceptorMinimize</span><span class="p">(</span><span class="n">fst</span><span class="p">);</span><span class="w"></span>
-<span class="n">Decode</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="n">encoder</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Map</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="n">QuantizeMapper</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&gt;</span><span class="p">(</span><span class="n">delta</span><span class="p">));</span>
+<span class="n">EncodeMapper</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&gt;</span><span class="w"> </span><span class="n">encoder</span><span class="p">(</span><span class="n">kEncodeLabels</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">kEncodeWeights</span><span class="p">,</span><span class="w"> </span><span class="n">ENCODE</span><span class="p">);</span>
+<span class="n">Encode</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">encoder</span><span class="p">);</span>
+<span class="n">internal</span><span class="o">::</span><span class="n">AcceptorMinimize</span><span class="p">(</span><span class="n">fst</span><span class="p">);</span>
+<span class="n">Decode</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="n">encoder</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>See also <a class="reference external" href="https://github.com/kaldi-asr/kaldi/blob/master/src/fstbin/fstminimizeencoded.cc">https://github.com/kaldi-asr/kaldi/blob/master/src/fstbin/fstminimizeencoded.cc</a>.</p>
@@ -1291,7 +1291,7 @@ True to minimize non-deterministic FSTs</p></li>
 <span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">20</span>
 <span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">22</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">23</span><span class="sd">        a 1</span>
 <span class="linenos">24</span><span class="sd">        b 2</span>
 <span class="linenos">25</span><span class="sd">        c 3</span>
@@ -1355,7 +1355,7 @@ True to minimize non-deterministic FSTs</p></li>
 <span class="linenos">19</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">20</span>
 <span class="linenos">21</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">22</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">22</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">23</span><span class="sd">        a 1</span>
 <span class="linenos">24</span><span class="sd">        b 2</span>
 <span class="linenos">25</span><span class="sd">        c 3</span>
@@ -1366,7 +1366,7 @@ True to minimize non-deterministic FSTs</p></li>
 <span class="linenos">30</span><span class="p">)</span>
 <span class="linenos">31</span>
 <span class="linenos">32</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">33</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">33</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">34</span><span class="sd">        a 1</span>
 <span class="linenos">35</span><span class="sd">        b 2</span>
 <span class="linenos">36</span><span class="sd">        c 3</span>
@@ -1457,7 +1457,7 @@ with weight a.Reverse().</p>
 <span class="linenos">16</span><span class="s2">3 2</span>
 <span class="linenos">17</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">18</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">19</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">19</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">20</span><span class="sd">        eps 0</span>
 <span class="linenos">21</span><span class="sd">        a 1</span>
 <span class="linenos">22</span><span class="sd">        b 2</span>
@@ -1517,7 +1517,7 @@ with weight a.Reverse().</p>
 <span class="linenos">16</span><span class="s2">3 2</span>
 <span class="linenos">17</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">18</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">19</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">19</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">20</span><span class="sd">        eps 0</span>
 <span class="linenos">21</span><span class="sd">        a 1</span>
 <span class="linenos">22</span><span class="sd">        b 2</span>
@@ -1574,7 +1574,7 @@ with weight a.Reverse().</p>
 <span class="linenos">13</span><span class="s2">4</span>
 <span class="linenos">14</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">15</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">16</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">16</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">17</span><span class="sd">        eps 0</span>
 <span class="linenos">18</span><span class="sd">        a 1</span>
 <span class="linenos">19</span><span class="sd">        b 2</span>
@@ -1631,7 +1631,7 @@ with weight a.Reverse().</p>
 <span class="linenos">13</span><span class="s2">4</span>
 <span class="linenos">14</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">15</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">16</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">16</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">17</span><span class="sd">        eps 0</span>
 <span class="linenos">18</span><span class="sd">        a 1</span>
 <span class="linenos">19</span><span class="sd">        b 2</span>
@@ -1720,14 +1720,14 @@ that has no such epsilon transitions.</p>
 <span class="linenos">14</span><span class="s2">3 7</span>
 <span class="linenos">15</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">16</span><span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">17</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">17</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">18</span><span class="sd">        eps 0</span>
 <span class="linenos">19</span><span class="sd">        a 1</span>
 <span class="linenos">20</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">21</span><span class="p">)</span>
 <span class="linenos">22</span>
 <span class="linenos">23</span><span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">24</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">24</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">25</span><span class="sd">        eps 0</span>
 <span class="linenos">26</span><span class="sd">        p 1</span>
 <span class="linenos">27</span><span class="sd">&quot;&quot;&quot;</span>

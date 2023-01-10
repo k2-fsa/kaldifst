@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Read and write ark/scp files from Kaldi &mdash; kaldifst 1.5.2 documentation</title>
+  <title>Read and write ark/scp files from Kaldi &mdash; kaldifst 1.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.5.2
+                1.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -107,7 +107,7 @@ The following is an example:</p>
 <span class="linenos"> 9</span><span class="s2">    2 0.25</span>
 <span class="linenos">10</span><span class="s2">    &quot;&quot;&quot;</span>
 <span class="linenos">11</span>    <span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">12</span>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">12</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">13</span><span class="sd">      a 1</span>
 <span class="linenos">14</span><span class="sd">      b 2</span>
 <span class="linenos">15</span><span class="sd">    &quot;&quot;&quot;</span>
@@ -128,14 +128,14 @@ The following is an example:</p>
 <span class="linenos">30</span><span class="s2">    2 0.25</span>
 <span class="linenos">31</span><span class="s2">    &quot;&quot;&quot;</span>
 <span class="linenos">32</span>    <span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">33</span>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">33</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">34</span><span class="sd">      a 1</span>
 <span class="linenos">35</span><span class="sd">      b 2</span>
 <span class="linenos">36</span><span class="sd">    &quot;&quot;&quot;</span>
 <span class="linenos">37</span>    <span class="p">)</span>
 <span class="linenos">38</span>
 <span class="linenos">39</span>    <span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
-<span class="linenos">40</span>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">40</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos">41</span><span class="sd">      A 1</span>
 <span class="linenos">42</span><span class="sd">      B 2</span>
 <span class="linenos">43</span><span class="sd">    &quot;&quot;&quot;</span>
@@ -171,26 +171,26 @@ The following is an example:</p>
 </div>
 </div>
 <p>The above code creates two files</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ls -lh lat.scp lat.ark
--rw-r--r-- <span class="m">1</span> kuangfangjun root <span class="m">452</span> Oct  <span class="m">8</span> <span class="m">23</span>:18 lat.ark
--rw-r--r-- <span class="m">1</span> kuangfangjun root  <span class="m">32</span> Oct  <span class="m">8</span> <span class="m">23</span>:18 lat.scp
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span>lat.scp<span class="w"> </span>lat.ark
+-rw-r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>kuangfangjun<span class="w"> </span>root<span class="w"> </span><span class="m">452</span><span class="w"> </span>Oct<span class="w">  </span><span class="m">8</span><span class="w"> </span><span class="m">23</span>:18<span class="w"> </span>lat.ark
+-rw-r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>kuangfangjun<span class="w"> </span>root<span class="w">  </span><span class="m">32</span><span class="w"> </span>Oct<span class="w">  </span><span class="m">8</span><span class="w"> </span><span class="m">23</span>:18<span class="w"> </span>lat.scp
 </pre></div>
 </div>
 <p>You can use <a class="reference external" href="https://github.com/kaldi-asr/kaldi/blob/master/src/fstbin/fstcopy.cc">fstcopy</a>
 from <a class="reference external" href="https://github.com/kaldi-asr/kaldi">Kaldi</a> to view them:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ fstcopy scp:lat.scp ark,t:-
-fstcopy scp:lat.scp ark,t:-
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>fstcopy<span class="w"> </span>scp:lat.scp<span class="w"> </span>ark,t:-
+fstcopy<span class="w"> </span>scp:lat.scp<span class="w"> </span>ark,t:-
 lat1
-<span class="m">0</span>       <span class="m">1</span>       a       <span class="m">1</span>       <span class="m">0</span>.5
-<span class="m">1</span>       <span class="m">2</span>       b       <span class="m">2</span>       <span class="m">0</span>.8
-<span class="m">2</span>       <span class="m">0</span>.25
+<span class="m">0</span><span class="w">       </span><span class="m">1</span><span class="w">       </span>a<span class="w">       </span><span class="m">1</span><span class="w">       </span><span class="m">0</span>.5
+<span class="m">1</span><span class="w">       </span><span class="m">2</span><span class="w">       </span>b<span class="w">       </span><span class="m">2</span><span class="w">       </span><span class="m">0</span>.8
+<span class="m">2</span><span class="w">       </span><span class="m">0</span>.25
 
 lat2
-<span class="m">0</span>       <span class="m">1</span>       a       A       <span class="m">0</span>.5
-<span class="m">1</span>       <span class="m">2</span>       b       B       <span class="m">0</span>.8
-<span class="m">2</span>       <span class="m">0</span>.25
+<span class="m">0</span><span class="w">       </span><span class="m">1</span><span class="w">       </span>a<span class="w">       </span>A<span class="w">       </span><span class="m">0</span>.5
+<span class="m">1</span><span class="w">       </span><span class="m">2</span><span class="w">       </span>b<span class="w">       </span>B<span class="w">       </span><span class="m">0</span>.8
+<span class="m">2</span><span class="w">       </span><span class="m">0</span>.25
 
-LOG <span class="o">(</span>fstcopy<span class="o">[</span><span class="m">5</span>.5.1035~1-3dd90<span class="o">]</span>:main<span class="o">()</span>:fstcopy.cc:71<span class="o">)</span> Copied <span class="m">2</span> FSTs.
+LOG<span class="w"> </span><span class="o">(</span>fstcopy<span class="o">[</span><span class="m">5</span>.5.1035~1-3dd90<span class="o">]</span>:main<span class="o">()</span>:fstcopy.cc:71<span class="o">)</span><span class="w"> </span>Copied<span class="w"> </span><span class="m">2</span><span class="w"> </span>FSTs.
 </pre></div>
 </div>
 </section>
