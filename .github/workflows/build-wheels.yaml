@@ -4,12 +4,8 @@ on:
   push:
     branches:
       - wheel
-      - pre-built-wheels-2023-01-10
     tags:
       - '*'
-
-env:
-  SHERPA_NCNN_IS_IN_GITHUB_ACTIONS: 1
 
 concurrency:
   group: build-wheels-${{ github.ref }}
@@ -46,12 +42,12 @@ jobs:
         with:
           path: ./wheelhouse/*.whl
 
-      # - name: Publish wheels to PyPI
-      #   env:
-      #     TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-      #     TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      #   run: |
-      #     python3 -m pip install --upgrade pip
-      #     python3 -m pip install wheel twine setuptools
-      #
-      #     twine upload ./wheelhouse/*.whl
+      - name: Publish wheels to PyPI
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel twine setuptools
+
+          twine upload ./wheelhouse/*.whl
