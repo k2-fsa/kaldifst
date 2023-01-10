@@ -27,9 +27,10 @@ pybind11_add_module(_kaldifst
   vector-fst.cc
 )
 target_link_libraries(_kaldifst PRIVATE kaldifst_core fstscript)
-if(UNIX AND NOT APPLE)
+
+if(PYTHON_LIBRARY)
   target_link_libraries(_kaldifst PUBLIC ${PYTHON_LIBRARY})
-elseif(WIN32)
+elseif(PYTHON_LIBRARIES)
   target_link_libraries(_kaldifst PUBLIC ${PYTHON_LIBRARIES})
 endif()
 
