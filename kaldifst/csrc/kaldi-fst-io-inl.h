@@ -12,6 +12,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
+#include <vector>
 
 #include "fst/fst.h"
 #include "fst/script/print.h"
@@ -78,9 +80,9 @@ void ReadFstKaldi(std::istream &is, bool binary, VectorFst<Arc> *fst) {
     // Consume the \r on Windows, the \n that the text-form FST format starts
     // with, and any extra spaces that might have got in there somehow.
     while (std::isspace(is.peek()) && is.peek() != '\n') is.get();
-    if (is.peek() == '\n')
+    if (is.peek() == '\n') {
       is.get();  // consume the newline.
-    else {       // saw spaces but no newline.. this is not expected.
+    } else {     // saw spaces but no newline.. this is not expected.
       KALDIFST_ERR << "Reading FST: unexpected sequence of spaces "
                    << " at file position " << is.tellg();
     }

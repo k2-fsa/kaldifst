@@ -4,6 +4,7 @@
 
 #include "kaldifst/python/csrc/symbol-table.h"
 
+#include <string>
 #include <utility>
 #include <vector>
 

@@ -159,7 +159,7 @@ class Input {
   /// Equivalent to calling the default constructor followed by Open(); then, if
   /// binary != NULL, it calls ReadHeader(), putting the output in "binary"; it
   /// throws on error.
-  Input(const std::string &rxfilename, bool *contents_binary = NULL);
+  explicit Input(const std::string &rxfilename, bool *contents_binary = NULL);
 
   Input() : impl_(NULL) {}
 

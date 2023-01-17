@@ -4,6 +4,8 @@
 
 #include "kaldifst/csrc/kaldi-table.h"
 
+#include <string>
+
 #include "kaldifst/csrc/kaldi-fst-io.h"
 #include "kaldifst/csrc/kaldi-holder.h"
 #include "kaldifst/python/csrc/kaldi-table.h"
@@ -11,7 +13,8 @@
 namespace kaldifst {
 
 template <class Holder>
-void PybindTableWriter(py::module &m, const std::string &class_name,
+void PybindTableWriter(py::module &m,  // NOLINT
+                       const std::string &class_name,
                        const std::string &class_help_doc = "") {
   using PyClass = TableWriter<Holder>;
 
@@ -26,7 +29,8 @@ void PybindTableWriter(py::module &m, const std::string &class_name,
 }
 
 template <class Holder>
-void PybindSequentialTableReader(py::module &m, const std::string &class_name,
+void PybindSequentialTableReader(py::module &m,  // NOLINT
+                                 const std::string &class_name,
                                  const std::string &class_help_doc = "") {
   using PyClass = SequentialTableReader<Holder>;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
@@ -43,7 +47,8 @@ void PybindSequentialTableReader(py::module &m, const std::string &class_name,
 }
 
 template <class Holder>
-void PybindRandomAccessTableReader(py::module &m, const std::string &class_name,
+void PybindRandomAccessTableReader(py::module &m,  // NOLINT
+                                   const std::string &class_name,
                                    const std::string &class_help_doc = "") {
   using PyClass = RandomAccessTableReader<Holder>;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
@@ -57,7 +62,7 @@ void PybindRandomAccessTableReader(py::module &m, const std::string &class_name,
            py::return_value_policy::reference);
 }
 
-void PybindKaldiTable(py::module &m) {
+void PybindKaldiTable(py::module &m) {  // NOLINT
   PybindTableWriter<fst::VectorFstHolder>(m, "_VectorFstWriter");
   PybindSequentialTableReader<fst::VectorFstHolder>(
       m, "_SequentialVectorFstReader");

@@ -16,10 +16,10 @@
 // MERCHANTABLITY OR NON-INFRINGEMENT.
 // See the Apache 2 License for the specific language governing permissions and
 // limitations under the License.
-#ifndef KALDIFST_CSRC_UTIL_KALDI_IO_INL_H_
-#define KALDIFST_CSRC_UTIL_KALDI_IO_INL_H_
+#ifndef KALDIFST_CSRC_KALDI_IO_INL_H_
+#define KALDIFST_CSRC_KALDI_IO_INL_H_
 
-#include<string>
+#include <string>
 
 namespace kaldifst {
 
@@ -31,16 +31,10 @@ bool Input::OpenTextMode(const std::string &rxfilename) {
   return OpenInternal(rxfilename, false, NULL);
 }
 
-bool Input::IsOpen() {
-  return impl_ != NULL;
-}
+bool Input::IsOpen() { return impl_ != NULL; }
 
-bool Output::IsOpen() {
-  return impl_ != NULL;
-}
-
+bool Output::IsOpen() { return impl_ != NULL; }
 
 }  // namespace kaldifst
 
-
-#endif  // KALDIFST_CSRC_UTIL_KALDI_IO_INL_H_
+#endif  // KALDIFST_CSRC_KALDI_IO_INL_H_

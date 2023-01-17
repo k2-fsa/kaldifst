@@ -6,6 +6,7 @@
 #define KALDIFST_CSRC_LOG_H_
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 namespace kaldifst {
 
@@ -59,7 +60,7 @@ class Logger {
 
 class Voidifier {
  public:
-  void operator&(const Logger &)const {}
+  void operator&(const Logger &) const {}
 };
 
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__) || \
