@@ -18,12 +18,11 @@
 // See the Apache 2 License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef KALDIFST_CSRC_KALDI_SEMAPHORE_H_
 #define KALDIFST_CSRC_KALDI_SEMAPHORE_H_
 
-#include <condition_variable>
-#include <mutex>
+#include <condition_variable>  // NOLINT
+#include <mutex>               // NOLINT
 
 #include "kaldifst/csrc/log.h"
 
@@ -31,7 +30,7 @@ namespace kaldifst {
 
 class Semaphore {
  public:
-  Semaphore(int32_t count = 0);
+  explicit Semaphore(int32_t count = 0);
 
   ~Semaphore();
 
@@ -40,13 +39,13 @@ class Semaphore {
   void Signal();   ///< increase the counter
 
  private:
-  int32_t count_;    ///< the semaphore counter, 0 means block on Wait()
+  int32_t count_;  ///< the semaphore counter, 0 means block on Wait()
 
   std::mutex mutex_;
   std::condition_variable condition_variable_;
   KALDIFST_DISALLOW_COPY_AND_ASSIGN(Semaphore);
 };
 
-} //namespace kaldifst
+}  // namespace kaldifst
 
-#endif // KALDIFST_CSRC_KALDI_SEMAPHORE_H_ 
+#endif  // KALDIFST_CSRC_KALDI_SEMAPHORE_H_

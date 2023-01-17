@@ -9,7 +9,13 @@
 #ifndef KALDIFST_CSRC_DETERMINIZE_STAR_INL_H_
 #define KALDIFST_CSRC_DETERMINIZE_STAR_INL_H_
 
+#include <algorithm>
+#include <deque>
+#include <limits>
+#include <string>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include "fst/fst.h"
 #include "kaldifst/csrc/log.h"
@@ -79,9 +85,9 @@ class StringRepository {
 
   inline bool IsEmptyString(StringId id) { return id == no_symbol; }
   void SeqOfId(StringId id, std::vector<Label> *v) {
-    if (id == no_symbol)
+    if (id == no_symbol) {
       v->clear();
-    else if (id >= single_symbol_start) {
+    } else if (id >= single_symbol_start) {
       v->resize(1);
       (*v)[0] = id - single_symbol_start;
     } else {
@@ -90,9 +96,9 @@ class StringRepository {
     }
   }
   StringId RemovePrefix(StringId id, size_t prefix_len) {
-    if (prefix_len == 0)
+    if (prefix_len == 0) {
       return id;
-    else {
+    } else {
       std::vector<Label> v;
       SeqOfId(id, &v);
       size_t sz = v.size();
@@ -198,9 +204,9 @@ class DeterminizerStar {
     InputStateId start_id = ifst_->Start();
     if (start_id == kNoStateId) {
       determinized_ = true;
+      // Nothing to do.
       return;
-    }       // Nothing to do.
-    else {  // Insert start state into hash and queue.
+    } else {  // Insert start state into hash and queue.
       Element elem;
       elem.state = start_id;
       elem.weight = Weight::One();
@@ -329,7 +335,7 @@ class DeterminizerStar {
       return true;
     }
     float delta_;
-    SubsetEqual(float delta) : delta_(delta) {}
+    explicit SubsetEqual(float delta) : delta_(delta) {}
     SubsetEqual() : delta_(kDelta) {}
   };
 
@@ -499,11 +505,11 @@ class DeterminizerStar {
    public:
     inline bool operator()(const std::pair<Label, Element> &p1,
                            const std::pair<Label, Element> &p2) {
-      if (p1.first < p2.first)
+      if (p1.first < p2.first) {
         return true;
-      else if (p1.first > p2.first)
+      } else if (p1.first > p2.first) {
         return false;
-      else {
+      } else {
         return p1.second.state < p2.second.state;
       }
     }
@@ -538,10 +544,10 @@ class DeterminizerStar {
             Element &next_elem(this_pr.second);
             next_elem.state = arc.nextstate;
             next_elem.weight = Times(elem.weight, arc.weight);
-            if (arc.olabel == 0)  // output epsilon-- this is simple case so
-                                  // handle separately for efficiency
+            if (arc.olabel == 0) {  // output epsilon-- this is simple case so
+                                    // handle separately for efficiency
               next_elem.string = elem.string;
-            else {
+            } else {
               std::vector<Label> seq;
               repository_.SeqOfId(elem.string, &seq);
               seq.push_back(arc.olabel);
@@ -756,9 +762,8 @@ void DeterminizerStar<F>::EpsilonClosure::AddOneElement(
   if (index != -1) {
     if (index >= ecinfo_.size()) {
       index = -1;
-    }
-    // since ecinfo_ might store outdated information, we need to check
-    else if (ecinfo_[index].element.state != elem.state) {
+      // since ecinfo_ might store outdated information, we need to check
+    } else if (ecinfo_[index].element.state != elem.state) {
       index = -1;
     }
   }
@@ -1095,7 +1100,8 @@ void DeterminizerStar<F>::Debug() {
 }
 
 template <class F>
-bool DeterminizeStar(F &ifst, MutableFst<typename F::Arc> *ofst, float delta,
+bool DeterminizeStar(F &ifst,  // NOLINT
+                     MutableFst<typename F::Arc> *ofst, float delta,
                      bool *debug_ptr, int max_states, bool allow_partial) {
   ofst->SetOutputSymbols(ifst.OutputSymbols());
   ofst->SetInputSymbols(ifst.InputSymbols());

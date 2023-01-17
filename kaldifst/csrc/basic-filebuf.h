@@ -1,3 +1,5 @@
+// Copyright (c) 2009-2014 by the contributors listed in CREDITS.TXT (included
+// below)
 // This file is copied from kaldi/src/util/basic-filebuf.h
 ///////////////////////////////////////////////////////////////////////////////
 // This is a modified version of the std::basic_filebuf from libc++
@@ -9,15 +11,17 @@
 // Source License licenses. See LICENSE.TXT for details (included at the
 // bottom).
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef KALDIFST_CSRC_UTIL_BASIC_FILEBUF_H_
-#define KALDIFST_CSRC_UTIL_BASIC_FILEBUF_H_
+#ifndef KALDIFST_CSRC_BASIC_FILEBUF_H_
+#define KALDIFST_CSRC_BASIC_FILEBUF_H_
 
 ///////////////////////////////////////////////////////////////////////////////
-#include <fstream>
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
+#include <memory>
 #include <string>
-#include <algorithm>
+#include <utility>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace kaldifst {
@@ -335,7 +339,7 @@ basic_filebuf<CharT, Traits>::
 open(const char* s, std::ios_base::openmode mode) {
     basic_filebuf<CharT, Traits>* rt = nullptr;
     if (_M_file == nullptr) {
-        const char* md= _M_get_mode(mode);
+        const char* md = _M_get_mode(mode);
         if (md) {
             _M_file = fopen(s, md);
             if (_M_file) {
@@ -367,9 +371,9 @@ basic_filebuf<CharT, Traits>::open(const std::string& s,
 template <class CharT, class Traits>
 basic_filebuf<CharT, Traits>*
 basic_filebuf<CharT, Traits>::open(int fd, std::ios_base::openmode mode) {
-    const char* md= this->_M_get_mode(mode);
+    const char* md = this->_M_get_mode(mode);
     if (md) {
-        this->_M_file= fdopen(fd, md);
+        this->_M_file = fdopen(fd, md);
         this->_M_om = mode;
         return this;
     } else {
@@ -782,10 +786,10 @@ basic_filebuf<CharT, Traits>::_M_write_mode() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-}
+}  // namespace kaldifst
 
 ///////////////////////////////////////////////////////////////////////////////
-#endif  // KALDIFST_CSRC_UTIL_BASIC_FILEBUF_H_
+#endif  // KALDIFST_CSRC_BASIC_FILEBUF_H_
 
 ///////////////////////////////////////////////////////////////////////////////
 
