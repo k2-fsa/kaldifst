@@ -188,6 +188,13 @@ void RemoveSomeInputSymbols(const std::vector<I> &to_remove,
   Map(fst, mapper);
 }
 
+template <class T>
+struct IdentityFunction {
+  typedef T Arg;
+  typedef T Result;
+  T operator()(const T &t) const { return t; }
+};
+
 template <class Arc, class F>
 void MakePrecedingInputSymbolsSameClass(bool start_is_epsilon,
                                         MutableFst<Arc> *fst, const F &f) {
