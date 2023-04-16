@@ -36,5 +36,23 @@ inline bool DeterminizeStarInLog(VectorFst<StdArc> *fst, float delta,
   delete fst_det_log;
   return status;
 }
+
+template <class Arc, class I>
+void MakeLinearAcceptor(const std::vector<I> &labels, MutableFst<Arc> *ofst) {
+  typedef typename Arc::StateId StateId;
+  typedef typename Arc::Weight Weight;
+
+  ofst->DeleteStates();
+  StateId cur_state = ofst->AddState();
+  ofst->SetStart(cur_state);
+  for (size_t i = 0; i < labels.size(); i++) {
+    StateId next_state = ofst->AddState();
+    Arc arc(labels[i], labels[i], Weight::One(), next_state);
+    ofst->AddArc(cur_state, arc);
+    cur_state = next_state;
+  }
+  ofst->SetFinal(cur_state, Weight::One());
+}
+
 }  // namespace fst
 #endif  // KALDIFST_CSRC_FSTEXT_UTILS_INL_H_

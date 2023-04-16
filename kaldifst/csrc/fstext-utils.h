@@ -37,6 +37,10 @@ void MinimizeEncoded(MutableFst<Arc> *fst, float delta = kDelta) {
 inline bool DeterminizeStarInLog(VectorFst<StdArc> *fst, float delta = kDelta,
                                  bool *debug_ptr = NULL, int max_states = -1);
 
+/// Creates unweighted linear acceptor from symbol sequence.
+template <class Arc, class I>
+void MakeLinearAcceptor(const std::vector<I> &labels, MutableFst<Arc> *ofst);
+
 }  // namespace fst
 
 #include "kaldifst/csrc/fstext-utils-inl.h"
