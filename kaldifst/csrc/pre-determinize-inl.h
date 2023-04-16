@@ -10,6 +10,8 @@
 
 #include <assert.h>
 
+#include <set>
+
 namespace fst {
 
 // see pre-determinize.h for documentation.
@@ -68,6 +70,20 @@ void AddSelfLoops(MutableFst<Arc> *fst, std::vector<typename Arc::Label> &isyms,
         fst->AddArc(state, arc);
       }
     }
+  }
+}
+
+template <class T>
+void CopySetToVector(const std::set<T> s, std::vector<T> *v) {
+  // adds members of s to v, in sorted order from lowest to highest
+  // (because the set was in sorted order).
+  assert(v != nullptr);
+  v->resize(s.size());
+  typename std::set<T>::const_iterator siter = s.begin();
+  typename std::vector<T>::iterator viter = v->begin();
+  for (; siter != s.end(); ++siter, ++viter) {
+    assert(viter != v->end());
+    *viter = *siter;
   }
 }
 
