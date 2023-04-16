@@ -78,6 +78,12 @@ template <class Arc, class I>
 void RemoveSomeInputSymbols(const std::vector<I> &to_remove,
                             MutableFst<Arc> *fst);
 
+/// As MakePrecedingInputSymbolsSame, but takes a functor object that maps
+/// labels to classes.
+template <class Arc, class F>
+void MakePrecedingInputSymbolsSameClass(bool start_is_epsilon,
+                                        MutableFst<Arc> *fst, const F &f);
+
 }  // namespace fst
 
 #include "kaldifst/csrc/fstext-utils-inl.h"

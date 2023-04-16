@@ -12,8 +12,10 @@
 #ifndef KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 #define KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 
+#include <map>
 #include <type_traits>
 #include <unordered_map>
+#include <utility>
 
 #include "kaldifst/csrc/const-integer-set.h"
 #include "kaldifst/csrc/determinize-star.h"
@@ -184,6 +186,82 @@ void RemoveSomeInputSymbols(const std::vector<I> &to_remove,
   static_assert(std::is_integral<I>::value, "");
   RemoveSomeInputSymbolsMapper<Arc, I> mapper(to_remove);
   Map(fst, mapper);
+}
+
+template <class Arc, class F>
+void MakePrecedingInputSymbolsSameClass(bool start_is_epsilon,
+                                        MutableFst<Arc> *fst, const F &f) {
+  typedef typename F::Result ClassType;
+  typedef typename Arc::StateId StateId;
+  typedef typename Arc::Weight Weight;
+  std::vector<ClassType> classes;
+  ClassType noClass = f(kNoLabel);
+  ClassType epsClass = f(0);
+  if (start_is_epsilon) {  // treat having-start-state as epsilon in-transition.
+    StateId start_state = fst->Start();
+    if (start_state < 0 || start_state == kNoStateId)  // empty FST.
+      return;
+    classes.resize(start_state + 1, noClass);
+    classes[start_state] = epsClass;
+  }
+
+  // Find bad states (states with multiple input-symbols into them).
+  std::set<StateId> bad_states;  // states that we need to change.
+  for (StateIterator<Fst<Arc>> siter(*fst); !siter.Done(); siter.Next()) {
+    StateId s = siter.Value();
+    for (ArcIterator<Fst<Arc>> aiter(*fst, s); !aiter.Done(); aiter.Next()) {
+      const Arc &arc = aiter.Value();
+      if (classes.size() <= static_cast<size_t>(arc.nextstate))
+        classes.resize(arc.nextstate + 1, noClass);
+      if (classes[arc.nextstate] == noClass)
+        classes[arc.nextstate] = f(arc.ilabel);
+      else if (classes[arc.nextstate] != f(arc.ilabel))
+        bad_states.insert(arc.nextstate);
+    }
+  }
+  if (bad_states.empty()) return;  // Nothing to do.
+  kaldifst::ConstIntegerSet<StateId> bad_states_ciset(
+      bad_states);  // faster lookup.
+
+  // Work out list of arcs we have to change as (state, arc-offset).
+  // Can't do the actual changes in this pass, since we have to add new
+  // states which invalidates the iterators.
+  std::vector<std::pair<StateId, size_t>> arcs_to_change;
+  for (StateIterator<Fst<Arc>> siter(*fst); !siter.Done(); siter.Next()) {
+    StateId s = siter.Value();
+    for (ArcIterator<Fst<Arc>> aiter(*fst, s); !aiter.Done(); aiter.Next()) {
+      const Arc &arc = aiter.Value();
+      if (arc.ilabel != 0 && bad_states_ciset.count(arc.nextstate) != 0)
+        arcs_to_change.push_back(std::make_pair(s, aiter.Position()));
+    }
+  }
+  KHG_ASSERT(!arcs_to_change.empty());  // since !bad_states.empty().
+
+  std::map<std::pair<StateId, ClassType>, StateId> state_map;
+  // state_map is a map from (bad-state, input-symbol-class) to dummy-state.
+
+  for (size_t i = 0; i < arcs_to_change.size(); i++) {
+    StateId s = arcs_to_change[i].first;
+    ArcIterator<MutableFst<Arc>> aiter(*fst, s);
+    aiter.Seek(arcs_to_change[i].second);
+    Arc arc = aiter.Value();
+
+    // Transition is non-eps transition to "bad" state.  Introduce new state (or
+    // find existing one).
+    std::pair<StateId, ClassType> p(arc.nextstate, f(arc.ilabel));
+    if (state_map.count(p) == 0) {
+      StateId newstate = state_map[p] = fst->AddState();
+      fst->AddArc(newstate, Arc(0, 0, Weight::One(), arc.nextstate));
+    }
+    StateId dst_state = state_map[p];
+    arc.nextstate = dst_state;
+
+    // Initialize the MutableArcIterator only now, as the call to NewState()
+    // may have invalidated the first arc iterator.
+    MutableArcIterator<MutableFst<Arc>> maiter(fst, s);
+    maiter.Seek(arcs_to_change[i].second);
+    maiter.SetValue(arc);
+  }
 }
 
 }  // namespace fst
