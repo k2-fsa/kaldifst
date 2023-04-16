@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <queue>
 
+#include "kaldifst/csrc/log.h"
 #include "kaldifst/csrc/stl-utils.h"
 
 namespace fst {
