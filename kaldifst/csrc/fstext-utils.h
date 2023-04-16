@@ -65,6 +65,19 @@ void MakeLinearAcceptor(const std::vector<I> &labels, MutableFst<Arc> *ofst);
 template <class Arc>
 VectorFst<Arc> *MakeLoopFst(const std::vector<const ExpandedFst<Arc> *> &fsts);
 
+/// ApplyProbabilityScale is applicable to FSTs in the log or tropical semiring.
+/// It multiplies the arc and final weights by "scale" [this is not the Mul
+/// operation of the semiring, it's actual multiplication, which is equivalent
+/// to taking a power in the semiring].
+template <class Arc>
+void ApplyProbabilityScale(float scale, MutableFst<Arc> *fst);
+
+/// RemoveSomeInputSymbols removes any symbol that appears in "to_remove", from
+/// the input side of the FST, replacing them with epsilon.
+template <class Arc, class I>
+void RemoveSomeInputSymbols(const std::vector<I> &to_remove,
+                            MutableFst<Arc> *fst);
+
 }  // namespace fst
 
 #include "kaldifst/csrc/fstext-utils-inl.h"

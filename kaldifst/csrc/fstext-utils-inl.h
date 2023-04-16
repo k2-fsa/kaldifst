@@ -12,8 +12,10 @@
 #ifndef KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 #define KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 
+#include <type_traits>
 #include <unordered_map>
 
+#include "kaldifst/csrc/const-integer-set.h"
 #include "kaldifst/csrc/determinize-star.h"
 
 namespace fst {
@@ -127,6 +129,61 @@ VectorFst<Arc> *MakeLoopFst(const std::vector<const ExpandedFst<Arc> *> &fsts) {
     }
   }
   return ans;
+}
+
+template <class Arc>
+void ApplyProbabilityScale(float scale, MutableFst<Arc> *fst) {
+  typedef typename Arc::Weight Weight;
+  typedef typename Arc::StateId StateId;
+  for (StateIterator<MutableFst<Arc>> siter(*fst); !siter.Done();
+       siter.Next()) {
+    StateId s = siter.Value();
+    for (MutableArcIterator<MutableFst<Arc>> aiter(fst, s); !aiter.Done();
+         aiter.Next()) {
+      Arc arc = aiter.Value();
+      arc.weight = Weight(arc.weight.Value() * scale);
+      aiter.SetValue(arc);
+    }
+    if (fst->Final(s) != Weight::Zero())
+      fst->SetFinal(s, Weight(fst->Final(s).Value() * scale));
+  }
+}
+
+template <class Arc, class I>
+class RemoveSomeInputSymbolsMapper {
+ public:
+  Arc operator()(const Arc &arc_in) {
+    Arc ans = arc_in;
+    if (to_remove_set_.count(ans.ilabel) != 0)
+      ans.ilabel = 0;  // remove this symbol
+    return ans;
+  }
+  MapFinalAction FinalAction() { return MAP_NO_SUPERFINAL; }
+  MapSymbolsAction InputSymbolsAction() { return MAP_CLEAR_SYMBOLS; }
+  MapSymbolsAction OutputSymbolsAction() { return MAP_COPY_SYMBOLS; }
+  uint64_t Properties(uint64_t props) const {
+    // remove the following as we don't know now if any of them are true.
+    uint64_t to_remove = kAcceptor | kNotAcceptor | kIDeterministic |
+                         kNonIDeterministic | kNoEpsilons | kNoIEpsilons |
+                         kILabelSorted | kNotILabelSorted;
+    return props & ~to_remove;
+  }
+  RemoveSomeInputSymbolsMapper(const std::vector<I> &to_remove)
+      : to_remove_set_(to_remove) {
+    static_assert(std::is_integral<I>::value, "");
+    assert(to_remove_set_.count(0) == 0);  // makes no sense to remove epsilon.
+  }
+
+ private:
+  kaldifst::ConstIntegerSet<I> to_remove_set_;
+};
+
+template <class Arc, class I>
+void RemoveSomeInputSymbols(const std::vector<I> &to_remove,
+                            MutableFst<Arc> *fst) {
+  static_assert(std::is_integral<I>::value, "");
+  RemoveSomeInputSymbolsMapper<Arc, I> mapper(to_remove);
+  Map(fst, mapper);
 }
 
 }  // namespace fst
