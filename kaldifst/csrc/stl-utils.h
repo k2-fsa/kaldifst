@@ -8,8 +8,10 @@
 #ifndef KALDIFST_CSRC_STL_UTILS_H_
 #define KALDIFST_CSRC_STL_UTILS_H_
 #include <algorithm>
+#include <set>
 #include <string>
 #include <type_traits>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -70,6 +72,31 @@ struct PairHasher {  // hashing function for pair<int>
     static_assert(std::is_integral<Int2>::value, "");
   }
 };
+
+/// Copies the elements of a set to a vector.
+template <class T>
+void CopySetToVector(const std::set<T> &s, std::vector<T> *v) {
+  // copies members of s into v, in sorted order from lowest to highest
+  // (because the set was in sorted order).
+  KHG_ASSERT(v != nullptr);
+  v->resize(s.size());
+  auto siter = s.begin(), send = s.end();
+  auto viter = v->begin();
+  for (; siter != send; ++siter, ++viter) {
+    *viter = *siter;
+  }
+}
+
+template <class T>
+void CopySetToVector(const std::unordered_set<T> &s, std::vector<T> *v) {
+  KHG_ASSERT(v != nullptr);
+  v->resize(s.size());
+  auto siter = s.begin(), send = s.end();
+  auto viter = v->begin();
+  for (; siter != send; ++siter, ++viter) {
+    *viter = *siter;
+  }
+}
 
 }  // namespace kaldifst
 
