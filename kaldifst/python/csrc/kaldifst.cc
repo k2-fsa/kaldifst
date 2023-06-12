@@ -23,6 +23,7 @@
 #include "kaldifst/python/csrc/fstrmepsilon.h"
 #include "kaldifst/python/csrc/kaldi-table.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
+#include "kaldifst/python/csrc/pre-determinize.h"
 #include "kaldifst/python/csrc/symbol-table.h"
 #include "kaldifst/python/csrc/table-matcher.h"
 #include "kaldifst/python/csrc/vector-fst.h"
@@ -52,6 +53,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstDeterminize(m);
   PybindFstInvert(m);
 
+  PybindPreDeterminize(m);
   PybindDeterminizeStar(m);
   PybindFstRmEpsilon(m);
   PybindFstReverse(m);

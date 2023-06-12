@@ -13,9 +13,11 @@
 #define KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 
 #include <map>
+#include <set>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 #include "kaldifst/csrc/const-integer-set.h"
 #include "kaldifst/csrc/determinize-star.h"
@@ -170,7 +172,7 @@ class RemoveSomeInputSymbolsMapper {
                          kILabelSorted | kNotILabelSorted;
     return props & ~to_remove;
   }
-  RemoveSomeInputSymbolsMapper(const std::vector<I> &to_remove)
+  explicit RemoveSomeInputSymbolsMapper(const std::vector<I> &to_remove)
       : to_remove_set_(to_remove) {
     static_assert(std::is_integral<I>::value, "");
     assert(to_remove_set_.count(0) == 0);  // makes no sense to remove epsilon.
@@ -292,9 +294,9 @@ void MakeFollowingInputSymbolsSameClass(bool end_is_epsilon,
     bool bad = false;
     for (ArcIterator<Fst<Arc>> aiter(*fst, s); !aiter.Done(); aiter.Next()) {
       const Arc &arc = aiter.Value();
-      if (c == noClass)
+      if (c == noClass) {
         c = f(arc.ilabel);
-      else if (c != f(arc.ilabel)) {
+      } else if (c != f(arc.ilabel)) {
         bad = true;
         break;
       }

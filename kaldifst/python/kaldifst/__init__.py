@@ -5,6 +5,7 @@ from _kaldifst import (
     StdVectorFst,
     SymbolTable,
     TropicalWeight,
+    add_self_loops,
     arcsort,
     compile,
     compose,

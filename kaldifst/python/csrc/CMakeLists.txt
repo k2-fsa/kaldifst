@@ -22,6 +22,7 @@ pybind11_add_module(_kaldifst
   kaldi-table.cc
   kaldifst.cc
   mutable-fst.cc
+  pre-determinize.cc
   symbol-table.cc
   table-matcher.cc
   vector-fst.cc

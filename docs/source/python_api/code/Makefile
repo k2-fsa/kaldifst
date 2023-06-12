@@ -14,15 +14,16 @@ all:
 	$(MAKE) -C rmepsilon
 
 clean:
-	$(MAKE) -C fstcompile clean
+	$(MAKE) -C add_self_loops
 	$(MAKE) -C arcsort clean
 	$(MAKE) -C compose clean
+	$(MAKE) -C connect clean
 	$(MAKE) -C determinize clean
 	$(MAKE) -C determinizestar clean
 	$(MAKE) -C draw clean
-	$(MAKE) -C connect clean
+	$(MAKE) -C fstcompile clean
 	$(MAKE) -C invert clean
-	$(MAKE) -C reverse clean
 	$(MAKE) -C minimize clean
 	$(MAKE) -C minimize_encoded clean
+	$(MAKE) -C reverse clean
 	$(MAKE) -C rmepsilon clean
