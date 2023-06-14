@@ -1,16 +1,17 @@
 
 all:
-	$(MAKE) -C fstcompile
 	$(MAKE) -C arcsort
 	$(MAKE) -C compose
+	$(MAKE) -C connect
 	$(MAKE) -C determinize
 	$(MAKE) -C determinizestar
 	$(MAKE) -C draw
-	$(MAKE) -C connect
+	$(MAKE) -C fstcompile
 	$(MAKE) -C invert
-	$(MAKE) -C reverse
+	$(MAKE) -C make_linear_acceptor
 	$(MAKE) -C minimize
 	$(MAKE) -C minimize_encoded
+	$(MAKE) -C reverse
 	$(MAKE) -C rmepsilon
 
 clean:
