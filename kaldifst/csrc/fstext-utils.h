@@ -101,6 +101,21 @@ template <class Arc, class F>
 void MakeFollowingInputSymbolsSameClass(bool end_is_epsilon,
                                         MutableFst<Arc> *fst, const F &f);
 
+/// EqualAlign is similar to RandGen, but it generates a sequence with exactly
+/// "length" input symbols.  It returns true on success, false on failure
+/// (failure is partly random but should never happen in practice for normal
+/// speech models.) It generates a random path through the input FST, finds out
+/// which subset of the states it visits along the way have self-loops with
+/// inupt symbols on them, and outputs a path with exactly enough self-loops to
+/// have the requested number of input symbols. Note that EqualAlign does not
+/// use the probabilities on the FST.  It just uses equal probabilities in the
+/// first stage of selection (since the output will anyway not be a truly random
+/// sample from the FST). The input fst "ifst" must be connected or this may
+/// enter an infinite loop.
+template <class Arc>
+bool EqualAlign(const Fst<Arc> &ifst, typename Arc::StateId length,
+                int rand_seed, MutableFst<Arc> *ofst, int num_retries = 10);
+
 }  // namespace fst
 
 #include "kaldifst/csrc/fstext-utils-inl.h"

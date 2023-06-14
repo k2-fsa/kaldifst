@@ -7,6 +7,7 @@ set(srcs
   kaldi-fst-io.cc
   kaldi-holder.cc
   kaldi-io.cc
+  kaldi-math.cc
   kaldi-semaphore.cc
   kaldi-table.cc
   parse-options.cc

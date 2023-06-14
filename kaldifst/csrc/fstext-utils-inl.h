@@ -21,6 +21,7 @@
 
 #include "kaldifst/csrc/const-integer-set.h"
 #include "kaldifst/csrc/determinize-star.h"
+#include "kaldifst/csrc/kaldi-math.h"
 
 namespace fst {
 
@@ -244,7 +245,7 @@ void MakePrecedingInputSymbolsSameClass(bool start_is_epsilon,
         arcs_to_change.push_back(std::make_pair(s, aiter.Position()));
     }
   }
-  KHG_ASSERT(!arcs_to_change.empty());  // since !bad_states.empty().
+  KALDIFST_ASSERT(!arcs_to_change.empty());  // since !bad_states.empty().
 
   std::map<std::pair<StateId, ClassType>, StateId> state_map;
   // state_map is a map from (bad-state, input-symbol-class) to dummy-state.
@@ -330,6 +331,156 @@ void MakeFollowingInputSymbolsSameClass(bool end_is_epsilon,
       }
     }
   }
+}
+
+// return arc-offset of self-loop with ilabel (or -1 if none exists).
+// if more than one such self-loop, pick first one.
+template <class Arc>
+ssize_t FindSelfLoopWithILabel(const Fst<Arc> &fst, typename Arc::StateId s) {
+  for (ArcIterator<Fst<Arc>> aiter(fst, s); !aiter.Done(); aiter.Next())
+    if (aiter.Value().nextstate == s && aiter.Value().ilabel != 0)
+      return static_cast<ssize_t>(aiter.Position());
+  return static_cast<ssize_t>(-1);
+}
+
+template <class Arc>
+bool EqualAlign(const Fst<Arc> &ifst, typename Arc::StateId length,
+                int rand_seed, MutableFst<Arc> *ofst, int num_retries) {
+  srand(rand_seed);
+  KALDIFST_ASSERT(ofst->NumStates() == 0);  // make sure ofst empty.
+  // make sure all states can reach final-state (or this algorithm may enter
+  // infinite loop.
+  KALDIFST_ASSERT(ifst.Properties(kCoAccessible, true) == kCoAccessible);
+
+  typedef typename Arc::StateId StateId;
+  typedef typename Arc::Weight Weight;
+
+  if (ifst.Start() == kNoStateId) {
+    KALDIFST_WARN << "Empty input fst.";
+    return false;
+  }
+  // First select path through ifst.
+  std::vector<StateId> path;
+  std::vector<size_t> arc_offsets;  // arc taken out of each state.
+  std::vector<int> nof_ilabels;
+
+  StateId num_ilabels = 0;
+  int retry_no = 0;
+
+  // Under normal circumstances, this will be one-pass-only process
+  // Multiple tries might be needed in special cases, typically when
+  // the number of frames is close to number of transitions from
+  // the start node to the final node. It usually happens for really
+  // short utterances
+  do {
+    num_ilabels = 0;
+    arc_offsets.clear();
+    path.clear();
+    path.push_back(ifst.Start());
+
+    while (1) {
+      // Select either an arc or final-prob.
+      StateId s = path.back();
+      size_t num_arcs = ifst.NumArcs(s);
+      size_t num_arcs_tot = num_arcs;
+      if (ifst.Final(s) != Weight::Zero()) num_arcs_tot++;
+      // kaldifst::RandInt is a bit like Rand(), but gets around situations
+      // where RAND_MAX is very small.
+      // Change this to Rand() % num_arcs_tot if compile issues arise
+      size_t arc_offset =
+          static_cast<size_t>(kaldifst::RandInt(0, num_arcs_tot - 1));
+
+      if (arc_offset < num_arcs) {  // an actual arc.
+        ArcIterator<Fst<Arc>> aiter(ifst, s);
+        aiter.Seek(arc_offset);
+        const Arc &arc = aiter.Value();
+        if (arc.nextstate == s) {
+          continue;  // don't take this self-loop arc
+        } else {
+          arc_offsets.push_back(arc_offset);
+          path.push_back(arc.nextstate);
+          if (arc.ilabel != 0) num_ilabels++;
+        }
+      } else {
+        break;  // Chose final-prob.
+      }
+    }
+
+    nof_ilabels.push_back(num_ilabels);
+  } while ((++retry_no < num_retries) && (num_ilabels > length));
+
+  if (num_ilabels > length) {
+    std::stringstream ilabel_vec;
+    std::copy(nof_ilabels.begin(), nof_ilabels.end(),
+              std::ostream_iterator<int>(ilabel_vec, ","));
+    std::string s = ilabel_vec.str();
+    s.erase(s.end() - 1);
+    KALDIFST_WARN << "EqualAlign: the randomly constructed paths lengths: "
+                  << s;
+    KALDIFST_WARN << "EqualAlign: utterance has too few frames " << length
+                  << " to align.";
+    return false;  // can't make it shorter by adding self-loops!.
+  }
+
+  StateId num_self_loops = 0;
+  std::vector<ssize_t> self_loop_offsets(path.size());
+  for (size_t i = 0; i < path.size(); i++)
+    if ((self_loop_offsets[i] = FindSelfLoopWithILabel(ifst, path[i])) !=
+        static_cast<ssize_t>(-1))
+      num_self_loops++;
+
+  if (num_self_loops == 0 && num_ilabels < length) {
+    KALDIFST_WARN << "No self-loops on chosen path; cannot match length.";
+    return false;  // no self-loops to make it longer.
+  }
+
+  StateId num_extra = length - num_ilabels;  // Number of self-loops we need.
+
+  StateId min_num_loops = 0;
+  if (num_extra != 0)
+    min_num_loops = num_extra / num_self_loops;  // prevent div by zero.
+  StateId num_with_one_more_loop = num_extra - (min_num_loops * num_self_loops);
+  KALDIFST_ASSERT(num_with_one_more_loop < num_self_loops ||
+                  num_self_loops == 0);
+
+  ofst->AddState();
+  ofst->SetStart(0);
+  StateId cur_state = 0;
+  StateId counter = 0;  // tell us when we should stop adding one more loop.
+  for (size_t i = 0; i < path.size(); i++) {
+    // First, add any self-loops that are necessary.
+    StateId num_loops = 0;
+    if (self_loop_offsets[i] != static_cast<ssize_t>(-1)) {
+      num_loops = min_num_loops + (counter < num_with_one_more_loop ? 1 : 0);
+      counter++;
+    }
+    for (StateId j = 0; j < num_loops; j++) {
+      ArcIterator<Fst<Arc>> aiter(ifst, path[i]);
+      aiter.Seek(self_loop_offsets[i]);
+      Arc arc = aiter.Value();
+      KALDIFST_ASSERT(arc.nextstate == path[i] &&
+                      arc.ilabel != 0);  // make sure self-loop with ilabel.
+      StateId next_state = ofst->AddState();
+      ofst->AddArc(cur_state,
+                   Arc(arc.ilabel, arc.olabel, arc.weight, next_state));
+      cur_state = next_state;
+    }
+    if (i + 1 < path.size()) {  // add forward transition.
+      ArcIterator<Fst<Arc>> aiter(ifst, path[i]);
+      aiter.Seek(arc_offsets[i]);
+      Arc arc = aiter.Value();
+      KALDIFST_ASSERT(arc.nextstate == path[i + 1]);
+      StateId next_state = ofst->AddState();
+      ofst->AddArc(cur_state,
+                   Arc(arc.ilabel, arc.olabel, arc.weight, next_state));
+      cur_state = next_state;
+    } else {  // add final-prob.
+      Weight weight = ifst.Final(path[i]);
+      KALDIFST_ASSERT(weight != Weight::Zero());
+      ofst->SetFinal(cur_state, weight);
+    }
+  }
+  return true;
 }
 
 }  // namespace fst

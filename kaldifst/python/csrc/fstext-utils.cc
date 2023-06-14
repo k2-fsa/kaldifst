@@ -78,6 +78,81 @@ Returns:
     Visualization of transducer-minimize-encoded.svg (after minimize encoded)
 )doc";
 
+static constexpr const char *kMakeLinearAcceptorDoc = R"doc(
+Creates unweighted linear acceptor from symbol sequence.
+
+Args:
+  labels:
+    A list of symbol IDs.
+
+Returns:
+  Return a linear acceptor. Actually, it returns a transducer whose
+  ilabel == olabel for each arc.
+
+**Example 1: Build a linear acceptor**
+
+.. literalinclude:: ./code/make_linear_acceptor/ex.py
+   :language: python
+   :linenos:
+   :caption: Example of make_linear_acceptor()
+
+.. figure:: ./code/make_linear_acceptor/acceptor.svg
+    :alt: acceptor.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of acceptor.svg
+)doc";
+
+static constexpr const char *kEqualAlignDoc = R"doc(
+Get a random linear path from an FST.
+
+Args:
+  ifst:
+    The input fst.
+  length:
+    Path length of the output fst. If the ilabel of an arc is 0, then this
+    arc does not contribute to the total path length of the output fst.
+  rand_seed:
+    A seed for random selecting arcs out of each state.
+  num_retries:
+    After trying this number but failed to generate a valid fst, it would
+    return False.
+
+Returns:
+  Return a tuple containing:
+    - succeeded, True if we successfully found a path.
+    - fst, the output fst.
+
+**Example 1: Equal align**
+
+.. literalinclude:: ./code/equal_align/ex.py
+   :language: python
+   :linenos:
+   :caption: Code for equal_align
+
+.. figure:: ./code/equal_align/input.svg
+    :alt: input.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of input.svg
+
+.. figure:: ./code/equal_align/first.svg
+    :alt: first.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of first.svg
+
+.. figure:: ./code/equal_align/second.svg
+    :alt: second.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of second.svg
+)doc";
+
 namespace kaldifst {
 
 void PybindFstExtUtils(py::module &m) {  // NOLINT
@@ -88,6 +163,26 @@ void PybindFstExtUtils(py::module &m) {  // NOLINT
       },
       py::arg("in_out"), py::arg("delta") = fst::kDelta,
       kFstMinimizeEncodedDoc);
+
+  m.def(
+      "make_linear_acceptor",
+      [](const std::vector<int32_t> &labels) -> fst::StdVectorFst {
+        fst::StdVectorFst ans;
+        fst::MakeLinearAcceptor(labels, &ans);
+        return ans;
+      },
+      py::arg("labels"), kMakeLinearAcceptorDoc);
+
+  m.def(
+      "equal_align",
+      [](const fst::StdVectorFst &ifst, int32_t length, int32_t rand_seed,
+         int32_t num_retries = 10) -> std::pair<bool, fst::StdVectorFst> {
+        fst::StdVectorFst ans;
+        bool succeeded = EqualAlign(ifst, length, rand_seed, &ans, num_retries);
+        return std::make_pair(succeeded, ans);
+      },
+      py::arg("ifst"), py::arg("length"), py::arg("rand_seed"),
+      py::arg("num_retries") = 10, kEqualAlignDoc);
 }
 
 }  // namespace kaldifst

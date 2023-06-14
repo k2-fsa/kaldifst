@@ -15,6 +15,8 @@
 #include <utility>
 #include <vector>
 
+#include "kaldifst/csrc/log.h"
+
 namespace kaldifst {
 
 /// A hashing function object for strings.
@@ -78,7 +80,7 @@ template <class T>
 void CopySetToVector(const std::set<T> &s, std::vector<T> *v) {
   // copies members of s into v, in sorted order from lowest to highest
   // (because the set was in sorted order).
-  KHG_ASSERT(v != nullptr);
+  KALDIFST_ASSERT(v != nullptr);
   v->resize(s.size());
   auto siter = s.begin(), send = s.end();
   auto viter = v->begin();
@@ -89,7 +91,7 @@ void CopySetToVector(const std::set<T> &s, std::vector<T> *v) {
 
 template <class T>
 void CopySetToVector(const std::unordered_set<T> &s, std::vector<T> *v) {
-  KHG_ASSERT(v != nullptr);
+  KALDIFST_ASSERT(v != nullptr);
   v->resize(s.size());
   auto siter = s.begin(), send = s.end();
   auto viter = v->begin();

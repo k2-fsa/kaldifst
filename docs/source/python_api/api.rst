@@ -48,6 +48,11 @@ draw
 
 .. autofunction:: draw
 
+equal_align
+-----------
+
+.. autofunction:: equal_align
+
 info
 ----
 
