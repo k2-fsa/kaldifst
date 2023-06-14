@@ -9,6 +9,7 @@ all:
 	$(MAKE) -C draw
 	$(MAKE) -C equal_align
 	$(MAKE) -C fstcompile
+	$(MAKE) -C get_linear_symbol_sequence
 	$(MAKE) -C invert
 	$(MAKE) -C make_linear_acceptor
 	$(MAKE) -C minimize
@@ -26,6 +27,7 @@ clean:
 	$(MAKE) -C draw clean
 	$(MAKE) -C equal_align clean
 	$(MAKE) -C fstcompile clean
+	$(MAKE) -C get_linear_symbol_sequence clean
 	$(MAKE) -C invert clean
 	$(MAKE) -C make_linear_acceptor clean
 	$(MAKE) -C minimize clean

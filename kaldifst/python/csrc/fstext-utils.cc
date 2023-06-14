@@ -153,6 +153,31 @@ Returns:
     Visualization of second.svg
 )doc";
 
+static constexpr const char *kGetLinearSymbolSequenceDoc = R"doc(
+get_linear_symbol_sequence gets the symbol sequence from a linear FST.
+If the FST is not just a linear sequence, it returns false.   If it is
+a linear sequence (including the empty FST), it returns true.  In this
+case it outputs the symbol
+
+Args:
+  fst:
+    The input fst.
+Returns:
+  Return a tuple containing:
+
+    - succeeded, bool, true if it succeeded.
+    - isymbols_out, List[int], containing non-zero input symbols
+    - osymbols_out, List[int], containing non-zero output symbols
+    - total_weight_out, float, the total weight
+
+**Example 1: get_linear_symbol_sequence**
+
+.. literalinclude:: ./code/get_linear_symbol_sequence/ex.py
+   :language: python
+   :linenos:
+   :caption: Code for get_linear_symbol_sequence
+)doc";
+
 namespace kaldifst {
 
 void PybindFstExtUtils(py::module &m) {  // NOLINT
@@ -183,6 +208,23 @@ void PybindFstExtUtils(py::module &m) {  // NOLINT
       },
       py::arg("ifst"), py::arg("length"), py::arg("rand_seed"),
       py::arg("num_retries") = 10, kEqualAlignDoc);
+  m.def(
+      "get_linear_symbol_sequence",
+      [](const fst::StdFst &fst) -> std::tuple<bool, std::vector<int32_t>,
+                                               std::vector<int32_t>, float> {
+        std::vector<int32_t> isymbols_out;
+        std::vector<int32_t> osymbols_out;
+        float total_weight_out;
+        fst::TropicalWeight w;
+
+        bool succeeded =
+            GetLinearSymbolSequence(fst, &isymbols_out, &osymbols_out, &w);
+        total_weight_out = w.Value();
+
+        return std::make_tuple(succeeded, isymbols_out, osymbols_out,
+                               total_weight_out);
+      },
+      py::arg("fst"), kGetLinearSymbolSequenceDoc);
 }
 
 }  // namespace kaldifst

@@ -116,6 +116,19 @@ template <class Arc>
 bool EqualAlign(const Fst<Arc> &ifst, typename Arc::StateId length,
                 int rand_seed, MutableFst<Arc> *ofst, int num_retries = 10);
 
+/// GetLinearSymbolSequence gets the symbol sequence from a linear FST.
+/// If the FST is not just a linear sequence, it returns false.   If it is
+/// a linear sequence (including the empty FST), it returns true.  In this
+/// case it outputs the symbol
+/// sequences as "isymbols_out" and "osymbols_out" (removing epsilons), and
+/// the total weight as "tot_weight". The total weight will be Weight::Zero()
+/// if the FST is empty.  If any of the output pointers are NULL, it does not
+/// create that output.
+template <class Arc, class I>
+bool GetLinearSymbolSequence(const Fst<Arc> &fst, std::vector<I> *isymbols_out,
+                             std::vector<I> *osymbols_out,
+                             typename Arc::Weight *tot_weight_out);
+
 }  // namespace fst
 
 #include "kaldifst/csrc/fstext-utils-inl.h"

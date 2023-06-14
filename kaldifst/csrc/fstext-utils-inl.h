@@ -483,5 +483,45 @@ bool EqualAlign(const Fst<Arc> &ifst, typename Arc::StateId length,
   return true;
 }
 
+template <class Arc, class I>
+bool GetLinearSymbolSequence(const Fst<Arc> &fst, std::vector<I> *isymbols_out,
+                             std::vector<I> *osymbols_out,
+                             typename Arc::Weight *tot_weight_out) {
+  typedef typename Arc::StateId StateId;
+  typedef typename Arc::Weight Weight;
+
+  Weight tot_weight = Weight::One();
+  std::vector<I> ilabel_seq;
+  std::vector<I> olabel_seq;
+
+  StateId cur_state = fst.Start();
+  if (cur_state == kNoStateId) {  // empty sequence.
+    if (isymbols_out != nullptr) isymbols_out->clear();
+    if (osymbols_out != nullptr) osymbols_out->clear();
+    if (tot_weight_out != nullptr) *tot_weight_out = Weight::Zero();
+    return true;
+  }
+  while (1) {
+    Weight w = fst.Final(cur_state);
+    if (w != Weight::Zero()) {  // is final..
+      tot_weight = Times(tot_weight, w);
+      if (fst.NumArcs(cur_state) != 0) return false;
+      if (isymbols_out != nullptr) *isymbols_out = ilabel_seq;
+      if (osymbols_out != nullptr) *osymbols_out = olabel_seq;
+      if (tot_weight_out != nullptr) *tot_weight_out = tot_weight;
+      return true;
+    } else {
+      if (fst.NumArcs(cur_state) != 1) return false;
+
+      ArcIterator<Fst<Arc>> iter(fst, cur_state);  // get the only arc.
+      const Arc &arc = iter.Value();
+      tot_weight = Times(tot_weight, arc.weight);
+      if (arc.ilabel != 0) ilabel_seq.push_back(arc.ilabel);
+      if (arc.olabel != 0) olabel_seq.push_back(arc.olabel);
+      cur_state = arc.nextstate;
+    }
+  }
+}
+
 }  // namespace fst
 #endif  // KALDIFST_CSRC_FSTEXT_UTILS_INL_H_

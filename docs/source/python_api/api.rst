@@ -53,6 +53,11 @@ equal_align
 
 .. autofunction:: equal_align
 
+get_linear_symbol_sequence
+--------------------------
+
+.. autofunction:: get_linear_symbol_sequence
+
 info
 ----
 
