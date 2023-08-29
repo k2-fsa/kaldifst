@@ -878,6 +878,14 @@ typedef LatticeWeightTpl<float> LatticeWeight;
 typedef ArcTpl<LatticeWeight> LatticeArc;
 typedef VectorFst<LatticeArc> Lattice;
 
+// careful: kaldi::int32 is not always the same C type as fst::int32
+typedef CompactLatticeWeightTpl<LatticeWeight, int32_t> CompactLatticeWeight;
+typedef CompactLatticeWeightCommonDivisorTpl<LatticeWeight, int32_t>
+    CompactLatticeWeightCommonDivisor;
+
+typedef ArcTpl<CompactLatticeWeight> CompactLatticeArc;
+
+typedef VectorFst<CompactLatticeArc> CompactLattice;
 }  // namespace fst
 
 #endif  // KALDIFST_CSRC_LATTICE_WEIGHT_H_
