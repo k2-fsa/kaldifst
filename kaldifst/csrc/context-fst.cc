@@ -6,6 +6,7 @@
 // Copyright      2018  Johns Hopkins University (author: Daniel Povey)
 #include "kaldifst/csrc/context-fst.h"
 
+#include "kaldifst/csrc/fstext-utils.h"
 #include "kaldifst/csrc/log.h"
 namespace fst {
 
@@ -15,7 +16,7 @@ void AddSubsequentialLoop(StdArc::Label subseq_symbol,
   typedef typename Arc::StateId StateId;
   typedef typename Arc::Weight Weight;
 
-  vector<StateId> final_states;
+  std::vector<StateId> final_states;
   for (StateIterator<MutableFst<Arc>> siter(*fst); !siter.Done();
        siter.Next()) {
     StateId s = siter.Value();
@@ -39,8 +40,8 @@ void AddSubsequentialLoop(StdArc::Label subseq_symbol,
 }
 
 InverseContextFst::InverseContextFst(Label subsequential_symbol,
-                                     const vector<int32_t> &phones,
-                                     const vector<int32_t> &disambig_syms,
+                                     const std::vector<int32_t> &phones,
+                                     const std::vector<int32_t> &disambig_syms,
                                      int32_t context_width,
                                      int32_t central_position)
     : context_width_(context_width),
@@ -66,12 +67,12 @@ InverseContextFst::InverseContextFst(Label subsequential_symbol,
 
   // empty vector, will be the ilabel_info vector that corresponds to epsilon,
   // in case our FST needs to output epsilons.
-  vector<int32_t> empty_vec;
+  std::vector<int32_t> empty_vec;
   Label epsilon_label = FindLabel(empty_vec);
 
   // epsilon_vec is the phonetic context window we have at the very start of a
   // sequence, meaning "no real phones have been seen yet".
-  vector<int32_t> epsilon_vec(context_width_ - 1, 0);
+  std::vector<int32_t> epsilon_vec(context_width_ - 1, 0);
   StateId start_state = FindState(epsilon_vec);
 
   KALDIFST_ASSERT(epsilon_label == 0 && start_state == 0);
@@ -86,7 +87,7 @@ InverseContextFst::InverseContextFst(Label subsequential_symbol,
     // disambig symbol appears at the very start of a sequence in CLG, it's not
     // clear exactly where it appeared on the corresponding sequence at the
     // input of LG.
-    vector<int32_t> pseudo_eps_vec;
+    std::vector<int32_t> pseudo_eps_vec;
     pseudo_eps_vec.push_back(0);
     pseudo_eps_symbol_ = FindLabel(pseudo_eps_vec);
     KALDIFST_ASSERT(pseudo_eps_symbol_ == 1);
@@ -121,7 +122,7 @@ void InverseContextFst::GetFullPhoneSequence(
 InverseContextFst::Weight InverseContextFst::Final(StateId s) {
   KALDIFST_ASSERT(static_cast<size_t>(s) < state_seqs_.size());
 
-  const vector<int32_t> &phone_context = state_seqs_[s];
+  const std::vector<int32_t> &phone_context = state_seqs_[s];
 
   KALDIFST_ASSERT(phone_context.size() == context_width_ - 1);
 
@@ -148,18 +149,18 @@ bool InverseContextFst::GetArc(StateId s, Label ilabel, Arc *arc) {
     CreateDisambigArc(s, ilabel, arc);
     return true;
   } else if (IsPhoneSymbol(ilabel)) {
-    const vector<int32_t> &seq = state_seqs_[s];
+    const std::vector<int32_t> &seq = state_seqs_[s];
     if (!seq.empty() && seq.back() == subsequential_symbol_) {
       return false;  // A real phone is not allowed to follow the subsequential
                      // symbol.
     }
 
     // next_seq will be 'seq' shifted left by 1, with 'ilabel' appended.
-    vector<int32_t> next_seq(seq);
+    std::vector<int32_t> next_seq(seq);
     ShiftSequenceLeft(ilabel, &next_seq);
 
     // full-seq will be the full context window of size context_width_.
-    vector<int32_t> full_seq;
+    std::vector<int32_t> full_seq;
     GetFullPhoneSequence(seq, ilabel, &full_seq);
 
     StateId next_s = FindState(next_seq);
@@ -167,7 +168,7 @@ bool InverseContextFst::GetArc(StateId s, Label ilabel, Arc *arc) {
     CreatePhoneOrEpsArc(s, next_s, ilabel, full_seq, arc);
     return true;
   } else if (ilabel == subsequential_symbol_) {
-    const vector<int32_t> &seq = state_seqs_[s];
+    const std::vector<int32_t> &seq = state_seqs_[s];
 
     if (central_position_ + 1 == context_width_ ||
         seq[central_position_] == subsequential_symbol_) {
@@ -178,10 +179,10 @@ bool InverseContextFst::GetArc(StateId s, Label ilabel, Arc *arc) {
     }
 
     // full-seq will be the full context window of size context_width_.
-    vector<int32_t> full_seq;
+    std::vector<int32_t> full_seq;
     GetFullPhoneSequence(seq, ilabel, &full_seq);
 
-    vector<int32_t> next_seq(seq);
+    std::vector<int32_t> next_seq(seq);
     ShiftSequenceLeft(ilabel, &next_seq);
     StateId next_s = FindState(next_seq);
 
@@ -196,7 +197,7 @@ bool InverseContextFst::GetArc(StateId s, Label ilabel, Arc *arc) {
 
 void InverseContextFst::CreateDisambigArc(StateId s, Label ilabel, Arc *arc) {
   // Creates a self-loop arc corresponding to the disambiguation symbol.
-  vector<int32_t>
+  std::vector<int32_t>
       label_info;  // This will be a vector containing just [ -olabel ].
   label_info.push_back(
       -ilabel);  // olabel is a disambiguation symbol.  Use its negative
@@ -208,10 +209,9 @@ void InverseContextFst::CreateDisambigArc(StateId s, Label ilabel, Arc *arc) {
   arc->nextstate = s;  // self-loop.
 }
 
-void InverseContextFst::CreatePhoneOrEpsArc(StateId src, StateId dest,
-                                            Label ilabel,
-                                            const vector<int32_t> &phone_seq,
-                                            Arc *arc) {
+void InverseContextFst::CreatePhoneOrEpsArc(
+    StateId src, StateId dest, Label ilabel,
+    const std::vector<int32_t> &phone_seq, Arc *arc) {
   KALDIFST_ASSERT(phone_seq[central_position_] != subsequential_symbol_);
 
   arc->ilabel = ilabel;
@@ -228,7 +228,7 @@ void InverseContextFst::CreatePhoneOrEpsArc(StateId src, StateId dest,
   }
 }
 
-StdArc::StateId InverseContextFst::FindState(const vector<int32_t> &seq) {
+StdArc::StateId InverseContextFst::FindState(const std::vector<int32_t> &seq) {
   // Finds state-id corresponding to this vector of phones.  Inserts it if
   // necessary.
   KALDIFST_ASSERT(static_cast<int32_t>(seq.size()) == context_width_ - 1);
@@ -243,7 +243,8 @@ StdArc::StateId InverseContextFst::FindState(const vector<int32_t> &seq) {
   }
 }
 
-StdArc::Label InverseContextFst::FindLabel(const vector<int32_t> &label_vec) {
+StdArc::Label InverseContextFst::FindLabel(
+    const std::vector<int32_t> &label_vec) {
   // Finds the ilabel corresponding to this vector (creates a new ilabel if
   // necessary).
   VectorToLabelMap::const_iterator iter = ilabel_map_.find(label_vec);
@@ -255,6 +256,62 @@ StdArc::Label InverseContextFst::FindLabel(const vector<int32_t> &label_vec) {
   } else {
     return iter->second;
   }
+}
+
+void ComposeContext(const std::vector<int32_t> &disambig_syms_in,
+                    int32_t context_width, int32_t central_position,
+                    VectorFst<StdArc> *ifst, VectorFst<StdArc> *ofst,
+                    std::vector<std::vector<int32_t>> *ilabels_out,
+                    bool project_ifst /*=false*/) {
+  KALDIFST_ASSERT(ifst != nullptr && ofst != nullptr);
+  KALDIFST_ASSERT(context_width > 0);
+  KALDIFST_ASSERT(central_position >= 0);
+  KALDIFST_ASSERT(central_position < context_width);
+
+  std::vector<int32_t> disambig_syms(disambig_syms_in);
+  std::sort(disambig_syms.begin(), disambig_syms.end());
+
+  std::vector<int32_t> all_syms;
+  GetInputSymbols(*ifst, false /*no eps*/, &all_syms);
+  std::sort(all_syms.begin(), all_syms.end());
+
+  std::vector<int32_t> phones;
+  for (size_t i = 0; i < all_syms.size(); ++i) {
+    if (!std::binary_search(disambig_syms.begin(), disambig_syms.end(),
+                            all_syms[i])) {
+      phones.push_back(all_syms[i]);
+    }
+  }
+
+  // Get subsequential symbol that does not clash with
+  // any disambiguation symbol or symbol in the FST.
+  int32_t subseq_sym = 1;
+  if (!all_syms.empty()) {
+    subseq_sym = std::max(subseq_sym, all_syms.back() + 1);
+  }
+
+  if (!disambig_syms.empty()) {
+    subseq_sym = std::max(subseq_sym, disambig_syms.back() + 1);
+  }
+
+  // if central_position == context_width-1, it's left-context, and no
+  // subsequential symbol is needed.
+  if (central_position != context_width - 1) {
+    AddSubsequentialLoop(subseq_sym, ifst);
+    if (project_ifst) {
+      fst::Project(ifst, fst::PROJECT_INPUT);
+    }
+  }
+
+  InverseContextFst inv_c(subseq_sym, phones, disambig_syms, context_width,
+                          central_position);
+
+  // The following statement is equivalent to the following
+  // (if FSTs had the '*' operator for composition):
+  //   (*ofst) = inv(inv_c) * (*ifst)
+  ComposeDeterministicOnDemandInverse(*ifst, &inv_c, ofst);
+
+  inv_c.SwapIlabelInfo(ilabels_out);
 }
 
 }  // namespace fst

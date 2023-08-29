@@ -23,6 +23,11 @@ compose
 
 .. autofunction:: compose
 
+compose_context
+---------------
+
+.. autofunction:: compose_context
+
 connect
 -------
 

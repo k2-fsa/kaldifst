@@ -129,6 +129,13 @@ bool GetLinearSymbolSequence(const Fst<Arc> &fst, std::vector<I> *isymbols_out,
                              std::vector<I> *osymbols_out,
                              typename Arc::Weight *tot_weight_out);
 
+/// GetInputSymbols gets the list of symbols on the input of fst
+/// (including epsilon, if include_eps == true), as a sorted, unique
+/// list.
+template <class Arc, class I>
+void GetInputSymbols(const Fst<Arc> &fst, bool include_eps,
+                     std::vector<I> *symbols);
+
 }  // namespace fst
 
 #include "kaldifst/csrc/fstext-utils-inl.h"

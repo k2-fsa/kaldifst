@@ -6,6 +6,7 @@
 
 #include "kaldifst/python/csrc/arc.h"
 #include "kaldifst/python/csrc/const-fst.h"
+#include "kaldifst/python/csrc/context-fst.h"
 #include "kaldifst/python/csrc/determinize-star.h"
 #include "kaldifst/python/csrc/expanded-fst.h"
 #include "kaldifst/python/csrc/float-weight.h"
@@ -58,6 +59,8 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstRmEpsilon(m);
   PybindFstReverse(m);
   PybindFstConnect(m);
+
+  PybindContextFst(&m);
 
   PybindKaldiTable(m);
 }

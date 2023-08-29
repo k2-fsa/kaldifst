@@ -16,12 +16,14 @@
 #include <set>
 #include <type_traits>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
 #include "kaldifst/csrc/const-integer-set.h"
 #include "kaldifst/csrc/determinize-star.h"
 #include "kaldifst/csrc/kaldi-math.h"
+#include "kaldifst/csrc/stl-utils.h"
 
 namespace fst {
 
@@ -521,6 +523,28 @@ bool GetLinearSymbolSequence(const Fst<Arc> &fst, std::vector<I> *isymbols_out,
       cur_state = arc.nextstate;
     }
   }
+}
+
+template <class Arc, class I>
+void GetInputSymbols(const Fst<Arc> &fst, bool include_eps,
+                     std::vector<I> *symbols) {
+  static_assert(std::is_integral<I>::value, "");
+  std::unordered_set<I> all_syms;
+  for (StateIterator<Fst<Arc>> siter(fst); !siter.Done(); siter.Next()) {
+    typename Arc::StateId s = siter.Value();
+    for (ArcIterator<Fst<Arc>> aiter(fst, s); !aiter.Done(); aiter.Next()) {
+      const Arc &arc = aiter.Value();
+      all_syms.insert(arc.ilabel);
+    }
+  }
+  // Remove epsilon, if instructed.
+  if (!include_eps && all_syms.count(0) != 0) {
+    all_syms.erase(0);
+  }
+
+  KALDIFST_ASSERT(symbols != NULL);
+  kaldifst::CopySetToVector(all_syms, symbols);
+  std::sort(symbols->begin(), symbols->end());
 }
 
 }  // namespace fst

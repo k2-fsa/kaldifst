@@ -9,6 +9,7 @@
 #define KALDIFST_CSRC_CONTEXT_FST_H_
 
 #include <unordered_map>
+#include <vector>
 
 #include "fst/fst-decl.h"
 #include "fst/fstlib.h"
@@ -238,6 +239,35 @@ class InverseContextFst : public DeterministicOnDemandFst<StdArc> {
   // See "http://kaldi-asr.org/doc/tree_externals.html#tree_ilabel".
   std::vector<std::vector<int32_t>> ilabel_info_;
 };
+
+/**
+   Used in the command-line tool fstcomposecontext.  It creates a context FST
+   and composes it on the left with "ifst" to make "ofst".  It outputs the label
+   information to ilabels_out.  "ifst" is mutable because we need to add the
+   subsequential loop.
+
+    @param [in] disambig_syms  List of disambiguation symbols, e.g. the integer
+                 ids of #0, #1, #2 ... in the phones.txt.
+    @param [in] context_width  Size of context window, e.g. 3 for triphone.
+    @param [in] central_position  Central position in phonetic context window
+                  (zero-based index), e.g. 1 for triphone.
+    @param [in,out] ifst   The FST we are composing with C (e.g. LG.fst),
+   mustable because we need to add the subsequential loop to it.
+    @param [out] ofst   Composed output FST (would be CLG.fst).
+    @param [out] ilabels_out  Vector, indexed by ilabel of CLG.fst, providing
+   information about the meaning of that ilabel; see
+                  "http://kaldi-asr.org/doc/tree_externals.html#tree_ilabel".
+    @param [in] project_ifst  This is intended only to be set to true
+                  in the program 'fstmakecontextfst'... if true, it will
+                  project on the input after adding the subsequential loop
+                  to 'ifst', which allows us to reconstruct the context
+                  fst C.fst.
+ */
+void ComposeContext(const std::vector<int32_t> &disambig_syms,
+                    int32_t context_width, int32_t central_position,
+                    VectorFst<StdArc> *ifst, VectorFst<StdArc> *ofst,
+                    std::vector<std::vector<int32_t>> *ilabels_out,
+                    bool project_ifst = false);
 
 }  // namespace fst
 
