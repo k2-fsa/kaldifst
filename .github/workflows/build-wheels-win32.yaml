@@ -31,7 +31,7 @@ jobs:
         env:
           CIBW_BEFORE_BUILD: "pip install -U cmake numpy"
           CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-A Win32"
-          CIBW_SKIP: "*-win_amd64"
+          CIBW_SKIP: "*-win_amd64 cp27-* cp35-*  cp36-* "
           CIBW_BUILD_VERBOSITY: 3
 
       - name: Display wheels
