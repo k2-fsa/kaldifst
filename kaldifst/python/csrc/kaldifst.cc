@@ -6,6 +6,7 @@
 
 #include "kaldifst/python/csrc/arc.h"
 #include "kaldifst/python/csrc/const-fst.h"
+#include "kaldifst/python/csrc/context-fst.h"
 #include "kaldifst/python/csrc/determinize-star.h"
 #include "kaldifst/python/csrc/expanded-fst.h"
 #include "kaldifst/python/csrc/float-weight.h"
@@ -23,6 +24,7 @@
 #include "kaldifst/python/csrc/fstrmepsilon.h"
 #include "kaldifst/python/csrc/kaldi-table.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
+#include "kaldifst/python/csrc/pre-determinize.h"
 #include "kaldifst/python/csrc/symbol-table.h"
 #include "kaldifst/python/csrc/table-matcher.h"
 #include "kaldifst/python/csrc/vector-fst.h"
@@ -52,10 +54,13 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindFstDeterminize(m);
   PybindFstInvert(m);
 
+  PybindPreDeterminize(m);
   PybindDeterminizeStar(m);
   PybindFstRmEpsilon(m);
   PybindFstReverse(m);
   PybindFstConnect(m);
+
+  PybindContextFst(&m);
 
   PybindKaldiTable(m);
 }

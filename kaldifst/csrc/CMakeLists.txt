@@ -3,9 +3,11 @@ include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${openfst_SOURCE_DIR}/src/include)
 
 set(srcs
+  context-fst.cc
   kaldi-fst-io.cc
   kaldi-holder.cc
   kaldi-io.cc
+  kaldi-math.cc
   kaldi-semaphore.cc
   kaldi-table.cc
   parse-options.cc

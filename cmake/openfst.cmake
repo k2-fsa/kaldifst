@@ -4,13 +4,27 @@ function(download_openfst)
   include(FetchContent)
 
   set(openfst_URL  "https://github.com/kkm000/openfst/archive/refs/tags/win/1.6.5.1.tar.gz")
+  set(openfst_URL2  "https://huggingface.co/csukuangfj/kaldi-hmm-gmm-cmake-deps/resolve/main/openfst-win-1.6.5.1.tar.gz")
   set(openfst_HASH "SHA256=02c49b559c3976a536876063369efc0e41ab374be1035918036474343877046e")
 
-  # If you don't have access to the Internet, please download the file to your
-  # local drive and replace with the line below (you need to change it accordingly.
-  # I am placing it in /mypath/openfst-win-1.6.5.1.tar.gz, but you can place it
-  # anywhere you like)
-  # set(openfst_URL  "/mypath/openfst-win-1.6.5.1.tar.gz")
+  # If you don't have access to the Internet,
+  # please pre-download it
+  set(possible_file_locations
+    $ENV{HOME}/Downloads/openfst-win-1.6.5.1.tar.gz
+    ${PROJECT_SOURCE_DIR}/openfst-win-1.6.5.1.tar.gz
+    ${PROJECT_BINARY_DIR}/openfst-win-1.6.5.1.tar.gz
+    /tmp/openfst-win-1.6.5.1.tar.gz
+    /star-fj/fangjun/download/github/openfst-win-1.6.5.1.tar.gz
+  )
+
+  foreach(f IN LISTS possible_file_locations)
+    if(EXISTS ${f})
+      set(openfst_URL  "${f}")
+      file(TO_CMAKE_PATH "${openfst_URL}" openfst_URL)
+      set(openfst_URL2)
+      break()
+    endif()
+  endforeach()
 
   set(HAVE_BIN OFF CACHE BOOL "" FORCE)
   set(HAVE_SCRIPT ON CACHE BOOL "" FORCE)
@@ -29,11 +43,14 @@ function(download_openfst)
 
   if(NOT WIN32)
     FetchContent_Declare(openfst
-      URL               ${openfst_URL}
+      URL
+        ${openfst_URL}
+        ${openfst_URL2}
       URL_HASH          ${openfst_HASH}
       PATCH_COMMAND
         sed -i.bak s/enable_testing\(\)//g "src/CMakeLists.txt" &&
-        sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt"
+        sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt" &&
+        sed -i.bak /message/d "src/script/CMakeLists.txt"
         # sed -i.bak s/add_subdirectory\(script\)//g "src/CMakeLists.txt" &&
         # sed -i.bak s/add_subdirectory\(extensions\)//g "src/CMakeLists.txt"
     )
@@ -46,7 +63,7 @@ function(download_openfst)
 
   FetchContent_GetProperties(openfst)
   if(NOT openfst_POPULATED)
-    message(STATUS "Downloading openfst ${openfst_URL}")
+    message(STATUS "Downloading openfst from ${openfst_URL}")
     FetchContent_Populate(openfst)
   endif()
   message(STATUS "openfst is downloaded to ${openfst_SOURCE_DIR}")

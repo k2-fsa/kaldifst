@@ -6,6 +6,7 @@
 #define KALDIFST_PYTHON_CSRC_KALDIFST_H_
 
 #include "pybind11/pybind11.h"
+#include "pybind11/stl.h"
 
 namespace py = pybind11;
 

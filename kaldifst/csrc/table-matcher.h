@@ -1,5 +1,7 @@
 // kaldifst/csrc/table-matcher.h
 //
+// Copyright 2009-2011  Microsoft Corporation
+//
 // This file is copied/modified from
 // https://github.com/kaldi-asr/kaldi/blob/master/src/fstext/table-matcher.h
 

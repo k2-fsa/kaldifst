@@ -4,6 +4,7 @@ include_directories(${openfst_SOURCE_DIR}/src/include)
 pybind11_add_module(_kaldifst
   arc.cc
   const-fst.cc
+  context-fst.cc
   determinize-star.cc
   expanded-fst.cc
   float-weight.cc
@@ -22,6 +23,7 @@ pybind11_add_module(_kaldifst
   kaldi-table.cc
   kaldifst.cc
   mutable-fst.cc
+  pre-determinize.cc
   symbol-table.cc
   table-matcher.cc
   vector-fst.cc
