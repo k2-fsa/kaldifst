@@ -8,7 +8,7 @@ function(download_openfst)
   set(openfst_HASH "SHA256=02c49b559c3976a536876063369efc0e41ab374be1035918036474343877046e")
 
   # If you don't have access to the Internet,
-  # please pre-download googletest
+  # please pre-download it
   set(possible_file_locations
     $ENV{HOME}/Downloads/openfst-win-1.6.5.1.tar.gz
     ${PROJECT_SOURCE_DIR}/openfst-win-1.6.5.1.tar.gz
