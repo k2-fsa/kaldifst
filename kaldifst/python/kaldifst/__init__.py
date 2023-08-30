@@ -1,4 +1,5 @@
 from _kaldifst import (
+    StdFst,
     FloatWeight,
     StdArc,
     StdConstFst,
