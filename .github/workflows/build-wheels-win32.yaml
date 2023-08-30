@@ -1,4 +1,4 @@
-name: build-wheels
+name: build-wheels-win32
 
 on:
   push:
@@ -9,18 +9,17 @@ on:
       - '*'
 
 concurrency:
-  group: build-wheels-${{ github.ref }}
+  group: build-wheels-win32-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}
+  build_wheels_win32:
+    name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest]
+        os: [windows-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -30,7 +29,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.4
         env:
-          CIBW_SKIP: "cp27-* cp35-* cp36-* cp37-* cp310-* cp311-* *-win32 pp* *-musllinux*"
+          CIBW_BEFORE_BUILD: "pip install -U cmake numpy"
+          CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-A Win32"
+          CIBW_SKIP: "*-win_amd64"
           CIBW_BUILD_VERBOSITY: 3
 
       - name: Display wheels
@@ -53,18 +54,3 @@ jobs:
           python3 -m pip install wheel twine setuptools
 
           twine upload ./wheelhouse/*.whl
-
-      - name: Build sdist
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        shell: bash
-        run: |
-          python3 setup.py sdist
-          ls -l dist/*
-
-      - name: Publish sdist to PyPI
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: |
-          twine upload dist/kaldifst-*.tar.gz
