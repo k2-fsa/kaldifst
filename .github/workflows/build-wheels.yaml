@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - wheel
+      - fix-wheel
     tags:
       - '*'
 
@@ -18,39 +19,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v2
 
       # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
       # for a list of versions
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.4
-        env:
-          CIBW_SKIP: "cp27-* cp35-* *-win32 pp* *-musllinux*"
-          CIBW_BUILD_VERBOSITY: 3
-
-      - name: Display wheels
-        shell: bash
-        run: |
-          ls -lh ./wheelhouse/
-
-          ls -lh ./wheelhouse/*.whl
-
-      - uses: actions/upload-artifact@v2
-        with:
-          path: ./wheelhouse/*.whl
-
-      - name: Publish wheels to PyPI
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install wheel twine setuptools
-
-          twine upload ./wheelhouse/*.whl
+      # - name: Build wheels
+      #   uses: pypa/cibuildwheel@v2.11.4
+      #   env:
+      #     CIBW_SKIP: "cp27-* cp35-* *-win32 pp* *-musllinux*"
+      #     CIBW_BUILD_VERBOSITY: 3
+      #
+      # - name: Display wheels
+      #   shell: bash
+      #   run: |
+      #     ls -lh ./wheelhouse/
+      #
+      #     ls -lh ./wheelhouse/*.whl
+      #
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     path: ./wheelhouse/*.whl
+      #
+      # - name: Publish wheels to PyPI
+      #   env:
+      #     TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+      #     TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+      #   run: |
+      #     python3 -m pip install --upgrade pip
+      #     python3 -m pip install wheel twine setuptools
+      #
+      #     twine upload ./wheelhouse/*.whl
 
       - name: Build sdist
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -62,7 +64,7 @@ jobs:
       - name: Publish sdist to PyPI
         if: ${{ matrix.os == 'ubuntu-latest' }}
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           twine upload dist/kaldifst-*.tar.gz
