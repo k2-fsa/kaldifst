@@ -7,7 +7,10 @@
 #ifndef KALDIFST_CSRC_LATTICE_WEIGHT_H_
 #define KALDIFST_CSRC_LATTICE_WEIGHT_H_
 
+#include <algorithm>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include "fst/fstlib.h"
 #include "kaldifst/csrc/log.h"
@@ -159,7 +162,7 @@ class LatticeWeightTpl {
   }
 
   // Internal helper function, used in ReadNoParen.
-  inline static void ReadFloatType(std::istream &strm, T &f) {
+  inline static void ReadFloatType(std::istream &strm, T &f) {  // NOLINT
     std::string s;
     strm >> s;
     if (s == "Infinity") {
@@ -279,14 +282,14 @@ inline int Compare(const LatticeWeightTpl<FloatType> &w1,
     return 1;
   }  // having smaller cost means you're larger
   // in the semiring [higher probability]
-  else if (f1 > f2) {
+  else if (f1 > f2) {  // NOLINT
     return -1;
   }
   // mathematically we should be comparing (w1.value1_-w1.value2_ <
   // w2.value1_-w2.value2_) in the next line, but add w1.value1_+w1.value2_ =
   // w2.value1_+w2.value2_ to both sides and divide by two, and we get the
   // simpler equivalent form w1.value1_ < w2.value1_.
-  else if (w1.Value1() < w2.Value1()) {
+  else if (w1.Value1() < w2.Value1()) {  // NOLINT
     return 1;
   } else if (w1.Value1() > w2.Value1()) {
     return -1;
@@ -369,7 +372,7 @@ inline LatticeWeightTpl<FloatType> Divide(const LatticeWeightTpl<FloatType> &w1,
     return LatticeWeightTpl<T>::Zero();
   }
   if (a == std::numeric_limits<T>::infinity() ||
-      b == std::numeric_limits<T>::infinity())
+      b == std::numeric_limits<T>::infinity())  // NOLINT
     return LatticeWeightTpl<T>::Zero();  // not a valid number if only one is
                                          // infinite.
   return LatticeWeightTpl<T>(a, b);
@@ -389,7 +392,7 @@ template <class FloatType>
 inline std::ostream &operator<<(std::ostream &strm,
                                 const LatticeWeightTpl<FloatType> &w) {
   LatticeWeightTpl<FloatType>::WriteFloatType(strm, w.Value1());
-  CHECK(FLAGS_fst_weight_separator.size() == 1);
+  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
   strm << FLAGS_fst_weight_separator[0];  // comma by default;
   // may or may not be settable from Kaldi programs.
   LatticeWeightTpl<FloatType>::WriteFloatType(strm, w.Value2());
@@ -399,7 +402,7 @@ inline std::ostream &operator<<(std::ostream &strm,
 template <class FloatType>
 inline std::istream &operator>>(std::istream &strm,
                                 LatticeWeightTpl<FloatType> &w1) {
-  CHECK(FLAGS_fst_weight_separator.size() == 1);
+  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
   // separator defaults to ','
   return w1.ReadNoParen(strm, FLAGS_fst_weight_separator[0]);
 }
@@ -739,7 +742,7 @@ template <class WeightType, class IntType>
 inline std::ostream &operator<<(
     std::ostream &strm, const CompactLatticeWeightTpl<WeightType, IntType> &w) {
   strm << w.Weight();
-  CHECK(FLAGS_fst_weight_separator.size() == 1);
+  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
   strm << FLAGS_fst_weight_separator[0];  // comma by default.
   for (size_t i = 0; i < w.String().size(); i++) {
     strm << w.String()[i];
@@ -758,7 +761,7 @@ inline std::istream &operator>>(
   if (strm.fail()) {
     return strm;
   }
-  CHECK(FLAGS_fst_weight_separator.size() == 1);
+  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
   size_t pos = s.find_last_of(FLAGS_fst_weight_separator);  // normally ","
   if (pos == std::string::npos) {
     strm.clear(std::ios::badbit);
@@ -781,8 +784,9 @@ inline std::istream &operator>>(
     if (*c == kStringSeparator)  // '_'
       c++;
     char *c2;
-    long int i = strtol(c, &c2, 10);
-    if (c2 == c || static_cast<long int>(static_cast<IntType>(i)) != i) {
+    long int i = strtol(c, &c2, 10);  // NOLINT
+    if (c2 == c ||
+        static_cast<long int>(static_cast<IntType>(i)) != i) {  // NOLINT
       strm.clear(std::ios::badbit);
       return strm;
     }

@@ -6,8 +6,11 @@
 // Copyright      2018  Johns Hopkins University (author: Daniel Povey)
 #include "kaldifst/csrc/context-fst.h"
 
+#include <algorithm>
+
 #include "kaldifst/csrc/fstext-utils.h"
 #include "kaldifst/csrc/log.h"
+
 namespace fst {
 
 void AddSubsequentialLoop(StdArc::Label subseq_symbol,

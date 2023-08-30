@@ -5,8 +5,8 @@
 
 // Copyright 2009-2011  Microsoft Corporation
 
-#ifndef KALDIFS_CSR_GRAMMER_CONTEXT_FST_H_
-#define KALDIFS_CSR_GRAMMER_CONTEXT_FST_H_
+#ifndef KALDIFST_CSRC_GRAMMAR_CONTEXT_FST_H_
+#define KALDIFST_CSRC_GRAMMAR_CONTEXT_FST_H_
 
 #include "fst/fst-decl.h"
 #include "fst/fstlib.h"
@@ -42,4 +42,4 @@ inline int32_t GetEncodingMultiple(int32_t nonterm_phones_offset) {
 
 }  // namespace fst
 
-#endif  // KALDIFS_CSR_GRAMMER_CONTEXT_FST_H_
+#endif  // KALDIFST_CSRC_GRAMMAR_CONTEXT_FST_H_

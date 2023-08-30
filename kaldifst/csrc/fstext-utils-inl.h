@@ -12,8 +12,10 @@
 #ifndef KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 #define KALDIFST_CSRC_FSTEXT_UTILS_INL_H_
 
+#include <algorithm>
 #include <map>
 #include <set>
+#include <string>
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>

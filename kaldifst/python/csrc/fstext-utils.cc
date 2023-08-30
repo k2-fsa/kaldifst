@@ -4,6 +4,10 @@
 
 #include "kaldifst/csrc/fstext-utils.h"
 
+#include <tuple>
+#include <utility>
+#include <vector>
+
 #include "kaldifst/python/csrc/fstarcsort.h"
 #include "kaldifst/python/csrc/fstext-utils.h"
 

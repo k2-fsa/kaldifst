@@ -5,8 +5,11 @@
 
 // Copyright 2009-2011  Microsoft Corporation
 
-#ifndef KALDIFS_CSR_PRE_DETERMINIZE_H_
-#define KALDIFS_CSR_PRE_DETERMINIZE_H_
+#ifndef KALDIFST_CSRC_PRE_DETERMINIZE_H_
+#define KALDIFST_CSRC_PRE_DETERMINIZE_H_
+
+#include <algorithm>
+#include <vector>
 
 #include "fst/fst-decl.h"
 #include "fst/fstlib.h"
@@ -30,11 +33,12 @@ namespace fst {
    the n pairs of symbols on its input and output.
 */
 template <class Arc>
-void AddSelfLoops(MutableFst<Arc> *fst, std::vector<typename Arc::Label> &isyms,
-                  std::vector<typename Arc::Label> &osyms);
+void AddSelfLoops(MutableFst<Arc> *fst,
+                  const std::vector<typename Arc::Label> &isyms,
+                  const std::vector<typename Arc::Label> &osyms);
 
 }  // namespace fst
 
 #include "kaldifst/csrc/pre-determinize-inl.h"
 
-#endif  // KALDIFS_CSR_PRE_DETERMINIZE_H_
+#endif  // KALDIFST_CSRC_PRE_DETERMINIZE_H_

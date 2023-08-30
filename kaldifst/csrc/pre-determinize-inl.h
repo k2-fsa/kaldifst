@@ -5,19 +5,22 @@
 
 // Copyright 2009-2011  Microsoft Corporation
 
-#ifndef KALDIFS_CSR_PRE_DETERMINIZE_INL_H_
-#define KALDIFS_CSR_PRE_DETERMINIZE_INL_H_
+#ifndef KALDIFST_CSRC_PRE_DETERMINIZE_INL_H_
+#define KALDIFST_CSRC_PRE_DETERMINIZE_INL_H_
 
 #include <assert.h>
 
+#include <algorithm>
 #include <set>
+#include <vector>
 
 namespace fst {
 
 // see pre-determinize.h for documentation.
 template <class Arc>
-void AddSelfLoops(MutableFst<Arc> *fst, std::vector<typename Arc::Label> &isyms,
-                  std::vector<typename Arc::Label> &osyms) {
+void AddSelfLoops(MutableFst<Arc> *fst,
+                  const std::vector<typename Arc::Label> &isyms,
+                  const std::vector<typename Arc::Label> &osyms) {
   assert(fst != nullptr);
   assert(isyms.size() == osyms.size());
   typedef typename Arc::Label Label;
@@ -88,4 +91,4 @@ void CopySetToVector(const std::set<T> s, std::vector<T> *v) {
 }
 
 }  // namespace fst
-#endif  // KALDIFS_CSR_PRE_DETERMINIZE_INL_H_
+#endif  // KALDIFST_CSRC_PRE_DETERMINIZE_INL_H_

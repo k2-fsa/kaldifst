@@ -12,6 +12,8 @@
 #ifndef KALDIFST_CSRC_FSTEXT_UTILS_H_
 #define KALDIFST_CSRC_FSTEXT_UTILS_H_
 
+#include <vector>
+
 #include "fst/fst.h"
 #include "fst/map.h"
 #include "fst/minimize.h"

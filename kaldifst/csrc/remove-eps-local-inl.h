@@ -9,6 +9,8 @@
 #ifndef KALDIFST_CSRC_REMOVE_EPS_LOCAL_INL_H_
 #define KALDIFST_CSRC_REMOVE_EPS_LOCAL_INL_H_
 
+#include <vector>
+
 namespace fst {
 
 template <class Weight>
@@ -34,8 +36,8 @@ class RemoveEpsLocalClass {
   typedef typename Arc::Weight Weight;
 
  public:
-  RemoveEpsLocalClass(MutableFst<Arc> *fst) : fst_(fst) {
-    if (fst_->Start() == kNoStateId) return;  // empty.
+  RemoveEpsLocalClass(MutableFst<Arc> *fst) : fst_(fst) {  // NOLINT
+    if (fst_->Start() == kNoStateId) return;               // empty.
     non_coacc_state_ = fst_->AddState();
     InitNumArcs();
     StateId num_states = fst_->NumStates();
@@ -66,9 +68,9 @@ class RemoveEpsLocalClass {
 
   static bool CanCombineFinal(const Arc &a, Weight final_prob,
                               Weight *final_prob_out) {
-    if (a.ilabel != 0 || a.olabel != 0)
+    if (a.ilabel != 0 || a.olabel != 0) {
       return false;
-    else {
+    } else {
       *final_prob_out = Times(a.weight, final_prob);
       return true;
     }

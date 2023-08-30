@@ -11,6 +11,8 @@
 #define KALDIFST_CSRC_DETERMINISTIC_FST_INL_H_
 #include <algorithm>
 #include <queue>
+#include <unordered_map>
+#include <utility>
 
 #include "kaldifst/csrc/log.h"
 #include "kaldifst/csrc/stl-utils.h"
