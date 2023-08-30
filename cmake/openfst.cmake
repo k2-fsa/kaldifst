@@ -49,7 +49,8 @@ function(download_openfst)
       URL_HASH          ${openfst_HASH}
       PATCH_COMMAND
         sed -i.bak s/enable_testing\(\)//g "src/CMakeLists.txt" &&
-        sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt"
+        sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt" &&
+        sed -i.bak /message/d "src/script/CMakeLists.txt"
         # sed -i.bak s/add_subdirectory\(script\)//g "src/CMakeLists.txt" &&
         # sed -i.bak s/add_subdirectory\(extensions\)//g "src/CMakeLists.txt"
     )
