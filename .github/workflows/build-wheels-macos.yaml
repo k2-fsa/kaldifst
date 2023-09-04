@@ -31,7 +31,6 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.4
         env:
-          CIBW_BEFORE_BUILD: "pip install -U cmake numpy"
           CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'"
           CIBW_ARCHS: "universal2"
           CIBW_BUILD_VERBOSITY: 3
