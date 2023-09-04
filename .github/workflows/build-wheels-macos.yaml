@@ -1,26 +1,30 @@
-name: build-wheels-win32
+name: build-wheels-macos
 
 on:
   push:
     branches:
       - wheel
+      - universal
     tags:
       - '*'
 
   workflow_dispatch:
 
+env:
+  KHG_IS_FOR_PYPI: 1
+
 concurrency:
-  group: build-wheels-win32-${{ github.ref }}
+  group: build-wheels-macos-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build_wheels_win32:
-    name: ${{ matrix.os }}
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
+        os: [macos-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -30,17 +34,18 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.4
         env:
-          # CIBW_BEFORE_BUILD: "pip install -U cmake numpy"
-          CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-A Win32"
-          CIBW_SKIP: "*-win_amd64 cp27-* cp35-*  cp36-* "
+          CIBW_BEFORE_BUILD: "pip install -U cmake numpy"
+          CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'"
+          CIBW_ARCHS: "universal2"
           CIBW_BUILD_VERBOSITY: 3
+
+          #  Don't repair macOS wheels
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
       - name: Display wheels
         shell: bash
         run: |
           ls -lh ./wheelhouse/
-
-          ls -lh ./wheelhouse/*.whl
 
       - uses: actions/upload-artifact@v2
         with:
