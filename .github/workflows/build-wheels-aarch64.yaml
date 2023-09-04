@@ -1,4 +1,4 @@
-name: build-wheels-macos
+name: build-wheels-aarch64
 
 on:
   push:
@@ -11,20 +11,25 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: build-wheels-macos-${{ github.ref }}
+  group: build-wheels-aarch64-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}
+  build_wheels_aarch64:
+    name: Build wheels for aarch64 on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
 
       # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
       # for a list of versions
@@ -32,12 +37,9 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.4
         env:
           CIBW_BEFORE_BUILD: "pip install -U cmake numpy"
-          CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'"
-          CIBW_ARCHS: "universal2"
+          CIBW_SKIP: "cp27-* cp35-* cp36-* *-win32 pp* *-musllinux* *-manylinux_i686"
           CIBW_BUILD_VERBOSITY: 3
-
-          #  Don't repair macOS wheels
-          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+          CIBW_ARCHS_LINUX: aarch64
 
       - name: Display wheels
         shell: bash
