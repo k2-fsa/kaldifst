@@ -48,7 +48,7 @@ class BuildExtension(build_ext):
         extra_cmake_args += f" -DCMAKE_INSTALL_PREFIX={install_dir}"
 
         if is_windows():
-            extra_cmake_args = " -DBUILD_SHARED_LIBS=OFF"
+            extra_cmake_args += " -DBUILD_SHARED_LIBS=OFF"
 
         if make_args == "" and system_make_args == "":
             print("For fast compilation, run:")
