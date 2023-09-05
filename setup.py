@@ -42,10 +42,13 @@ class BuildExtension(build_ext):
         system_make_args = os.environ.get("MAKEFLAGS", "")
 
         if cmake_args == "":
-            cmake_args = "-DCMAKE_BUILD_TYPE=Release"
+            cmake_args = "-DCMAKE_BUILD_TYPE=Release "
 
-        extra_cmake_args = " -DKALDIFST_BUILD_TESTS=OFF"
-        extra_cmake_args += f" -DCMAKE_INSTALL_PREFIX={install_dir}"
+        extra_cmake_args = " -DKALDIFST_BUILD_TESTS=OFF "
+        extra_cmake_args += f" -DCMAKE_INSTALL_PREFIX={install_dir} "
+
+        if is_windows():
+            extra_cmake_args += " -DBUILD_SHARED_LIBS=OFF "
 
         if make_args == "" and system_make_args == "":
             print("For fast compilation, run:")

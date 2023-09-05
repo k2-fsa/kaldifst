@@ -1,21 +1,10 @@
 Installation
 ============
 
-You can use the following methods to install `kaldifst`_ on Windows, Linux, and
-macOS. ``Python >= 3.6`` is known to work.
+You can use the following methods to install `kaldifst`_ on Windows (Win64/Win32),
+Linux (x86/x86_64/aarch64), and macOS (x86_64/arm64).
 
-Using conda
------------
-
-.. code-block:: bash
-
-   conda install -c kaldifst kaldifst
-
-To uninstall `kaldifst`_, use:
-
-.. code-block:: bash
-
-   conda remove kaldifst
+``Python >= 3.8`` is known to work.
 
 Using pip
 ---------
@@ -62,4 +51,4 @@ To check that `kaldifst`_ was installed successfully, use:
 
    python3 -c "import kaldifst; print(kaldifst.__version__)"
 
-It should print the version of `kaldifst`_, e.g., ``0.8``.
+It should print the version of `kaldifst`_, e.g., ``1.7.4``.
