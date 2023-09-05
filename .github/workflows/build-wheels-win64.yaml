@@ -1,4 +1,4 @@
-name: build-wheels-win32
+name: build-wheels-win64
 
 on:
   push:
@@ -11,11 +11,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: build-wheels-win32-${{ github.ref }}
+  group: build-wheels-win64-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build_wheels_win32:
+  build_wheels_win64:
     name: ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -32,9 +32,8 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.4
         env:
-          CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-A Win32"
           CIBW_BUILD: "${{ matrix.python-version}}-* "
-          CIBW_SKIP: "*-win_amd64 cp27-* cp35-*  cp36-* "
+          CIBW_SKIP: "cp27-* cp35-* *-win32 pp* *-musllinux*"
           CIBW_BUILD_VERBOSITY: 3
 
       - name: Display wheels
