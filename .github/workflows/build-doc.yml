@@ -53,7 +53,7 @@ jobs:
       - name: Install kaldifst
         shell: bash
         run: |
-          python3 setup.py install
+          python3 -m pip install .
 
       - name: Build doc
         shell: bash
