@@ -13,7 +13,6 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-# Remember to also change ./scripts/conda/kaldifst/meta.yaml
 set(KALDIFST_VERSION "1.7.4")
 
 if(NOT CMAKE_BUILD_TYPE)
