@@ -3,6 +3,11 @@ kaldifst
 
 .. currentmodule:: kaldifst
 
+add_self_loops
+--------------
+
+.. autofunction:: add_self_loops
+
 arcsort
 -------
 
@@ -17,6 +22,11 @@ compose
 -------
 
 .. autofunction:: compose
+
+compose_context
+---------------
+
+.. autofunction:: compose_context
 
 connect
 -------
@@ -43,6 +53,16 @@ draw
 
 .. autofunction:: draw
 
+equal_align
+-----------
+
+.. autofunction:: equal_align
+
+get_linear_symbol_sequence
+--------------------------
+
+.. autofunction:: get_linear_symbol_sequence
+
 info
 ----
 
@@ -52,6 +72,11 @@ invert
 ------
 
 .. autofunction:: invert
+
+make_linear_acceptor
+--------------------
+
+.. autofunction:: make_linear_acceptor
 
 minimize
 --------
@@ -228,6 +253,44 @@ type
 ^^^^
 
 .. autoattribute:: kaldifst.StdConstFst.type
+
+StdFst
+------
+
+copy
+^^^^
+
+.. automethod:: kaldifst.StdFst.copy
+
+input_symbols
+^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.StdFst.input_symbols
+
+is_ilabel_sorted
+^^^^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.StdFst.is_ilabel_sorted
+
+is_olabel_sorted
+^^^^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.StdFst.is_olabel_sorted
+
+output_symbols
+^^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.StdFst.output_symbols
+
+start
+^^^^^
+
+.. autoattribute:: kaldifst.StdFst.start
+
+type
+^^^^
+
+.. autoattribute:: kaldifst.StdFst.type
 
 StdVectorFst
 ------------
