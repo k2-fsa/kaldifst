@@ -22,6 +22,8 @@ on:
       - 'kaldifst/python/**'
       - 'setup.py'
 
+  workflow_dispatch:
+
 concurrency:
   group: build-windows-${{ github.ref }}
   cancel-in-progress: true

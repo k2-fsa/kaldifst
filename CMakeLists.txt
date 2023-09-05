@@ -26,19 +26,8 @@ option(KALDIFST_BUILD_PYTHON "Whether to build Python" ON)
 option(BUILD_SHARED_LIBS "Whether to build shared libraries" ON)
 
 if(BUILD_SHARED_LIBS AND MSVC)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
-if(NOT BUILD_SHARED_LIBS AND MSVC)
-  # see https://cmake.org/cmake/help/latest/prop_tgt/MSVC_RUNTIME_LIBRARY.html
-  # https://stackoverflow.com/questions/14172856/compile-with-mt-instead-of-md-using-cmake
-  if(MSVC)
-      add_compile_options(
-          $<$<CONFIG:>:/MT> #---------|
-          $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
-          $<$<CONFIG:Release>:/MT> #--|
-      )
-  endif()
+  message(STATUS "Disable building shared libraries for Windows")
+  set(BUILD_SHARED_LIBS OFF)
 endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
