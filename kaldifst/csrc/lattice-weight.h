@@ -39,10 +39,11 @@ class LatticeWeightTpl {
  public:
   typedef FloatType T;  // normally float.
   typedef LatticeWeightTpl ReverseWeight;
+  using ValueType = FloatType;
 
-  inline T Value1() const { return value1_; }
+  inline T Value1() const { return value1_; }  // usually graph cost
 
-  inline T Value2() const { return value2_; }
+  inline T Value2() const { return value2_; }  // usually acoustic cost
 
   inline void SetValue1(T f) { value1_ = f; }
 
@@ -50,7 +51,7 @@ class LatticeWeightTpl {
 
   LatticeWeightTpl() : value1_{}, value2_{} {}
 
-  LatticeWeightTpl(T a, T b) : value1_(a), value2_(b) {}
+  LatticeWeightTpl(T a, T b = 0) : value1_(a), value2_(b) {}  // NOLINT
 
   LatticeWeightTpl(const LatticeWeightTpl &other)
       : value1_(other.value1_), value2_(other.value2_) {}

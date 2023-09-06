@@ -22,6 +22,7 @@ pybind11_add_module(_kaldifst
   fstrmepsilon.cc
   kaldi-table.cc
   kaldifst.cc
+  lattice-weight.cc
   mutable-fst.cc
   pre-determinize.cc
   symbol-table.cc

@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "kaldifst/csrc/lattice-weight.h"
 #include "kaldifst/python/csrc/fstarcsort.h"
 #include "kaldifst/python/csrc/fstext-utils.h"
 
@@ -184,6 +185,19 @@ Returns:
 
 namespace kaldifst {
 
+template <class Arc, class I = int32_t>
+std::tuple<bool, std::vector<I>, std::vector<I>, typename Arc::Weight>
+GetLinearSymbolSequenceWrapper(const fst::Fst<Arc> &fst) {
+  std::vector<I> isymbols_out;
+  std::vector<I> osymbols_out;
+  typename Arc::Weight w;
+
+  bool succeeded =
+      GetLinearSymbolSequence(fst, &isymbols_out, &osymbols_out, &w);
+
+  return std::make_tuple(succeeded, isymbols_out, osymbols_out, w);
+}
+
 void PybindFstExtUtils(py::module &m) {  // NOLINT
   m.def(
       "minimize_encoded",
@@ -212,23 +226,14 @@ void PybindFstExtUtils(py::module &m) {  // NOLINT
       },
       py::arg("ifst"), py::arg("length"), py::arg("rand_seed"),
       py::arg("num_retries") = 10, kEqualAlignDoc);
-  m.def(
-      "get_linear_symbol_sequence",
-      [](const fst::StdFst &fst) -> std::tuple<bool, std::vector<int32_t>,
-                                               std::vector<int32_t>, float> {
-        std::vector<int32_t> isymbols_out;
-        std::vector<int32_t> osymbols_out;
-        float total_weight_out;
-        fst::TropicalWeight w;
 
-        bool succeeded =
-            GetLinearSymbolSequence(fst, &isymbols_out, &osymbols_out, &w);
-        total_weight_out = w.Value();
+  m.def("get_linear_symbol_sequence",
+        &(GetLinearSymbolSequenceWrapper<fst::StdArc>), py::arg("fst"),
+        kGetLinearSymbolSequenceDoc);
 
-        return std::make_tuple(succeeded, isymbols_out, osymbols_out,
-                               total_weight_out);
-      },
-      py::arg("fst"), kGetLinearSymbolSequenceDoc);
+  m.def("get_linear_symbol_sequence",
+        &(GetLinearSymbolSequenceWrapper<fst::LatticeArc>), py::arg("fst"),
+        kGetLinearSymbolSequenceDoc);
 }
 
 }  // namespace kaldifst
