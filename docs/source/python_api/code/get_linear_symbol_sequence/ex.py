@@ -23,7 +23,6 @@ assert succeeded is True
 assert isymbols_out == [1, 3, 9]
 assert osymbols_out == [2, 3, 5]
 
-print(dir(total_weight))
 assert (
     abs(total_weight.value - (0.5 + 0.8 + 0.7 + 0.1 + 0.2)) < 1e-3
 ), total_weight.value
