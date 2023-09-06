@@ -139,6 +139,80 @@ value
 
 .. autoattribute:: kaldifst.FloatWeight.value
 
+Lattice
+-------
+
+copy
+^^^^
+
+.. automethod:: kaldifst.Lattice.copy
+
+input_symbols
+^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.Lattice.input_symbols
+
+is_ilabel_sorted
+^^^^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.Lattice.is_ilabel_sorted
+
+is_olabel_sorted
+^^^^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.Lattice.is_olabel_sorted
+
+num_states
+^^^^^^^^^^
+
+.. autoattribute:: kaldifst.Lattice.num_states
+
+output_symbols
+^^^^^^^^^^^^^^
+
+.. autoattribute:: kaldifst.Lattice.output_symbols
+
+start
+^^^^^
+
+.. autoattribute:: kaldifst.Lattice.start
+
+type
+^^^^
+
+.. autoattribute:: kaldifst.Lattice.type
+
+LatticeArc
+----------
+
+__init__
+^^^^^^^^
+
+.. automethod:: kaldifst.LatticeArc.__init__
+
+ilabel
+^^^^^^
+
+.. autoattribute:: kaldifst.LatticeArc.ilabel
+
+nextstate
+^^^^^^^^^
+
+.. autoattribute:: kaldifst.LatticeArc.nextstate
+
+olabel
+^^^^^^
+
+.. autoattribute:: kaldifst.LatticeArc.olabel
+
+weight
+^^^^^^
+
+.. autoattribute:: kaldifst.LatticeArc.weight
+
+LatticeWeight
+-------------
+
 RandomAccessVectorFstReader
 ---------------------------
 

@@ -23,3 +23,9 @@ Python wrapper for `OpenFst`_ and its extensions from  `Kaldi`_, e.g.,
    :caption: Python API
 
    ./python_api/index
+
+.. toctree::
+   :maxdepth: 2
+   :caption: References
+
+   ./referencens/index
