@@ -7,6 +7,7 @@
 #include <string>
 
 #include "fst/fst.h"
+#include "kaldifst/csrc/lattice-weight.h"
 
 namespace kaldifst {
 
@@ -139,6 +140,16 @@ void PybindFst(py::module &m) {  // NOLINT
   // PybindArcIteratorImpl<fst::StdFst>(m, "_StdFstArcIterator");
 
   PybindFstImpl<fst::StdArc>(m, "_StdFstImpl");
+
+  PybindFst<fst::LatticeArc>(
+      m, "LatticeFst",
+      "A generic FST, templated on the arc definition, with \n"
+      "common-demoninator methods (use StateIterator and \n"
+      "ArcIterator to iterate over its states and arcs).");
+  // PybindStateIteratorImpl<fst::StdFst>(m, "_StdFstStateIterator");
+  // PybindArcIteratorImpl<fst::StdFst>(m, "_StdFstArcIterator");
+
+  PybindFstImpl<fst::LatticeArc>(m, "_LatticeFstImpl");
 }
 
 }  // namespace kaldifst

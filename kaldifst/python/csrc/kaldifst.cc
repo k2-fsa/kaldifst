@@ -23,6 +23,7 @@
 #include "kaldifst/python/csrc/fstreverse.h"
 #include "kaldifst/python/csrc/fstrmepsilon.h"
 #include "kaldifst/python/csrc/kaldi-table.h"
+#include "kaldifst/python/csrc/lattice-weight.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/pre-determinize.h"
 #include "kaldifst/python/csrc/symbol-table.h"
@@ -35,6 +36,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   m.doc() = "Python wrapper for kaldifst";
 
   PybindFloatWeight(m);
+  PybindLatticeWeight(&m);
   PybindArc(m);
   PybindSymbolTable(m);
   PybindFst(m);

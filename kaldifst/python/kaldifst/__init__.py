@@ -1,8 +1,11 @@
 from _kaldifst import (
-    StdFst,
     FloatWeight,
+    Lattice,
+    LatticeArc,
+    LatticeWeight,
     StdArc,
     StdConstFst,
+    StdFst,
     StdVectorFst,
     SymbolTable,
     TropicalWeight,

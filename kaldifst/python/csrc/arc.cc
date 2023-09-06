@@ -8,6 +8,7 @@
 #include <string>
 
 #include "fst/arc.h"
+#include "kaldifst/csrc/lattice-weight.h"
 
 namespace kaldifst {
 
@@ -59,6 +60,7 @@ static void PybindArcImpl(py::module &m,  // NOLINT
 
 void PybindArc(py::module &m) {  // NOLINT
   PybindArcImpl<fst::TropicalWeight>(m, "StdArc");
+  PybindArcImpl<fst::LatticeWeight>(m, "LatticeArc");
 }
 
 }  // namespace kaldifst
