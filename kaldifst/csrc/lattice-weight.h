@@ -51,7 +51,7 @@ class LatticeWeightTpl {
 
   LatticeWeightTpl() : value1_{}, value2_{} {}
 
-  LatticeWeightTpl(T a, T b = 0) : value1_(a), value2_(b) {}
+  LatticeWeightTpl(T a, T b = 0) : value1_(a), value2_(b) {}  // NOLINT
 
   LatticeWeightTpl(const LatticeWeightTpl &other)
       : value1_(other.value1_), value2_(other.value2_) {}

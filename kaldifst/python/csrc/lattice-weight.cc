@@ -37,7 +37,6 @@ void PybindLatticeWeight(py::module *m) {
         os << w.Value1() << ", " << w.Value2();
         return os.str();
       });
-  ;
 
   m->def("plus", [](const PyClass &w1, const PyClass &w2) {
     return fst::Plus(w1, w2);
