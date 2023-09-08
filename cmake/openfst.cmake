@@ -73,12 +73,17 @@ function(download_openfst)
   # Rename libfst.so.6 to libkaldifst_fst.so.6 to avoid potential conflicts
   # when kaldifst is installed.
   set_target_properties(fst PROPERTIES OUTPUT_NAME "kaldifst_fst")
-  set_target_properties(fstscript PROPERTIES OUTPUT_NAME "kaldifst_fstscript")
 
-  install(TARGETS fst fstscript
+  install(TARGETS fst
     DESTINATION lib
   )
 
+  if(KALDIFST_BUILD_PYTHON)
+    set_target_properties(fstscript PROPERTIES OUTPUT_NAME "kaldifst_fstscript")
+    install(TARGETS fstscript
+      DESTINATION lib
+    )
+  endif()
 endfunction()
 
 download_openfst()
