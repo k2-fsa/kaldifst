@@ -4,6 +4,7 @@
 
 #ifndef KALDIFST_CSRC_LOG_H_
 #define KALDIFST_CSRC_LOG_H_
+#include <cstdint>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
