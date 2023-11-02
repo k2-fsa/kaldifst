@@ -23,6 +23,7 @@ from _kaldifst import (
     get_linear_symbol_sequence,
     info,
     invert,
+    lattice_scale,
     make_linear_acceptor,
     minimize,
     minimize_encoded,

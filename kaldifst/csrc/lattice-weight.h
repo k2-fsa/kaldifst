@@ -222,8 +222,10 @@ inline LatticeWeightTpl<FloatType> ScaleTupleWeight(
     const LatticeWeightTpl<FloatType> &w,
     const std::vector<std::vector<ScaleFloatType>> &scale) {
   // Without the next special case we'd get NaNs from infinity * 0
-  if (w.Value1() == std::numeric_limits<FloatType>::infinity())
+  if (w.Value1() == std::numeric_limits<FloatType>::infinity()) {
     return LatticeWeightTpl<FloatType>::Zero();
+  }
+
   return LatticeWeightTpl<FloatType>(
       scale[0][0] * w.Value1() + scale[0][1] * w.Value2(),
       scale[1][0] * w.Value1() + scale[1][1] * w.Value2());
