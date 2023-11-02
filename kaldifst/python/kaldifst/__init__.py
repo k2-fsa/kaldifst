@@ -31,6 +31,7 @@ from _kaldifst import (
     reverse,
     rmepsilon,
     times,
+    shortest_path,
 )
 
 from .iterator import ArcIterator, StateIterator

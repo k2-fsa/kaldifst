@@ -34,3 +34,4 @@ clean:
 	$(MAKE) -C minimize_encoded clean
 	$(MAKE) -C reverse clean
 	$(MAKE) -C rmepsilon clean
+	$(MAKE) -C shortest_path clean

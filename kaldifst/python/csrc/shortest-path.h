@@ -20,31 +20,15 @@ void PybindShortestPath(py::module *m, const char *doc = "") {
 
   m->def(
       "shortest_path",
-      [](const PyClass &fst, int32_t n, bool unique,
-         const std::string &queue_type_str = "auto") -> fst::VectorFst<Arc> * {
-        fst::QueueType queue_type;
-
-        if (!fst::script::GetQueueType(queue_type_str, &queue_type)) {
-          fprintf(stderr,
-                  "Unsupported queue_type: %s. Valid values: quto, fifo, lifo, "
-                  "shortest, state, top.\n",
-                  queue_type_str.c_str());
-          return nullptr;
-        }
-
-        auto ifst = fst::script::FstClass(fst);
-        fst::script::ShortestPathOptions opts(
-            queue_type, n, unique, fst::kDelta,
-            fst::script::WeightClass::Zero(ifst.WeightType()));
-
+      [](const PyClass &fst, int32_t n) -> fst::VectorFst<Arc> * {
         fst::VectorFst<Arc> ofst;
-        fst::script::internal::ShortestPath(fst, &ofst, opts);
+        fst::ShortestPath(fst, &ofst, n);
+        // TopSort(&ofst);
 
         return ofst.Copy();
       },
-      py::arg("fst"), py::arg("n") = 1, py::arg("unique") = false,
-      py::arg("queue_type") = "auto"  // auto, fifo, lifo, shortest, state, top
-  );
+      py::arg("fst"), py::arg("n") = 1, doc,
+      py::return_value_policy::take_ownership);
 }
 
 void PybindShortestPath(py::module *m);
