@@ -7,6 +7,8 @@
 
 #include "kaldifst/csrc/text-utils.h"
 
+#include <cctype>
+
 #include "kaldifst/csrc/log.h"
 
 namespace kaldifst {

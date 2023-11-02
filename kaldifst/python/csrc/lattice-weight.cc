@@ -27,6 +27,8 @@ void PybindLatticeWeight(py::module *m) {
       .def("quantize", &PyClass::Quantize, py::arg("delta") = fst::kDelta)
       .def_property_readonly_static(
           "properties", [](py::object) { return PyClass::Properties(); })
+      .def_property_readonly("value1", &PyClass::Value1)
+      .def_property_readonly("value2", &PyClass::Value2)
       .def("hash", &PyClass::Hash)
       .def("__eq__",
            [](const PyClass &w1, const PyClass &w2) { return w1 == w2; })

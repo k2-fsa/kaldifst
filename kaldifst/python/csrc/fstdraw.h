@@ -8,6 +8,7 @@
 #include <string>
 
 #include "fst/script/draw.h"
+#include "kaldifst/csrc/lattice-weight.h"
 #include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
@@ -66,8 +67,63 @@ struct FstDrawParams {
   bool allow_negative_labels = false;
 };
 
+template <typename A>
 std::string FstDrawImpl(const fst::script::FstClass &fst,
-                        const FstDrawParams &params);
+                        const FstDrawParams &params) {
+  using fst::SymbolTable;
+  using fst::SymbolTableTextOptions;
+
+  std::ostringstream os;
+
+  const SymbolTableTextOptions opts(params.allow_negative_labels);
+
+  std::unique_ptr<const SymbolTable> isyms;
+  if (!params.isymbols.is_none()) {
+    if (py::isinstance<py::str>(params.isymbols)) {
+      isyms.reset(SymbolTable::ReadText(py::str(params.isymbols), opts));
+    } else {
+      isyms.reset(py::cast<SymbolTable *>(params.isymbols)->Copy());
+    }
+    KALDIFST_ASSERT(isyms);
+  }
+
+  std::unique_ptr<const SymbolTable> osyms;
+  if (!params.osymbols.is_none()) {
+    if (py::isinstance<py::str>(params.osymbols)) {
+      osyms.reset(SymbolTable::ReadText(py::str(params.osymbols), opts));
+    } else {
+      osyms.reset(py::cast<SymbolTable *>(params.osymbols)->Copy());
+    }
+    KALDIFST_ASSERT(osyms);
+  }
+
+  std::unique_ptr<const SymbolTable> ssyms;
+  if (!params.ssymbols.is_none()) {
+    if (py::isinstance<py::str>(params.ssymbols)) {
+      ssyms.reset(SymbolTable::ReadText(py::str(params.ssymbols), opts));
+    } else {
+      ssyms.reset(py::cast<SymbolTable *>(params.ssymbols)->Copy());
+    }
+    KALDIFST_ASSERT(ssyms);
+  }
+
+  if (!isyms && !params.numeric && fst.InputSymbols()) {
+    isyms.reset(fst.InputSymbols()->Copy());
+  }
+
+  if (!osyms && !params.numeric && fst.OutputSymbols()) {
+    osyms.reset(fst.OutputSymbols()->Copy());
+  }
+
+  std::string dest = "";
+  fst::FstDrawer<A> a(
+      *fst.GetFst<A>(), isyms.get(), osyms.get(), ssyms.get(), params.acceptor,
+      params.title, params.width, params.height, params.portrait,
+      params.vertical, params.ranksep, params.nodesep, params.fontsize,
+      params.precision, params.float_format, params.show_weight_one);
+  a.Draw(&os, dest);
+  return os.str();
+}
 
 template <typename A>
 void PybindFstDraw(py::module &m,  // NOLINT
@@ -104,7 +160,7 @@ void PybindFstDraw(py::module &m,  // NOLINT
         params.nodesep = nodesep;
         params.ranksep = ranksep;
         params.allow_negative_labels = allow_negative_labels;
-        return FstDrawImpl(_fst, params);
+        return FstDrawImpl<A>(_fst, params);
       },
       py::arg("fst"), py::arg("acceptor") = false,
       py::arg("isymbols") = py::none(), py::arg("osymbols") = py::none(),

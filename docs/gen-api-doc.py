@@ -63,10 +63,24 @@ def generate_doc_for_classes(module, names: List[str]) -> str:
     """Generate documentation for a list of classes."""
     ans = ""
     for n in names:
+        if n == "Lattice":
+            ans += ".. _lattice_class:\n\n"
+
+        if n == "LatticeArc":
+            ans += ".. _lattice_arc_class:\n\n"
+
+        if n == "LatticeWeight":
+            ans += ".. _lattice_weight_class:\n\n"
+
         ans += n
         ans += "\n"
         ans += "-" * len(n)
         ans += "\n\n"
+        if n == "Lattice":
+            ans += (
+                "Please refer to :ref:`introduction_to_lattice` for usage.\n\n"
+            )
+
         cls = getattr(module, n)
         if hasattr(cls, "forward"):
             method_names = ["forward"]
@@ -98,6 +112,12 @@ def generate_doc_for_classes(module, names: List[str]) -> str:
             ans += "\n"
             ans += "^" * len(p)
             ans += "\n\n"
+            if n == "LatticeWeight" and p == "value1":
+                ans += "The graph cost.\n\n"
+
+            if n == "LatticeWeight" and p == "value2":
+                ans += "The acoustic cost.\n\n"
+
             ans += f".. autoattribute:: {module.__name__}.{cls.__name__}.{p}"
             ans += "\n\n"
 
