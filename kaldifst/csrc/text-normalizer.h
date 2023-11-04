@@ -10,15 +10,11 @@
 
 #include "fst/fst.h"
 #include "fst/fstlib.h"
-#include "fst/vector-fst.h"
 
 namespace kaldifst {
 
 class TextNormalizer {
  public:
-  TextNormalizer(const TextNormalizer &) = delete;
-  const TextNormalizer &operator=(const TextNormalizer &) = delete;
-
   // Path to rule.fst
   explicit TextNormalizer(const std::string &rule);
 

@@ -47,7 +47,6 @@ static fst::StdVectorFst StringToFst(const std::string &text) {
 }
 
 TextNormalizer::TextNormalizer(const std::string &rule) {
-  // TODO(fangjun): Use StdConstFst
   rule_ = std::unique_ptr<fst::StdConstFst>(
       CastOrConvertToConstFst(fst::ReadFstKaldiGeneric(rule)));
 }
@@ -60,7 +59,6 @@ std::string TextNormalizer::Normalize(const std::string &s) const {
   fst::StdVectorFst text = StringToFst(s);
 
   // Step 2: Compose the input text with the rule FST
-
   fst::StdVectorFst composed_fst;
   fst::Compose(text, *rule_, &composed_fst);
 
@@ -72,7 +70,6 @@ std::string TextNormalizer::Normalize(const std::string &s) const {
   fst::StringPrinter<fst::StdArc> string_printer(fst::StringTokenType::BYTE);
 
   std::string normalized;
-
   string_printer(one_best, &normalized);
 
   return normalized;
