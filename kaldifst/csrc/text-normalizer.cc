@@ -8,7 +8,6 @@
 #include <string>
 #include <utility>
 
-#include "fst/arcsort.h"
 #include "kaldifst/csrc/kaldi-fst-io.h"
 #include "kaldifst/csrc/table-matcher.h"
 
