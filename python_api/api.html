@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../quick_start/index.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../convert-k2-to-openfst/index.html">Convert FST from k2 to OpenFst</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../read-write-ark-scp/index.html">Read and write ark/scp files from Kaldi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lattice/index.html">Lattice</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
@@ -65,12 +66,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#get-linear-symbol-sequence">get_linear_symbol_sequence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#info">info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#invert">invert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lattice-scale">lattice_scale</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#make-linear-acceptor">make_linear_acceptor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minimize">minimize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minimize-encoded">minimize_encoded</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#plus">plus</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#reverse">reverse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rmepsilon">rmepsilon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shortest-path">shortest_path</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#times">times</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#arciterator">ArcIterator</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#done">done</a></li>
@@ -80,7 +83,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#floatweight">FloatWeight</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id1">value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">value</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lattice">Lattice</a><ul>
@@ -102,61 +105,65 @@
 <li class="toctree-l4"><a class="reference internal" href="#weight">weight</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#latticeweight">LatticeWeight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#latticeweight">LatticeWeight</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#value1">value1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#value2">value2</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#randomaccessvectorfstreader">RandomAccessVectorFstReader</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#is-open">is_open</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#sequentialvectorfstreader">SequentialVectorFstReader</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id2">done</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id3">is_open</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">done</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">is_open</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#key">key</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id4">value</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#stateiterator">StateIterator</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id5">done</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id6">value</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#stateiterator">StateIterator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id7">done</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">value</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#stdarc">StdArc</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id7">__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id8">ilabel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id9">nextstate</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id10">olabel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id11">weight</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">ilabel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">nextstate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">olabel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id13">weight</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#stdconstfst">StdConstFst</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id12">copy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id13">input_symbols</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id14">is_ilabel_sorted</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id15">is_olabel_sorted</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id16">num_states</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id17">output_symbols</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id18">start</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id19">type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15">input_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16">is_ilabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id17">is_olabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id18">num_states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id19">output_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id20">start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id21">type</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#stdfst">StdFst</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id20">copy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id21">input_symbols</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id22">is_ilabel_sorted</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id23">is_olabel_sorted</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id24">output_symbols</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id25">start</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id26">type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id22">copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id23">input_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id24">is_ilabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id25">is_olabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id26">output_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id27">start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id28">type</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#stdvectorfst">StdVectorFst</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id27">copy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id28">input_symbols</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id29">is_ilabel_sorted</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id30">is_olabel_sorted</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id31">num_states</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id32">output_symbols</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id33">start</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id34">type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id29">copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id30">input_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id31">is_ilabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id32">is_olabel_sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id33">num_states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id34">output_symbols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id35">start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id36">type</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#symboltable">SymbolTable</a><ul>
@@ -168,12 +175,12 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#tropicalweight">TropicalWeight</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id35">value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id37">value</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#vectorfstwriter">VectorFstWriter</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#write">write</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id36">is_open</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id38">is_open</a></li>
 </ul>
 </li>
 </ul>
@@ -248,8 +255,8 @@ of symbols on its input and output.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Add self loops to a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id38">
-<div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">Add self loops to a transducer.</span><a class="headerlink" href="#id38" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id40">
+<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">Add self loops to a transducer.</span><a class="headerlink" href="#id40" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -300,14 +307,14 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id39" style="width: 600px">
+<figure class="align-center" id="id41" style="width: 600px">
 <img alt="fst.svg" src="../_images/fst.svg" /><figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Visualization of fst.svg (before connect)</span><a class="headerlink" href="#id39" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Visualization of fst.svg (before connect)</span><a class="headerlink" href="#id41" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id40" style="width: 600px">
+<figure class="align-center" id="id42" style="width: 600px">
 <img alt="fst-add-self-loops.svg" src="../_images/fst-add-self-loops.svg" /><figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Visualization of fst-add-self-loops.svg (after calling add_self_loops())</span><a class="headerlink" href="#id40" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Visualization of fst-add-self-loops.svg (after calling add_self_loops())</span><a class="headerlink" href="#id42" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -336,8 +343,8 @@ of symbols on its input and output.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Sort an acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id41">
-<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">Sort an acceptor</span><a class="headerlink" href="#id41" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id43">
+<div class="code-block-caption"><span class="caption-number">Listing 11 </span><span class="caption-text">Sort an acceptor</span><a class="headerlink" href="#id43" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -368,19 +375,19 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id42" style="width: 600px">
+<figure class="align-center" id="id44" style="width: 600px">
 <img alt="acceptor.svg" src="../_images/acceptor.svg" /><figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Visualization of acceptor.svg (before sort)</span><a class="headerlink" href="#id42" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Visualization of acceptor.svg (before sort)</span><a class="headerlink" href="#id44" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id43" style="width: 600px">
+<figure class="align-center" id="id45" style="width: 600px">
 <img alt="sorted.svg" src="../_images/sorted.svg" /><figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Visualization of sorted.svg (after sort)</span><a class="headerlink" href="#id43" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Visualization of sorted.svg (after sort)</span><a class="headerlink" href="#id45" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2: Sort a transducer by ilabel</strong></p>
-<div class="literal-block-wrapper docutils container" id="id44">
-<div class="code-block-caption"><span class="caption-number">Listing 11 </span><span class="caption-text">Sort a transducer by ilabel</span><a class="headerlink" href="#id44" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id46">
+<div class="code-block-caption"><span class="caption-number">Listing 12 </span><span class="caption-text">Sort a transducer by ilabel</span><a class="headerlink" href="#id46" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -410,19 +417,19 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id45" style="width: 600px">
+<figure class="align-center" id="id47" style="width: 600px">
 <img alt="transducer1.svg" src="../_images/transducer1.svg" /><figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Visualization of transducer1.svg (before sort)</span><a class="headerlink" href="#id45" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Visualization of transducer1.svg (before sort)</span><a class="headerlink" href="#id47" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id46" style="width: 600px">
+<figure class="align-center" id="id48" style="width: 600px">
 <img alt="sorted-transducer-ilabel.svg" src="../_images/sorted-transducer-ilabel.svg" /><figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Visualization of sorted-transducer-ilabel.svg (after sort)</span><a class="headerlink" href="#id46" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Visualization of sorted-transducer-ilabel.svg (after sort)</span><a class="headerlink" href="#id48" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 3: Sort a transducer by olabel</strong></p>
-<div class="literal-block-wrapper docutils container" id="id47">
-<div class="code-block-caption"><span class="caption-number">Listing 12 </span><span class="caption-text">Sort a transducer by olabel</span><a class="headerlink" href="#id47" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id49">
+<div class="code-block-caption"><span class="caption-number">Listing 13 </span><span class="caption-text">Sort a transducer by olabel</span><a class="headerlink" href="#id49" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -452,14 +459,14 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id48" style="width: 600px">
+<figure class="align-center" id="id50" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Visualization of transducer2.svg (before sort)</span><a class="headerlink" href="#id48" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Visualization of transducer2.svg (before sort)</span><a class="headerlink" href="#id50" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id49" style="width: 600px">
+<figure class="align-center" id="id51" style="width: 600px">
 <img alt="sorted-transducer-olabel.svg" src="../_images/sorted-transducer-olabel.svg" /><figcaption>
-<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Visualization of sorted-transducer-olabel.svg (after sort)</span><a class="headerlink" href="#id49" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Visualization of sorted-transducer-olabel.svg (after sort)</span><a class="headerlink" href="#id51" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -492,8 +499,8 @@ of symbols on its input and output.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Create an acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id50">
-<div class="code-block-caption"><span class="caption-number">Listing 13 </span><span class="caption-text">Create an acceptor</span><a class="headerlink" href="#id50" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id52">
+<div class="code-block-caption"><span class="caption-number">Listing 14 </span><span class="caption-text">Create an acceptor</span><a class="headerlink" href="#id52" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -512,14 +519,14 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id51" style="width: 600px">
+<figure class="align-center" id="id53" style="width: 600px">
 <img alt="acceptor1.svg" src="../_images/acceptor1.svg" /><figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Visualization of acceptor1.svg</span><a class="headerlink" href="#id51" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Visualization of acceptor1.svg</span><a class="headerlink" href="#id53" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2: Create an acceptor with symbol table</strong></p>
-<div class="literal-block-wrapper docutils container" id="id52">
-<div class="code-block-caption"><span class="caption-number">Listing 14 </span><span class="caption-text">Create an acceptor with symbol table</span><a class="headerlink" href="#id52" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id54">
+<div class="code-block-caption"><span class="caption-number">Listing 15 </span><span class="caption-text">Create an acceptor with symbol table</span><a class="headerlink" href="#id54" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -542,14 +549,14 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id53" style="width: 600px">
+<figure class="align-center" id="id55" style="width: 600px">
 <img alt="acceptor2.svg" src="../_images/acceptor2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Visualization of acceptor2.svg</span><a class="headerlink" href="#id53" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Visualization of acceptor2.svg</span><a class="headerlink" href="#id55" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 3: Create a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id54">
-<div class="code-block-caption"><span class="caption-number">Listing 15 </span><span class="caption-text">Create a transducer</span><a class="headerlink" href="#id54" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id56">
+<div class="code-block-caption"><span class="caption-number">Listing 16 </span><span class="caption-text">Create a transducer</span><a class="headerlink" href="#id56" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -568,14 +575,14 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id55" style="width: 600px">
+<figure class="align-center" id="id57" style="width: 600px">
 <img alt="transducer1.svg" src="../_images/transducer11.svg" /><figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Visualization of transducer1.svg</span><a class="headerlink" href="#id55" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Visualization of transducer1.svg</span><a class="headerlink" href="#id57" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 4: Create a transducer with symbol table</strong></p>
-<div class="literal-block-wrapper docutils container" id="id56">
-<div class="code-block-caption"><span class="caption-number">Listing 16 </span><span class="caption-text">Create a transducer with symbol table</span><a class="headerlink" href="#id56" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id58">
+<div class="code-block-caption"><span class="caption-number">Listing 17 </span><span class="caption-text">Create a transducer with symbol table</span><a class="headerlink" href="#id58" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">kaldifst</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -611,9 +618,9 @@ of symbols on its input and output.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id57" style="width: 600px">
+<figure class="align-center" id="id59" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer21.svg" /><figcaption>
-<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Visualization of transducer2.svg</span><a class="headerlink" href="#id57" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Visualization of transducer2.svg</span><a class="headerlink" href="#id59" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -650,8 +657,8 @@ second transducer must be <code class="docutils literal notranslate"><span class
 </dd>
 </dl>
 <p><strong>Example 1: Compose two transducers.</strong></p>
-<div class="literal-block-wrapper docutils container" id="id58">
-<div class="code-block-caption"><span class="caption-number">Listing 17 </span><span class="caption-text">Compose two transducers</span><a class="headerlink" href="#id58" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id60">
+<div class="code-block-caption"><span class="caption-number">Listing 18 </span><span class="caption-text">Compose two transducers</span><a class="headerlink" href="#id60" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -713,19 +720,19 @@ second transducer must be <code class="docutils literal notranslate"><span class
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id59" style="width: 600px">
-<img alt="a.svg" src="../_images/a.svg" /><figcaption>
-<p><span class="caption-number">Fig. 21 </span><span class="caption-text">The first transducer a.</span><a class="headerlink" href="#id59" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id60" style="width: 600px">
-<img alt="b.svg" src="../_images/b.svg" /><figcaption>
-<p><span class="caption-number">Fig. 22 </span><span class="caption-text">The second transducer b</span><a class="headerlink" href="#id60" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
 <figure class="align-center" id="id61" style="width: 600px">
+<img alt="a.svg" src="../_images/a.svg" /><figcaption>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text">The first transducer a.</span><a class="headerlink" href="#id61" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id62" style="width: 600px">
+<img alt="b.svg" src="../_images/b.svg" /><figcaption>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">The second transducer b</span><a class="headerlink" href="#id62" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id63" style="width: 600px">
 <img alt="c.svg" src="../_images/c.svg" /><figcaption>
-<p><span class="caption-number">Fig. 23 </span><span class="caption-text">The composition result c.</span><a class="headerlink" href="#id61" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text">The composition result c.</span><a class="headerlink" href="#id63" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -797,8 +804,8 @@ successful paths.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Connect a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id62">
-<div class="code-block-caption"><span class="caption-number">Listing 18 </span><span class="caption-text">Connect a transducer</span><a class="headerlink" href="#id62" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id64">
+<div class="code-block-caption"><span class="caption-number">Listing 19 </span><span class="caption-text">Connect a transducer</span><a class="headerlink" href="#id64" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -845,14 +852,14 @@ successful paths.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id63" style="width: 600px">
+<figure class="align-center" id="id65" style="width: 600px">
 <img alt="fst.svg" src="../_images/fst1.svg" /><figcaption>
-<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Visualization of fst.svg (before connect)</span><a class="headerlink" href="#id63" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text">Visualization of fst.svg (before connect)</span><a class="headerlink" href="#id65" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id64" style="width: 600px">
+<figure class="align-center" id="id66" style="width: 600px">
 <img alt="fst-connect.svg" src="../_images/fst-connect.svg" /><figcaption>
-<p><span class="caption-number">Fig. 25 </span><span class="caption-text">Visualization of fst-connect.svg (after connect)</span><a class="headerlink" href="#id64" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Visualization of fst-connect.svg (after connect)</span><a class="headerlink" href="#id66" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -887,8 +894,8 @@ subsequential transducer</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Determinize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id65">
-<div class="code-block-caption"><span class="caption-number">Listing 19 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id65" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id67">
+<div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id67" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -932,14 +939,14 @@ subsequential transducer</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id66" style="width: 600px">
+<figure class="align-center" id="id68" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer.svg" /><figcaption>
-<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id66" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id68" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id67" style="width: 600px">
+<figure class="align-center" id="id69" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer22.svg" /><figcaption>
-<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id67" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id69" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -975,8 +982,8 @@ by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Determinize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id68">
-<div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id68" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id70">
+<div class="code-block-caption"><span class="caption-number">Listing 21 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id70" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1020,14 +1027,14 @@ by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id69" style="width: 600px">
+<figure class="align-center" id="id71" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer3.svg" /><figcaption>
-<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id69" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id71" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id70" style="width: 600px">
+<figure class="align-center" id="id72" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer23.svg" /><figcaption>
-<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id70" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id72" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1050,8 +1057,12 @@ by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
 <h2>draw<a class="headerlink" href="#draw" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="kaldifst.draw">
-<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">osymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssymbols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'g'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_weight_one</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portrait</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodesep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranksep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_negative_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#kaldifst.draw" title="Permalink to this definition"></a></dt>
-<dd><p>Prints FSTs in dot text format.</p>
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>draw(fst: _kaldifst.StdFst, acceptor: bool = False, isymbols: object = None, osymbols: object = None, ssymbols: object = None, numeric: bool = False, precision: int = 5, float_format: str = ‘g’, show_weight_one: bool = False, title: str = ‘’, portrait: bool = False, vertical: bool = False, fontsize: int = 14, height: float = 11, width: float = 8.5, nodesep: float = 0.25, ranksep: float = 0.4, allow_negative_labels: bool = False) -&gt; str</p></li>
+</ol>
+<p>Prints FSTs in dot text format.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>You can use the Python package <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> to visualize it.</p>
@@ -1087,8 +1098,8 @@ your browser. You can also share the URL to others.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Draw a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id71">
-<div class="code-block-caption"><span class="caption-number">Listing 21 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id71" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id73">
+<div class="code-block-caption"><span class="caption-number">Listing 22 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id73" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1123,8 +1134,8 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id72">
-<div class="code-block-caption"><span class="caption-number">Listing 22 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id72" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id74">
+<div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id74" title="Permalink to this code"></a></div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">digraph</span> <span class="n">FST</span> <span class="p">{</span>
 <span class="linenos"> 2</span><span class="n">rankdir</span> <span class="o">=</span> <span class="n">LR</span><span class="p">;</span>
 <span class="linenos"> 3</span><span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;8.5,11&quot;</span><span class="p">;</span>
@@ -1142,9 +1153,108 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id73" style="width: 600px">
+<figure class="align-center" id="id75" style="width: 600px">
 <img alt="fst.svg" src="../_images/fst2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id73" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id75" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="2">
+<li><p>draw(fst: _kaldifst.LatticeFst, acceptor: bool = False, isymbols: object = None, osymbols: object = None, ssymbols: object = None, numeric: bool = False, precision: int = 5, float_format: str = ‘g’, show_weight_one: bool = False, title: str = ‘’, portrait: bool = False, vertical: bool = False, fontsize: int = 14, height: float = 11, width: float = 8.5, nodesep: float = 0.25, ranksep: float = 0.4, allow_negative_labels: bool = False) -&gt; str</p></li>
+</ol>
+<p>Prints FSTs in dot text format.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can use the Python package <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> to visualize it.</p>
+<p>You can also post the dot format output to
+<a class="reference external" href="https://dreampuf.github.io/GraphvizOnline/">https://dreampuf.github.io/GraphvizOnline/</a> to visualize it within
+your browser. You can also share the URL to others.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fst</strong> – The FST to be printed.</p></li>
+<li><p><strong>acceptor</strong> – Input in acceptor format</p></li>
+<li><p><strong>isymbols</strong> – Input label symbol table</p></li>
+<li><p><strong>osymbols</strong> – Output label symbol table</p></li>
+<li><p><strong>ssymbols</strong> – State label symbol table</p></li>
+<li><p><strong>numeric</strong> – Print numeric labels</p></li>
+<li><p><strong>precision</strong> – Set precision (number of char/float)</p></li>
+<li><p><strong>float_format</strong> – Floating-point format, one of: “e”, “f”, or “g”</p></li>
+<li><p><strong>show_weight_one</strong> – Print/draw arc weights and final weights equal to Weight::One()</p></li>
+<li><p><strong>title</strong> – Set figure title</p></li>
+<li><p><strong>portrait</strong> – Portrait mode (def: landscape)</p></li>
+<li><p><strong>vertical</strong> – Draw bottom-to-top instead of left-to-right</p></li>
+<li><p><strong>fontsize</strong> – Set fontsize</p></li>
+<li><p><strong>height</strong> – Set height</p></li>
+<li><p><strong>width</strong> – Set width</p></li>
+<li><p><strong>nodesep</strong> – Set minimum separation between nodes (see dot documentation)</p></li>
+<li><p><strong>ranksep</strong> – Set minimum separation between ranks (see dot documentation)</p></li>
+<li><p><strong>allow_negative_labels</strong> – Allow negative labels (not recommended; may cause conflicts)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a string.</p>
+</dd>
+</dl>
+<p><strong>Example 1: Draw a transducer</strong></p>
+<div class="literal-block-wrapper docutils container" id="id76">
+<div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id76" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span><span class="s2">0 1 a q 1</span>
+<span class="linenos"> 7</span><span class="s2">0 2 a r 2.5</span>
+<span class="linenos"> 8</span><span class="s2">1 1 c s 1</span>
+<span class="linenos"> 9</span><span class="s2">1 0</span>
+<span class="linenos">10</span><span class="s2">2 2.5</span>
+<span class="linenos">11</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">14</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">15</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">,</span> <span class="n">osymbols</span><span class="o">=</span><span class="n">sym2</span><span class="p">)</span>
+<span class="linenos">23</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">24</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">27</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;fst_dot.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="linenos">28</span>    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">31</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;fst.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id77">
+<div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id77" title="Permalink to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">digraph</span> <span class="n">FST</span> <span class="p">{</span>
+<span class="linenos"> 2</span><span class="n">rankdir</span> <span class="o">=</span> <span class="n">LR</span><span class="p">;</span>
+<span class="linenos"> 3</span><span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;8.5,11&quot;</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="n">center</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="linenos"> 5</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">Portrait</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="n">ranksep</span> <span class="o">=</span> <span class="s2">&quot;0.4&quot;</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="n">nodesep</span> <span class="o">=</span> <span class="s2">&quot;0.25&quot;</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="mi">0</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">circle</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="n">bold</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">]</span>
+<span class="linenos"> 9</span>	<span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;a:q/1&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">];</span>
+<span class="linenos">10</span>	<span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">2</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;a:r/2.5&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">];</span>
+<span class="linenos">11</span><span class="mi">1</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">doublecircle</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="n">solid</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">]</span>
+<span class="linenos">12</span>	<span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;c:s/1&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">];</span>
+<span class="linenos">13</span><span class="mi">2</span> <span class="p">[</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;2/2.5&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">doublecircle</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="n">solid</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">14</span><span class="p">]</span>
+<span class="linenos">14</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id78" style="width: 600px">
+<img alt="fst.svg" src="../_images/fst2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id78" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1179,8 +1289,8 @@ return False.</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Equal align</strong></p>
-<div class="literal-block-wrapper docutils container" id="id74">
-<div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">Code for equal_align</span><a class="headerlink" href="#id74" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id79">
+<div class="code-block-caption"><span class="caption-number">Listing 26 </span><span class="caption-text">Code for equal_align</span><a class="headerlink" href="#id79" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1252,19 +1362,19 @@ return False.</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id75" style="width: 600px">
+<figure class="align-center" id="id80" style="width: 600px">
 <img alt="input.svg" src="../_images/input.svg" /><figcaption>
-<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Visualization of input.svg</span><a class="headerlink" href="#id75" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Visualization of input.svg</span><a class="headerlink" href="#id80" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id76" style="width: 600px">
+<figure class="align-center" id="id81" style="width: 600px">
 <img alt="first.svg" src="../_images/first.svg" /><figcaption>
-<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Visualization of first.svg</span><a class="headerlink" href="#id76" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Visualization of first.svg</span><a class="headerlink" href="#id81" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id77" style="width: 600px">
+<figure class="align-center" id="id82" style="width: 600px">
 <img alt="second.svg" src="../_images/second.svg" /><figcaption>
-<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Visualization of second.svg</span><a class="headerlink" href="#id77" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Visualization of second.svg</span><a class="headerlink" href="#id82" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1301,8 +1411,8 @@ case it outputs the symbol</p>
 </dd>
 </dl>
 <p><strong>Example 1: get_linear_symbol_sequence</strong></p>
-<div class="literal-block-wrapper docutils container" id="id78">
-<div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id78" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id83">
+<div class="code-block-caption"><span class="caption-number">Listing 27 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id83" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1359,8 +1469,8 @@ case it outputs the symbol</p>
 </dd>
 </dl>
 <p><strong>Example 1: get_linear_symbol_sequence</strong></p>
-<div class="literal-block-wrapper docutils container" id="id79">
-<div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id79" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id84">
+<div class="code-block-caption"><span class="caption-number">Listing 28 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id84" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1436,8 +1546,8 @@ exchanging the FST’s input and output labels.</p>
 </dd>
 </dl>
 <p><strong>Example Invert a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id80">
-<div class="code-block-caption"><span class="caption-number">Listing 26 </span><span class="caption-text">Invert a transducer</span><a class="headerlink" href="#id80" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id85">
+<div class="code-block-caption"><span class="caption-number">Listing 29 </span><span class="caption-text">Invert a transducer</span><a class="headerlink" href="#id85" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1494,16 +1604,54 @@ exchanging the FST’s input and output labels.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id81" style="width: 600px">
+<figure class="align-center" id="id86" style="width: 600px">
 <img alt="before-invert.svg" src="../_images/before-invert.svg" /><figcaption>
-<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Visualization of before-invert.svg</span><a class="headerlink" href="#id81" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Visualization of before-invert.svg</span><a class="headerlink" href="#id86" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id82" style="width: 600px">
+<figure class="align-center" id="id87" style="width: 600px">
 <img alt="after-invert.svg" src="../_images/after-invert.svg" /><figcaption>
-<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Visualization of after-invert.svg</span><a class="headerlink" href="#id82" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Visualization of after-invert.svg</span><a class="headerlink" href="#id87" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
+</dd></dl>
+
+</section>
+<section id="lattice-scale">
+<h2>lattice_scale<a class="headerlink" href="#lattice-scale" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.lattice_scale">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">lattice_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lmwt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acwt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kaldifst.lattice_scale" title="Permalink to this definition"></a></dt>
+<dd><p>Return a diagonal scale matrix with specified LM scale <code class="docutils literal notranslate"><span class="pre">lmwt</span></code>
+and AM scale <code class="docutils literal notranslate"><span class="pre">amwt</span></code>.</p>
+<p>Note that the diagonal matrix is a list of list, e.g.,
+<code class="docutils literal notranslate"><span class="pre">[[lmwt,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">acwt]]</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lmwt</strong> – Scale for language model scores.</p></li>
+<li><p><strong>acwt</strong> – Scale for acoustic likelihoods.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>A list-of-list containing <code class="docutils literal notranslate"><span class="pre">[[lmwt,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">acwt]]</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p><strong>Example 1: Return a matrix with lmwt=0.1, acwt=10.0</strong></p>
+<div class="literal-block-wrapper docutils container" id="id88">
+<div class="code-block-caption"><span class="caption-number">Listing 30 </span><span class="caption-text">Return a matrix with lmwt=0.1, acwt=10.0</span><a class="headerlink" href="#id88" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="n">m</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">lattice_scale</span><span class="p">(</span><span class="n">lmwt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">acwt</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+<span class="linenos">6</span><span class="k">assert</span> <span class="n">m</span> <span class="o">==</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]],</span> <span class="n">m</span>
+</pre></div>
+</div>
+</div>
 </dd></dl>
 
 </section>
@@ -1523,8 +1671,8 @@ ilabel == olabel for each arc.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Build a linear acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id83">
-<div class="code-block-caption"><span class="caption-number">Listing 27 </span><span class="caption-text">Example of make_linear_acceptor()</span><a class="headerlink" href="#id83" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id89">
+<div class="code-block-caption"><span class="caption-number">Listing 31 </span><span class="caption-text">Example of make_linear_acceptor()</span><a class="headerlink" href="#id89" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1548,9 +1696,9 @@ ilabel == olabel for each arc.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id84" style="width: 600px">
+<figure class="align-center" id="id90" style="width: 600px">
 <img alt="acceptor.svg" src="../_images/acceptor3.svg" /><figcaption>
-<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Visualization of acceptor.svg</span><a class="headerlink" href="#id84" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Visualization of acceptor.svg</span><a class="headerlink" href="#id90" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1582,8 +1730,8 @@ True to minimize non-deterministic FSTs</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Minimize an acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id85">
-<div class="code-block-caption"><span class="caption-number">Listing 28 </span><span class="caption-text">Minimize an acceptor</span><a class="headerlink" href="#id85" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id91">
+<div class="code-block-caption"><span class="caption-number">Listing 32 </span><span class="caption-text">Minimize an acceptor</span><a class="headerlink" href="#id91" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1634,19 +1782,19 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id86" style="width: 600px">
+<figure class="align-center" id="id92" style="width: 600px">
 <img alt="acceptor.svg" src="../_images/acceptor4.svg" /><figcaption>
-<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Visualization of acceptor.svg (before minimize)</span><a class="headerlink" href="#id86" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Visualization of acceptor.svg (before minimize)</span><a class="headerlink" href="#id92" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id87" style="width: 600px">
+<figure class="align-center" id="id93" style="width: 600px">
 <img alt="acceptor-minimized.svg" src="../_images/acceptor-minimized.svg" /><figcaption>
-<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Visualization of acceptor-minimized.svg (after minimize)</span><a class="headerlink" href="#id87" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Visualization of acceptor-minimized.svg (after minimize)</span><a class="headerlink" href="#id93" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2: Minimize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id88">
-<div class="code-block-caption"><span class="caption-number">Listing 29 </span><span class="caption-text">Minimize a transducer</span><a class="headerlink" href="#id88" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id94">
+<div class="code-block-caption"><span class="caption-number">Listing 33 </span><span class="caption-text">Minimize a transducer</span><a class="headerlink" href="#id94" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1708,14 +1856,14 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id89" style="width: 600px">
+<figure class="align-center" id="id95" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer4.svg" /><figcaption>
-<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Visualization of transducer.svg (before minimize)</span><a class="headerlink" href="#id89" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Visualization of transducer.svg (before minimize)</span><a class="headerlink" href="#id95" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id90" style="width: 600px">
+<figure class="align-center" id="id96" style="width: 600px">
 <img alt="transducer-minimized.svg" src="../_images/transducer-minimized.svg" /><figcaption>
-<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Visualization of transducer-minimized.svg (after minimize)</span><a class="headerlink" href="#id90" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Visualization of transducer-minimized.svg (after minimize)</span><a class="headerlink" href="#id96" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1752,8 +1900,8 @@ True to minimize non-deterministic FSTs</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Minimize encode an acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id91">
-<div class="code-block-caption"><span class="caption-number">Listing 30 </span><span class="caption-text">Minimize encode an acceptor</span><a class="headerlink" href="#id91" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id97">
+<div class="code-block-caption"><span class="caption-number">Listing 34 </span><span class="caption-text">Minimize encode an acceptor</span><a class="headerlink" href="#id97" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1805,19 +1953,19 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id92" style="width: 600px">
+<figure class="align-center" id="id98" style="width: 600px">
 <img alt="acceptor.svg" src="../_images/acceptor5.svg" /><figcaption>
-<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Visualization of acceptor.svg (before minimize_encoded)</span><a class="headerlink" href="#id92" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Visualization of acceptor.svg (before minimize_encoded)</span><a class="headerlink" href="#id98" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id93" style="width: 600px">
+<figure class="align-center" id="id99" style="width: 600px">
 <img alt="acceptor-minimize-encoded.svg" src="../_images/acceptor-minimize-encoded.svg" /><figcaption>
-<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Visualization of acceptor-minimize-encoded.svg (after minimize_encoded)</span><a class="headerlink" href="#id93" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 44 </span><span class="caption-text">Visualization of acceptor-minimize-encoded.svg (after minimize_encoded)</span><a class="headerlink" href="#id99" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2: Minimize encode a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id94">
-<div class="code-block-caption"><span class="caption-number">Listing 31 </span><span class="caption-text">Minimize encode a transducer</span><a class="headerlink" href="#id94" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id100">
+<div class="code-block-caption"><span class="caption-number">Listing 35 </span><span class="caption-text">Minimize encode a transducer</span><a class="headerlink" href="#id100" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1879,14 +2027,14 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id95" style="width: 600px">
+<figure class="align-center" id="id101" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer5.svg" /><figcaption>
-<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Visualization of transducer.svg (before minimize_encoded)</span><a class="headerlink" href="#id95" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 45 </span><span class="caption-text">Visualization of transducer.svg (before minimize_encoded)</span><a class="headerlink" href="#id101" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id96" style="width: 600px">
+<figure class="align-center" id="id102" style="width: 600px">
 <img alt="transducer-minimize-encoded.svg" src="../_images/transducer-minimize-encoded.svg" /><figcaption>
-<p><span class="caption-number">Fig. 44 </span><span class="caption-text">Visualization of transducer-minimize-encoded.svg (after minimize encoded)</span><a class="headerlink" href="#id96" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 46 </span><span class="caption-text">Visualization of transducer-minimize-encoded.svg (after minimize encoded)</span><a class="headerlink" href="#id102" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1926,8 +2074,8 @@ with weight a.Reverse().</p>
 </dd>
 </dl>
 <p><strong>Example 1 Revert an acceptor (require_superinitial=True)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id97">
-<div class="code-block-caption"><span class="caption-number">Listing 32 </span><span class="caption-text">Revert an acceptor using require_superinitial=True</span><a class="headerlink" href="#id97" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id103">
+<div class="code-block-caption"><span class="caption-number">Listing 36 </span><span class="caption-text">Revert an acceptor using require_superinitial=True</span><a class="headerlink" href="#id103" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1975,19 +2123,19 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id98" style="width: 600px">
+<figure class="align-center" id="id104" style="width: 600px">
 <img alt="acceptor-before-reverse.svg" src="../_images/acceptor-before-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 45 </span><span class="caption-text">Visualization of acceptor-before-reverse.svg</span><a class="headerlink" href="#id98" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 47 </span><span class="caption-text">Visualization of acceptor-before-reverse.svg</span><a class="headerlink" href="#id104" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id99" style="width: 600px">
+<figure class="align-center" id="id105" style="width: 600px">
 <img alt="acceptor-after-reverse.svg" src="../_images/acceptor-after-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 46 </span><span class="caption-text">Visualization of acceptor-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id99" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 48 </span><span class="caption-text">Visualization of acceptor-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id105" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2 Revert an acceptor (require_superinitial=False)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id100">
-<div class="code-block-caption"><span class="caption-number">Listing 33 </span><span class="caption-text">Revert an acceptor using require_superinitial=False</span><a class="headerlink" href="#id100" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id106">
+<div class="code-block-caption"><span class="caption-number">Listing 37 </span><span class="caption-text">Revert an acceptor using require_superinitial=False</span><a class="headerlink" href="#id106" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2035,19 +2183,19 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id101" style="width: 600px">
+<figure class="align-center" id="id107" style="width: 600px">
 <img alt="acceptor-before-reverse-2.svg" src="../_images/acceptor-before-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 47 </span><span class="caption-text">Visualization of acceptor-before-reverse-2.svg</span><a class="headerlink" href="#id101" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 49 </span><span class="caption-text">Visualization of acceptor-before-reverse-2.svg</span><a class="headerlink" href="#id107" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id102" style="width: 600px">
+<figure class="align-center" id="id108" style="width: 600px">
 <img alt="acceptor-after-reverse-2.svg" src="../_images/acceptor-after-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 48 </span><span class="caption-text">Visualization of acceptor-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id102" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 50 </span><span class="caption-text">Visualization of acceptor-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id108" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 3 Revert a transducer  (require_superinitial=False)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id103">
-<div class="code-block-caption"><span class="caption-number">Listing 34 </span><span class="caption-text">Revert a transducer using require_superinitial=True</span><a class="headerlink" href="#id103" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id109">
+<div class="code-block-caption"><span class="caption-number">Listing 38 </span><span class="caption-text">Revert a transducer using require_superinitial=True</span><a class="headerlink" href="#id109" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2092,19 +2240,19 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id104" style="width: 600px">
+<figure class="align-center" id="id110" style="width: 600px">
 <img alt="transducer-before-reverse.svg" src="../_images/transducer-before-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 49 </span><span class="caption-text">Visualization of transducer-before-reverse.svg</span><a class="headerlink" href="#id104" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 51 </span><span class="caption-text">Visualization of transducer-before-reverse.svg</span><a class="headerlink" href="#id110" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id105" style="width: 600px">
+<figure class="align-center" id="id111" style="width: 600px">
 <img alt="transducer-after-reverse.svg" src="../_images/transducer-after-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 50 </span><span class="caption-text">Visualization of transducer-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id105" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 52 </span><span class="caption-text">Visualization of transducer-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id111" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 4 Revert a transducer (require_superinitial=False)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id106">
-<div class="code-block-caption"><span class="caption-number">Listing 35 </span><span class="caption-text">Revert a transducer using require_superinitial=False</span><a class="headerlink" href="#id106" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id112">
+<div class="code-block-caption"><span class="caption-number">Listing 39 </span><span class="caption-text">Revert a transducer using require_superinitial=False</span><a class="headerlink" href="#id112" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2149,14 +2297,14 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id107" style="width: 600px">
+<figure class="align-center" id="id113" style="width: 600px">
 <img alt="transducer-before-reverse-2.svg" src="../_images/transducer-before-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 51 </span><span class="caption-text">Visualization of transducer-before-reverse-2.svg</span><a class="headerlink" href="#id107" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 53 </span><span class="caption-text">Visualization of transducer-before-reverse-2.svg</span><a class="headerlink" href="#id113" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id108" style="width: 600px">
+<figure class="align-center" id="id114" style="width: 600px">
 <img alt="transducer-after-reverse-2.svg" src="../_images/transducer-after-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 52 </span><span class="caption-text">Visualization of transducer-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id108" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 54 </span><span class="caption-text">Visualization of transducer-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id114" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -2191,8 +2339,8 @@ that has no such epsilon transitions.</p>
 </dd>
 </dl>
 <p><strong>Example Remove epsilon of a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id109">
-<div class="code-block-caption"><span class="caption-number">Listing 36 </span><span class="caption-text">Remove epsilon of transducer</span><a class="headerlink" href="#id109" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id115">
+<div class="code-block-caption"><span class="caption-number">Listing 40 </span><span class="caption-text">Remove epsilon of transducer</span><a class="headerlink" href="#id115" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2244,14 +2392,237 @@ that has no such epsilon transitions.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id110" style="width: 600px">
+<figure class="align-center" id="id116" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer6.svg" /><figcaption>
-<p><span class="caption-number">Fig. 53 </span><span class="caption-text">Visualization of transducer.svg</span><a class="headerlink" href="#id110" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 55 </span><span class="caption-text">Visualization of transducer.svg</span><a class="headerlink" href="#id116" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id111" style="width: 600px">
+<figure class="align-center" id="id117" style="width: 600px">
 <img alt="transducer-after-rmepislon.svg" src="../_images/transducer-after-rmepsilon.svg" /><figcaption>
-<p><span class="caption-number">Fig. 54 </span><span class="caption-text">Visualization of transducer-after-rmepsilon.svg</span><a class="headerlink" href="#id111" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 56 </span><span class="caption-text">Visualization of transducer-after-rmepsilon.svg</span><a class="headerlink" href="#id117" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
+
+</section>
+<section id="shortest-path">
+<h2>shortest_path<a class="headerlink" href="#shortest-path" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.shortest_path">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">shortest_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.shortest_path" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>shortest_path(fst: _kaldifst.StdFst, n: int = 1) -&gt; _kaldifst.StdVectorFst</p></li>
+</ol>
+<p>This operation produces an FST containing the n-shortest paths in the input FST.</p>
+<p>The n -shortest paths are the n -lowest weight paths w.r.t. the natural semiring
+order. The single path that can be read from the ith of at most n transitions
+leaving the initial state of the resulting FST is the ith shortest path.</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/ShortestPathDoc">https://www.openfst.org/twiki/bin/view/FST/ShortestPathDoc</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – Size of n-best.</p></li>
+<li><p><strong>unique</strong> – Return only distinct strings. (NB: must be acceptor; epsilons
+treated as regular symbols)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a VectorFst containing n paths.</p>
+</dd>
+</dl>
+<p><strong>Example 1: StdVectorFst</strong></p>
+<div class="literal-block-wrapper docutils container" id="id118">
+<div class="code-block-caption"><span class="caption-number">Listing 41 </span><span class="caption-text">ShortestPath for a StdVectorFst</span><a class="headerlink" href="#id118" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a 0.1</span>
+<span class="linenos"> 9</span><span class="s2">0 2 b 0.1</span>
+<span class="linenos">10</span><span class="s2">1 3 c 0.4</span>
+<span class="linenos">11</span><span class="s2">1 3 d 0.2</span>
+<span class="linenos">12</span><span class="s2">2 3 c 0.3</span>
+<span class="linenos">13</span><span class="s2">2 3 d 0.2</span>
+<span class="linenos">14</span><span class="s2">3 0</span>
+<span class="linenos">15</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">21</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="n">a</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">a</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="n">a_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">28</span><span class="n">a_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">a_dot</span><span class="p">)</span>
+<span class="linenos">29</span><span class="n">a_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst.svg&quot;</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="n">nbest_1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">32</span><span class="n">nbest_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">33</span><span class="n">nbest_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_1_dot</span><span class="p">)</span>
+<span class="linenos">34</span><span class="n">nbest_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-1best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">nbest_2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">37</span><span class="n">nbest_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_2</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">38</span><span class="n">nbest_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_2_dot</span><span class="p">)</span>
+<span class="linenos">39</span><span class="n">nbest_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-2best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="n">nbest_3</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos">42</span><span class="n">nbest_3_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">43</span><span class="n">nbest_3_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_3_dot</span><span class="p">)</span>
+<span class="linenos">44</span><span class="n">nbest_3_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id119" style="width: 600px">
+<img alt="vector-fst.svg" src="python_api/code/shortest_path/vector-fst.svg" /><figcaption>
+<p><span class="caption-number">Fig. 57 </span><span class="caption-text">Visualization of vector-fst.svg</span><a class="headerlink" href="#id119" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id120" style="width: 600px">
+<img alt="vector-fst-1best.svg" src="python_api/code/shortest_path/vector-fst-1best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 58 </span><span class="caption-text">Visualization of vector-fst-1best.svg</span><a class="headerlink" href="#id120" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id121" style="width: 600px">
+<img alt="vector-fst-2best.svg" src="python_api/code/shortest_path/vector-fst-2best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 59 </span><span class="caption-text">Visualization of vector-fst-2best.svg</span><a class="headerlink" href="#id121" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id122" style="width: 600px">
+<img alt="vector-fst-3best.svg" src="python_api/code/shortest_path/vector-fst-3best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 60 </span><span class="caption-text">Visualization of vector-fst-3best.svg</span><a class="headerlink" href="#id122" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 2: Lattice</strong></p>
+<div class="literal-block-wrapper docutils container" id="id123">
+<div class="code-block-caption"><span class="caption-number">Listing 42 </span><span class="caption-text">ShortestPath for a Lattice</span><a class="headerlink" href="#id123" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id124" style="width: 600px">
+<img alt="lattice.svg" src="python_api/code/shortest_path/lattice.svg" /><figcaption>
+<p><span class="caption-number">Fig. 61 </span><span class="caption-text">Visualization of lattice.svg</span><a class="headerlink" href="#id124" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id125" style="width: 600px">
+<img alt="lattice-nbest.svg" src="python_api/code/shortest_path/lattice-nbest.svg" /><figcaption>
+<p><span class="caption-number">Fig. 62 </span><span class="caption-text">Visualization of lattice-nbest.svg</span><a class="headerlink" href="#id125" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="2">
+<li><p>shortest_path(fst: _kaldifst.LatticeFst, n: int = 1) -&gt; _kaldifst.Lattice</p></li>
+</ol>
+<p>This operation produces an FST containing the n-shortest paths in the input FST.</p>
+<p>The n -shortest paths are the n -lowest weight paths w.r.t. the natural semiring
+order. The single path that can be read from the ith of at most n transitions
+leaving the initial state of the resulting FST is the ith shortest path.</p>
+<p>See also <a class="reference external" href="https://www.openfst.org/twiki/bin/view/FST/ShortestPathDoc">https://www.openfst.org/twiki/bin/view/FST/ShortestPathDoc</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – Size of n-best.</p></li>
+<li><p><strong>unique</strong> – Return only distinct strings. (NB: must be acceptor; epsilons
+treated as regular symbols)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a VectorFst containing n paths.</p>
+</dd>
+</dl>
+<p><strong>Example 1: StdVectorFst</strong></p>
+<div class="literal-block-wrapper docutils container" id="id126">
+<div class="code-block-caption"><span class="caption-number">Listing 43 </span><span class="caption-text">ShortestPath for a StdVectorFst</span><a class="headerlink" href="#id126" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a 0.1</span>
+<span class="linenos"> 9</span><span class="s2">0 2 b 0.1</span>
+<span class="linenos">10</span><span class="s2">1 3 c 0.4</span>
+<span class="linenos">11</span><span class="s2">1 3 d 0.2</span>
+<span class="linenos">12</span><span class="s2">2 3 c 0.3</span>
+<span class="linenos">13</span><span class="s2">2 3 d 0.2</span>
+<span class="linenos">14</span><span class="s2">3 0</span>
+<span class="linenos">15</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">21</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="n">a</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">a</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="n">a_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">28</span><span class="n">a_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">a_dot</span><span class="p">)</span>
+<span class="linenos">29</span><span class="n">a_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst.svg&quot;</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="n">nbest_1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">32</span><span class="n">nbest_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">33</span><span class="n">nbest_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_1_dot</span><span class="p">)</span>
+<span class="linenos">34</span><span class="n">nbest_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-1best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">nbest_2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">37</span><span class="n">nbest_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_2</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">38</span><span class="n">nbest_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_2_dot</span><span class="p">)</span>
+<span class="linenos">39</span><span class="n">nbest_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-2best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="n">nbest_3</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos">42</span><span class="n">nbest_3_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">43</span><span class="n">nbest_3_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_3_dot</span><span class="p">)</span>
+<span class="linenos">44</span><span class="n">nbest_3_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id127" style="width: 600px">
+<img alt="vector-fst.svg" src="python_api/code/shortest_path/vector-fst.svg" /><figcaption>
+<p><span class="caption-number">Fig. 63 </span><span class="caption-text">Visualization of vector-fst.svg</span><a class="headerlink" href="#id127" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id128" style="width: 600px">
+<img alt="vector-fst-1best.svg" src="python_api/code/shortest_path/vector-fst-1best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 64 </span><span class="caption-text">Visualization of vector-fst-1best.svg</span><a class="headerlink" href="#id128" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id129" style="width: 600px">
+<img alt="vector-fst-2best.svg" src="python_api/code/shortest_path/vector-fst-2best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 65 </span><span class="caption-text">Visualization of vector-fst-2best.svg</span><a class="headerlink" href="#id129" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id130" style="width: 600px">
+<img alt="vector-fst-3best.svg" src="python_api/code/shortest_path/vector-fst-3best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 66 </span><span class="caption-text">Visualization of vector-fst-3best.svg</span><a class="headerlink" href="#id130" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example 2: Lattice</strong></p>
+<div class="literal-block-wrapper docutils container" id="id131">
+<div class="code-block-caption"><span class="caption-number">Listing 44 </span><span class="caption-text">ShortestPath for a Lattice</span><a class="headerlink" href="#id131" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id132" style="width: 600px">
+<img alt="lattice.svg" src="python_api/code/shortest_path/lattice.svg" /><figcaption>
+<p><span class="caption-number">Fig. 67 </span><span class="caption-text">Visualization of lattice.svg</span><a class="headerlink" href="#id132" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id133" style="width: 600px">
+<img alt="lattice-nbest.svg" src="python_api/code/shortest_path/lattice-nbest.svg" /><figcaption>
+<p><span class="caption-number">Fig. 68 </span><span class="caption-text">Visualization of lattice-nbest.svg</span><a class="headerlink" href="#id133" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -2307,8 +2678,8 @@ that has no such epsilon transitions.</p>
 </section>
 <section id="floatweight">
 <h2>FloatWeight<a class="headerlink" href="#floatweight" title="Permalink to this headline"></a></h2>
-<section id="id1">
-<h3>value<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<section id="id3">
+<h3>value<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.FloatWeight.value">
 <span class="sig-prename descclassname"><span class="pre">FloatWeight.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.FloatWeight.value" title="Permalink to this definition"></a></dt>
@@ -2317,7 +2688,8 @@ that has no such epsilon transitions.</p>
 </section>
 </section>
 <section id="lattice">
-<h2>Lattice<a class="headerlink" href="#lattice" title="Permalink to this headline"></a></h2>
+<span id="lattice-class"></span><h2>Lattice<a class="headerlink" href="#lattice" title="Permalink to this headline"></a></h2>
+<p>Please refer to <a class="reference internal" href="../lattice/intro.html#introduction-to-lattice"><span class="std std-ref">Introduction to Lattice</span></a> for usage.</p>
 <section id="copy">
 <h3>copy<a class="headerlink" href="#copy" title="Permalink to this headline"></a></h3>
 <dl class="py method">
@@ -2334,6 +2706,19 @@ Behavior is otherwise undefined.</p>
 <p>(3) If a MutableFst is copied and then mutated, then the original
 is unmodified and vice versa (often by a copy-on-write on the
 initial mutation, which may not be constant time).</p>
+<blockquote>
+<div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To get a deep copy of an FST, e.g., a deep copy of Lattice <code class="docutils literal notranslate"><span class="pre">lat1</span></code>, please use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lat2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To get deep copy of StdVectorFst <code class="docutils literal notranslate"><span class="pre">fst1</span></code>, please use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fst2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="p">(</span><span class="n">fst1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
 </dd></dl>
 
 </section>
@@ -2395,7 +2780,7 @@ initial mutation, which may not be constant time).</p>
 </section>
 </section>
 <section id="latticearc">
-<h2>LatticeArc<a class="headerlink" href="#latticearc" title="Permalink to this headline"></a></h2>
+<span id="lattice-arc-class"></span><h2>LatticeArc<a class="headerlink" href="#latticearc" title="Permalink to this headline"></a></h2>
 <section id="init">
 <h3>__init__<a class="headerlink" href="#init" title="Permalink to this headline"></a></h3>
 <dl class="py method">
@@ -2444,7 +2829,25 @@ initial mutation, which may not be constant time).</p>
 </section>
 </section>
 <section id="latticeweight">
-<h2>LatticeWeight<a class="headerlink" href="#latticeweight" title="Permalink to this headline"></a></h2>
+<span id="lattice-weight-class"></span><h2>LatticeWeight<a class="headerlink" href="#latticeweight" title="Permalink to this headline"></a></h2>
+<section id="value1">
+<h3>value1<a class="headerlink" href="#value1" title="Permalink to this headline"></a></h3>
+<p>The graph cost.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.LatticeWeight.value1">
+<span class="sig-prename descclassname"><span class="pre">LatticeWeight.</span></span><span class="sig-name descname"><span class="pre">value1</span></span><a class="headerlink" href="#kaldifst.LatticeWeight.value1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="value2">
+<h3>value2<a class="headerlink" href="#value2" title="Permalink to this headline"></a></h3>
+<p>The acoustic cost.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kaldifst.LatticeWeight.value2">
+<span class="sig-prename descclassname"><span class="pre">LatticeWeight.</span></span><span class="sig-name descname"><span class="pre">value2</span></span><a class="headerlink" href="#kaldifst.LatticeWeight.value2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
 </section>
 <section id="randomaccessvectorfstreader">
 <h2>RandomAccessVectorFstReader<a class="headerlink" href="#randomaccessvectorfstreader" title="Permalink to this headline"></a></h2>
@@ -2465,8 +2868,8 @@ initial mutation, which may not be constant time).</p>
 </section>
 <section id="sequentialvectorfstreader">
 <h2>SequentialVectorFstReader<a class="headerlink" href="#sequentialvectorfstreader" title="Permalink to this headline"></a></h2>
-<section id="id2">
-<h3>done<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<section id="id4">
+<h3>done<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.SequentialVectorFstReader.done">
 <span class="sig-prename descclassname"><span class="pre">SequentialVectorFstReader.</span></span><span class="sig-name descname"><span class="pre">done</span></span><a class="headerlink" href="#kaldifst.SequentialVectorFstReader.done" title="Permalink to this definition"></a></dt>
@@ -2478,8 +2881,8 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id3">
-<h3>is_open<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<section id="id5">
+<h3>is_open<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.SequentialVectorFstReader.is_open">
 <span class="sig-prename descclassname"><span class="pre">SequentialVectorFstReader.</span></span><span class="sig-name descname"><span class="pre">is_open</span></span><a class="headerlink" href="#kaldifst.SequentialVectorFstReader.is_open" title="Permalink to this definition"></a></dt>
@@ -2505,8 +2908,8 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id4">
-<h3>value<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h3>
+<section id="id6">
+<h3>value<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.SequentialVectorFstReader.value">
 <span class="sig-prename descclassname"><span class="pre">SequentialVectorFstReader.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.SequentialVectorFstReader.value" title="Permalink to this definition"></a></dt>
@@ -2521,16 +2924,16 @@ initial mutation, which may not be constant time).</p>
 </section>
 <section id="stateiterator">
 <h2>StateIterator<a class="headerlink" href="#stateiterator" title="Permalink to this headline"></a></h2>
-<section id="id5">
-<h3>done<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
+<section id="id7">
+<h3>done<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StateIterator.done">
 <span class="sig-prename descclassname"><span class="pre">StateIterator.</span></span><span class="sig-name descname"><span class="pre">done</span></span><a class="headerlink" href="#kaldifst.StateIterator.done" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id6">
-<h3>value<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h3>
+<section id="id8">
+<h3>value<a class="headerlink" href="#id8" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StateIterator.value">
 <span class="sig-prename descclassname"><span class="pre">StateIterator.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.StateIterator.value" title="Permalink to this definition"></a></dt>
@@ -2540,8 +2943,8 @@ initial mutation, which may not be constant time).</p>
 </section>
 <section id="stdarc">
 <h2>StdArc<a class="headerlink" href="#stdarc" title="Permalink to this headline"></a></h2>
-<section id="id7">
-<h3>__init__<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h3>
+<section id="id9">
+<h3>__init__<a class="headerlink" href="#id9" title="Permalink to this headline"></a></h3>
 <dl class="py method">
 <dt class="sig sig-object py" id="kaldifst.StdArc.__init__">
 <span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.StdArc.__init__" title="Permalink to this definition"></a></dt>
@@ -2554,32 +2957,32 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id8">
-<h3>ilabel<a class="headerlink" href="#id8" title="Permalink to this headline"></a></h3>
+<section id="id10">
+<h3>ilabel<a class="headerlink" href="#id10" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdArc.ilabel">
 <span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">ilabel</span></span><a class="headerlink" href="#kaldifst.StdArc.ilabel" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id9">
-<h3>nextstate<a class="headerlink" href="#id9" title="Permalink to this headline"></a></h3>
+<section id="id11">
+<h3>nextstate<a class="headerlink" href="#id11" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdArc.nextstate">
 <span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">nextstate</span></span><a class="headerlink" href="#kaldifst.StdArc.nextstate" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id10">
-<h3>olabel<a class="headerlink" href="#id10" title="Permalink to this headline"></a></h3>
+<section id="id12">
+<h3>olabel<a class="headerlink" href="#id12" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdArc.olabel">
 <span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">olabel</span></span><a class="headerlink" href="#kaldifst.StdArc.olabel" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id11">
-<h3>weight<a class="headerlink" href="#id11" title="Permalink to this headline"></a></h3>
+<section id="id13">
+<h3>weight<a class="headerlink" href="#id13" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdArc.weight">
 <span class="sig-prename descclassname"><span class="pre">StdArc.</span></span><span class="sig-name descname"><span class="pre">weight</span></span><a class="headerlink" href="#kaldifst.StdArc.weight" title="Permalink to this definition"></a></dt>
@@ -2589,8 +2992,8 @@ initial mutation, which may not be constant time).</p>
 </section>
 <section id="stdconstfst">
 <h2>StdConstFst<a class="headerlink" href="#stdconstfst" title="Permalink to this headline"></a></h2>
-<section id="id12">
-<h3>copy<a class="headerlink" href="#id12" title="Permalink to this headline"></a></h3>
+<section id="id14">
+<h3>copy<a class="headerlink" href="#id14" title="Permalink to this headline"></a></h3>
 <dl class="py method">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.copy">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdFst</span></span></span><a class="headerlink" href="#kaldifst.StdConstFst.copy" title="Permalink to this definition"></a></dt>
@@ -2605,11 +3008,24 @@ Behavior is otherwise undefined.</p>
 <p>(3) If a MutableFst is copied and then mutated, then the original
 is unmodified and vice versa (often by a copy-on-write on the
 initial mutation, which may not be constant time).</p>
+<blockquote>
+<div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To get a deep copy of an FST, e.g., a deep copy of Lattice <code class="docutils literal notranslate"><span class="pre">lat1</span></code>, please use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lat2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To get deep copy of StdVectorFst <code class="docutils literal notranslate"><span class="pre">fst1</span></code>, please use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fst2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="p">(</span><span class="n">fst1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
 </dd></dl>
 
 </section>
-<section id="id13">
-<h3>input_symbols<a class="headerlink" href="#id13" title="Permalink to this headline"></a></h3>
+<section id="id15">
+<h3>input_symbols<a class="headerlink" href="#id15" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.input_symbols">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">input_symbols</span></span><a class="headerlink" href="#kaldifst.StdConstFst.input_symbols" title="Permalink to this definition"></a></dt>
@@ -2617,32 +3033,32 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id14">
-<h3>is_ilabel_sorted<a class="headerlink" href="#id14" title="Permalink to this headline"></a></h3>
+<section id="id16">
+<h3>is_ilabel_sorted<a class="headerlink" href="#id16" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.is_ilabel_sorted">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">is_ilabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdConstFst.is_ilabel_sorted" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id15">
-<h3>is_olabel_sorted<a class="headerlink" href="#id15" title="Permalink to this headline"></a></h3>
+<section id="id17">
+<h3>is_olabel_sorted<a class="headerlink" href="#id17" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.is_olabel_sorted">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">is_olabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdConstFst.is_olabel_sorted" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id16">
-<h3>num_states<a class="headerlink" href="#id16" title="Permalink to this headline"></a></h3>
+<section id="id18">
+<h3>num_states<a class="headerlink" href="#id18" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.num_states">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">num_states</span></span><a class="headerlink" href="#kaldifst.StdConstFst.num_states" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id17">
-<h3>output_symbols<a class="headerlink" href="#id17" title="Permalink to this headline"></a></h3>
+<section id="id19">
+<h3>output_symbols<a class="headerlink" href="#id19" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.output_symbols">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">output_symbols</span></span><a class="headerlink" href="#kaldifst.StdConstFst.output_symbols" title="Permalink to this definition"></a></dt>
@@ -2650,16 +3066,16 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id18">
-<h3>start<a class="headerlink" href="#id18" title="Permalink to this headline"></a></h3>
+<section id="id20">
+<h3>start<a class="headerlink" href="#id20" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.start">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#kaldifst.StdConstFst.start" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id19">
-<h3>type<a class="headerlink" href="#id19" title="Permalink to this headline"></a></h3>
+<section id="id21">
+<h3>type<a class="headerlink" href="#id21" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdConstFst.type">
 <span class="sig-prename descclassname"><span class="pre">StdConstFst.</span></span><span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#kaldifst.StdConstFst.type" title="Permalink to this definition"></a></dt>
@@ -2669,8 +3085,8 @@ initial mutation, which may not be constant time).</p>
 </section>
 <section id="stdfst">
 <h2>StdFst<a class="headerlink" href="#stdfst" title="Permalink to this headline"></a></h2>
-<section id="id20">
-<h3>copy<a class="headerlink" href="#id20" title="Permalink to this headline"></a></h3>
+<section id="id22">
+<h3>copy<a class="headerlink" href="#id22" title="Permalink to this headline"></a></h3>
 <dl class="py method">
 <dt class="sig sig-object py" id="kaldifst.StdFst.copy">
 <span class="sig-prename descclassname"><span class="pre">StdFst.</span></span><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdFst</span></span></span><a class="headerlink" href="#kaldifst.StdFst.copy" title="Permalink to this definition"></a></dt>
@@ -2685,11 +3101,24 @@ Behavior is otherwise undefined.</p>
 <p>(3) If a MutableFst is copied and then mutated, then the original
 is unmodified and vice versa (often by a copy-on-write on the
 initial mutation, which may not be constant time).</p>
+<blockquote>
+<div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To get a deep copy of an FST, e.g., a deep copy of Lattice <code class="docutils literal notranslate"><span class="pre">lat1</span></code>, please use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lat2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To get deep copy of StdVectorFst <code class="docutils literal notranslate"><span class="pre">fst1</span></code>, please use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fst2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="p">(</span><span class="n">fst1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
 </dd></dl>
 
 </section>
-<section id="id21">
-<h3>input_symbols<a class="headerlink" href="#id21" title="Permalink to this headline"></a></h3>
+<section id="id23">
+<h3>input_symbols<a class="headerlink" href="#id23" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdFst.input_symbols">
 <span class="sig-prename descclassname"><span class="pre">StdFst.</span></span><span class="sig-name descname"><span class="pre">input_symbols</span></span><a class="headerlink" href="#kaldifst.StdFst.input_symbols" title="Permalink to this definition"></a></dt>
@@ -2697,24 +3126,24 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id22">
-<h3>is_ilabel_sorted<a class="headerlink" href="#id22" title="Permalink to this headline"></a></h3>
+<section id="id24">
+<h3>is_ilabel_sorted<a class="headerlink" href="#id24" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdFst.is_ilabel_sorted">
 <span class="sig-prename descclassname"><span class="pre">StdFst.</span></span><span class="sig-name descname"><span class="pre">is_ilabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdFst.is_ilabel_sorted" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id23">
-<h3>is_olabel_sorted<a class="headerlink" href="#id23" title="Permalink to this headline"></a></h3>
+<section id="id25">
+<h3>is_olabel_sorted<a class="headerlink" href="#id25" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdFst.is_olabel_sorted">
 <span class="sig-prename descclassname"><span class="pre">StdFst.</span></span><span class="sig-name descname"><span class="pre">is_olabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdFst.is_olabel_sorted" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id24">
-<h3>output_symbols<a class="headerlink" href="#id24" title="Permalink to this headline"></a></h3>
+<section id="id26">
+<h3>output_symbols<a class="headerlink" href="#id26" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdFst.output_symbols">
 <span class="sig-prename descclassname"><span class="pre">StdFst.</span></span><span class="sig-name descname"><span class="pre">output_symbols</span></span><a class="headerlink" href="#kaldifst.StdFst.output_symbols" title="Permalink to this definition"></a></dt>
@@ -2722,16 +3151,16 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id25">
-<h3>start<a class="headerlink" href="#id25" title="Permalink to this headline"></a></h3>
+<section id="id27">
+<h3>start<a class="headerlink" href="#id27" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdFst.start">
 <span class="sig-prename descclassname"><span class="pre">StdFst.</span></span><span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#kaldifst.StdFst.start" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id26">
-<h3>type<a class="headerlink" href="#id26" title="Permalink to this headline"></a></h3>
+<section id="id28">
+<h3>type<a class="headerlink" href="#id28" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdFst.type">
 <span class="sig-prename descclassname"><span class="pre">StdFst.</span></span><span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#kaldifst.StdFst.type" title="Permalink to this definition"></a></dt>
@@ -2741,8 +3170,8 @@ initial mutation, which may not be constant time).</p>
 </section>
 <section id="stdvectorfst">
 <h2>StdVectorFst<a class="headerlink" href="#stdvectorfst" title="Permalink to this headline"></a></h2>
-<section id="id27">
-<h3>copy<a class="headerlink" href="#id27" title="Permalink to this headline"></a></h3>
+<section id="id29">
+<h3>copy<a class="headerlink" href="#id29" title="Permalink to this headline"></a></h3>
 <dl class="py method">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.copy">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_kaldifst.StdFst</span></span></span><a class="headerlink" href="#kaldifst.StdVectorFst.copy" title="Permalink to this definition"></a></dt>
@@ -2757,59 +3186,72 @@ Behavior is otherwise undefined.</p>
 <p>(3) If a MutableFst is copied and then mutated, then the original
 is unmodified and vice versa (often by a copy-on-write on the
 initial mutation, which may not be constant time).</p>
+<blockquote>
+<div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To get a deep copy of an FST, e.g., a deep copy of Lattice <code class="docutils literal notranslate"><span class="pre">lat1</span></code>, please use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lat2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To get deep copy of StdVectorFst <code class="docutils literal notranslate"><span class="pre">fst1</span></code>, please use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fst2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="p">(</span><span class="n">fst1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
 </dd></dl>
 
 </section>
-<section id="id28">
-<h3>input_symbols<a class="headerlink" href="#id28" title="Permalink to this headline"></a></h3>
+<section id="id30">
+<h3>input_symbols<a class="headerlink" href="#id30" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.input_symbols">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">input_symbols</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.input_symbols" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id29">
-<h3>is_ilabel_sorted<a class="headerlink" href="#id29" title="Permalink to this headline"></a></h3>
+<section id="id31">
+<h3>is_ilabel_sorted<a class="headerlink" href="#id31" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.is_ilabel_sorted">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">is_ilabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.is_ilabel_sorted" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id30">
-<h3>is_olabel_sorted<a class="headerlink" href="#id30" title="Permalink to this headline"></a></h3>
+<section id="id32">
+<h3>is_olabel_sorted<a class="headerlink" href="#id32" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.is_olabel_sorted">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">is_olabel_sorted</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.is_olabel_sorted" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id31">
-<h3>num_states<a class="headerlink" href="#id31" title="Permalink to this headline"></a></h3>
+<section id="id33">
+<h3>num_states<a class="headerlink" href="#id33" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.num_states">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">num_states</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.num_states" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id32">
-<h3>output_symbols<a class="headerlink" href="#id32" title="Permalink to this headline"></a></h3>
+<section id="id34">
+<h3>output_symbols<a class="headerlink" href="#id34" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.output_symbols">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">output_symbols</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.output_symbols" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id33">
-<h3>start<a class="headerlink" href="#id33" title="Permalink to this headline"></a></h3>
+<section id="id35">
+<h3>start<a class="headerlink" href="#id35" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.start">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.start" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="id34">
-<h3>type<a class="headerlink" href="#id34" title="Permalink to this headline"></a></h3>
+<section id="id36">
+<h3>type<a class="headerlink" href="#id36" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.StdVectorFst.type">
 <span class="sig-prename descclassname"><span class="pre">StdVectorFst.</span></span><span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#kaldifst.StdVectorFst.type" title="Permalink to this definition"></a></dt>
@@ -2886,8 +3328,8 @@ initial mutation, which may not be constant time).</p>
 </section>
 <section id="tropicalweight">
 <h2>TropicalWeight<a class="headerlink" href="#tropicalweight" title="Permalink to this headline"></a></h2>
-<section id="id35">
-<h3>value<a class="headerlink" href="#id35" title="Permalink to this headline"></a></h3>
+<section id="id37">
+<h3>value<a class="headerlink" href="#id37" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.TropicalWeight.value">
 <span class="sig-prename descclassname"><span class="pre">TropicalWeight.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#kaldifst.TropicalWeight.value" title="Permalink to this definition"></a></dt>
@@ -2917,8 +3359,8 @@ initial mutation, which may not be constant time).</p>
 </dd></dl>
 
 </section>
-<section id="id36">
-<h3>is_open<a class="headerlink" href="#id36" title="Permalink to this headline"></a></h3>
+<section id="id38">
+<h3>is_open<a class="headerlink" href="#id38" title="Permalink to this headline"></a></h3>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kaldifst.VectorFstWriter.is_open">
 <span class="sig-prename descclassname"><span class="pre">VectorFstWriter.</span></span><span class="sig-name descname"><span class="pre">is_open</span></span><a class="headerlink" href="#kaldifst.VectorFstWriter.is_open" title="Permalink to this definition"></a></dt>

@@ -73,6 +73,11 @@ invert
 
 .. autofunction:: invert
 
+lattice_scale
+-------------
+
+.. autofunction:: lattice_scale
+
 make_linear_acceptor
 --------------------
 
@@ -102,6 +107,11 @@ rmepsilon
 ---------
 
 .. autofunction:: rmepsilon
+
+shortest_path
+-------------
+
+.. autofunction:: shortest_path
 
 times
 -----
@@ -139,8 +149,12 @@ value
 
 .. autoattribute:: kaldifst.FloatWeight.value
 
+.. _lattice_class:
+
 Lattice
 -------
+
+Please refer to :ref:`introduction_to_lattice` for usage.
 
 copy
 ^^^^
@@ -182,6 +196,8 @@ type
 
 .. autoattribute:: kaldifst.Lattice.type
 
+.. _lattice_arc_class:
+
 LatticeArc
 ----------
 
@@ -210,8 +226,24 @@ weight
 
 .. autoattribute:: kaldifst.LatticeArc.weight
 
+.. _lattice_weight_class:
+
 LatticeWeight
 -------------
+
+value1
+^^^^^^
+
+The graph cost.
+
+.. autoattribute:: kaldifst.LatticeWeight.value1
+
+value2
+^^^^^^
+
+The acoustic cost.
+
+.. autoattribute:: kaldifst.LatticeWeight.value2
 
 RandomAccessVectorFstReader
 ---------------------------
