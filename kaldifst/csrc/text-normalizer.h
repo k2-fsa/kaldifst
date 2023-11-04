@@ -20,7 +20,11 @@ class TextNormalizer {
 
   explicit TextNormalizer(std::unique_ptr<fst::StdConstFst> rule);
 
-  std::string Normalize(const std::string &s) const;
+  // @param s The input text to be normalized
+  // @param remove_output_zero True to remove bytes whose value is 0 from the
+  //                           output.
+  std::string Normalize(const std::string &s,
+                        bool remove_output_zero = true) const;
 
  private:
   std::unique_ptr<fst::StdConstFst> rule_;
