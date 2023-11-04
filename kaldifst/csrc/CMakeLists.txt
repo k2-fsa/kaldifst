@@ -11,6 +11,7 @@ set(srcs
   kaldi-semaphore.cc
   kaldi-table.cc
   parse-options.cc
+  text-normalizer.cc
   text-utils.cc
   )
 

@@ -30,6 +30,7 @@
 #include "kaldifst/python/csrc/shortest-path.h"
 #include "kaldifst/python/csrc/symbol-table.h"
 #include "kaldifst/python/csrc/table-matcher.h"
+#include "kaldifst/python/csrc/text-normalizer.h"
 #include "kaldifst/python/csrc/vector-fst.h"
 
 namespace kaldifst {
@@ -69,6 +70,7 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindKaldiTable(m);
   PybindLatticeUtils(&m);
   PybindShortestPath(&m);
+  PybindTextNormalizer(&m);
 }
 
 }  // namespace kaldifst

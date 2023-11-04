@@ -50,6 +50,8 @@ Fst<StdArc> *ReadFstKaldiGeneric(std::string rxfilename,
 // initialized by 'fst'), prints a warning, and deletes 'fst'.
 VectorFst<StdArc> *CastOrConvertToVectorFst(Fst<StdArc> *fst);
 
+ConstFst<StdArc> *CastOrConvertToConstFst(Fst<StdArc> *fst);
+
 // Version of ReadFstKaldi() that writes to a pointer.  Assumes
 // the FST is binary with no binary marker.  Crashes on error.
 void ReadFstKaldi(std::string rxfilename, VectorFst<StdArc> *ofst);
