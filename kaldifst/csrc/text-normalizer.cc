@@ -14,11 +14,13 @@
 
 namespace fst {
 
+// This variable is copied from
+// https://github.com/pzelasko/Pynini/blob/master/src/stringcompile.h#L81
 constexpr uint64_t kCompiledStringProps =
     kAcceptor | kIDeterministic | kODeterministic | kILabelSorted |
     kOLabelSorted | kUnweighted | kAcyclic | kInitialAcyclic | kTopSorted |
     kAccessible | kCoAccessible | kString | kUnweightedCycles;
-}
+}  // namespace fst
 
 namespace kaldifst {
 
