@@ -32,6 +32,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.os }}-${{ matrix.python-version }}
+
       # see https://github.com/microsoft/setup-msbuild
       - name: Add msbuild to PATH
         if: startsWith(matrix.os, 'windows')
@@ -57,6 +62,10 @@ jobs:
       - name: Install kaldifst
         shell: bash
         run: |
+          export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          cmake --version
+
           pip3 install --verbose -U kaldifst
 
       - name: Display kaldifst version
