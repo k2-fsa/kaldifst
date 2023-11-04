@@ -23,9 +23,11 @@
 #include "kaldifst/python/csrc/fstreverse.h"
 #include "kaldifst/python/csrc/fstrmepsilon.h"
 #include "kaldifst/python/csrc/kaldi-table.h"
+#include "kaldifst/python/csrc/lattice-utils.h"
 #include "kaldifst/python/csrc/lattice-weight.h"
 #include "kaldifst/python/csrc/mutable-fst.h"
 #include "kaldifst/python/csrc/pre-determinize.h"
+#include "kaldifst/python/csrc/shortest-path.h"
 #include "kaldifst/python/csrc/symbol-table.h"
 #include "kaldifst/python/csrc/table-matcher.h"
 #include "kaldifst/python/csrc/vector-fst.h"
@@ -65,6 +67,8 @@ PYBIND11_MODULE(_kaldifst, m) {
   PybindContextFst(&m);
 
   PybindKaldiTable(m);
+  PybindLatticeUtils(&m);
+  PybindShortestPath(&m);
 }
 
 }  // namespace kaldifst

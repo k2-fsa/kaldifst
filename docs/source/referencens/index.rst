@@ -59,3 +59,18 @@ Papers
 - `Allauzen, Cyril, et al. "OpenFst: A General and Efficient Weighted Finite-State Transducer Library." <https://huggingface.co/csukuangfj/fst-tutorials/resolve/main/ciaa.pdf>`_
 
   - `<https://www.openfst.org/twiki/pub/FST/FstBackground/ciaa.pdf>`_
+
+- `Mohri, Mehryar. "Finite-state transducers in language and speech processing." Computational linguistics 23.2 (1997): 269-311. <https://cs.nyu.edu/~mohri/pub/cl1.pdf>`_
+
+Text normalization
+------------------
+
+- `Mohri, Mehryar, Fernando Pereira, and Michael Riley. "Weighted automata in text and speech processing." arXiv preprint cs/0503077 (2005). <https://arxiv.org/abs/cs/0503077>`_
+
+- `<https://github.com/NVIDIA/NeMo-text-processing/blob/main/tutorials/WFST_Tutorial.ipynb>`_
+
+- `Ebden, Peter, and Richard Sproat. "The Kestrel TTS text normalization system." Natural Language Engineering 21.3 (2015): 333-353. <https://huggingface.co/csukuangfj/papers/resolve/main/The%20Kestrel%20TTS%20text%20normalization%20system.pdf>`_
+
+- K. Gorman & R. Sproat. 2021. Finite-State Text Processing . Morgan & Claypool.
+
+  A sample PDF can be found at `<https://www.morganclaypoolpublishers.com/catalog_Orig/samples/9781636391144_sample.pdf>`_

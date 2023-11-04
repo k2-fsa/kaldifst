@@ -25,6 +25,7 @@ source/python_api/api.rst:
 	$(MAKE) -C ./source/quick_start/code
 	$(MAKE) -C ./source/convert-k2-to-openfst/code
 	$(MAKE) -C ./source/read-write-ark-scp/code
+	$(MAKE) -C ./source/lattice/code
 
 
 clean:

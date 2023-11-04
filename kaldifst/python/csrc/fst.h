@@ -159,7 +159,17 @@ void PybindFst(py::module &m,  // NOLINT
            "(3) If a MutableFst is copied and then mutated, then the original"
            "\n"
            "is unmodified and vice versa (often by a copy-on-write on the \n"
-           "initial mutation, which may not be constant time).",
+           "initial mutation, which may not be constant time).\n"
+           "\n"
+           "  .. warning::\n\n"
+           "      To get a deep copy of an FST, e.g., a deep copy of Lattice "
+           "``lat1``, please use:\n\n"
+           "      .. code-block:: python\n\n"
+           "          lat2 = kaldifst.Lattice(lat1)\n\n\n"
+           "\n"
+           "      To get deep copy of StdVectorFst ``fst1``, please use\n\n"
+           "      .. code-block:: python\n\n"
+           "          fst2 = kaldifst.StdVectorFst(fst1)\n\n",
            py::arg("safe") = false, py::return_value_policy::take_ownership)
       .def_static(
           "read", overload_cast_<const fst::string &>()(&PyClass::Read),
