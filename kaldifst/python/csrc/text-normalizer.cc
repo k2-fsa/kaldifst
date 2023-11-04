@@ -14,8 +14,10 @@ void PybindTextNormalizer(py::module *m) {
   using PyClass = TextNormalizer;
   py::class_<PyClass>(*m, "TextNormalizer")
       .def(py::init<const std::string &>(), py::arg("rule"))
-      .def("normalize", &PyClass::Normalize)
-      .def("__call__", &PyClass::Normalize);
+      .def("normalize", &PyClass::Normalize, py::arg("s"),
+           py::arg("remove_output_zero") = true)
+      .def("__call__", &PyClass::Normalize, py::arg("s"),
+           py::arg("remove_output_zero") = true);
 }
 
 }  // namespace kaldifst

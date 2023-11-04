@@ -48,6 +48,44 @@ static fst::StdVectorFst StringToFst(const std::string &text) {
   return ans;
 }
 
+static std::string FstToString(const fst::StdVectorFst &fst,
+                               bool remove_output_zero) {
+  std::string ans;
+
+  using Weight = typename fst::StdArc::Weight;
+  using Arc = fst::StdArc;
+  auto s = fst.Start();
+  if (s == fst::kNoStateId) {
+    // this is an empty FST
+    return "";
+  }
+  while (fst.Final(s) == Weight::Zero()) {
+    fst::ArcIterator<fst::Fst<Arc>> aiter(fst, s);
+    if (aiter.Done()) {
+      // not reached final.
+      return "";
+    }
+
+    const auto &arc = aiter.Value();
+    if (arc.olabel != 0 || !remove_output_zero) {
+      ans.push_back(arc.olabel);
+    }
+
+    s = arc.nextstate;
+    if (s == fst::kNoStateId) {
+      // Transition to invalid state";
+      return "";
+    }
+
+    aiter.Next();
+    if (!aiter.Done()) {
+      // not a linear FST
+      return "";
+    }
+  }
+  return ans;
+}
+
 TextNormalizer::TextNormalizer(const std::string &rule) {
   rule_ = std::unique_ptr<fst::StdConstFst>(
       CastOrConvertToConstFst(fst::ReadFstKaldiGeneric(rule)));
@@ -56,7 +94,8 @@ TextNormalizer::TextNormalizer(const std::string &rule) {
 TextNormalizer::TextNormalizer(std::unique_ptr<fst::StdConstFst> rule)
     : rule_(std::move(rule)) {}
 
-std::string TextNormalizer::Normalize(const std::string &s) const {
+std::string TextNormalizer::Normalize(const std::string &s,
+                                      bool remove_output_zero /*=true*/) const {
   // Step 1: Convert the input text into an FST
   fst::StdVectorFst text = StringToFst(s);
 
@@ -68,13 +107,7 @@ std::string TextNormalizer::Normalize(const std::string &s) const {
   fst::StdVectorFst one_best;
   fst::ShortestPath(composed_fst, &one_best, 1);
 
-  // Step 4: Concatenate the output labels of the best path
-  fst::StringPrinter<fst::StdArc> string_printer(fst::StringTokenType::BYTE);
-
-  std::string normalized;
-  string_printer(one_best, &normalized);
-
-  return normalized;
+  return FstToString(one_best, remove_output_zero);
 }
 
 }  // namespace kaldifst
