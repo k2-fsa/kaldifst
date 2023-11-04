@@ -9,6 +9,8 @@
 
 #include <assert.h>
 
+#include <vector>
+
 namespace fst {
 
 template <class Weight, class ScaleFloat>

@@ -5,6 +5,7 @@
 #ifndef KALDIFST_PYTHON_CSRC_FSTDRAW_H_
 #define KALDIFST_PYTHON_CSRC_FSTDRAW_H_
 
+#include <memory>
 #include <string>
 
 #include "fst/script/draw.h"
