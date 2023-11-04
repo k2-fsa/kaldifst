@@ -29,6 +29,7 @@ pybind11_add_module(_kaldifst
   shortest-path.cc
   symbol-table.cc
   table-matcher.cc
+  text-normalizer.cc
   vector-fst.cc
 )
 target_link_libraries(_kaldifst PRIVATE kaldifst_core fstscript)

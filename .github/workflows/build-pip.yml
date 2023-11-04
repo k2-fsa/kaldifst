@@ -39,6 +39,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.os }}-${{ matrix.python-version }}
+
       # see https://github.com/microsoft/setup-msbuild
       - name: Add msbuild to PATH
         if: startsWith(matrix.os, 'windows')
@@ -52,6 +57,10 @@ jobs:
       - name: Build
         shell: bash
         run: |
+          export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          cmake --version
+
           python3 -m pip install -U pip wheel numpy
           python3 setup.py bdist_wheel
           ls -lh dist

@@ -8,6 +8,7 @@ from _kaldifst import (
     StdFst,
     StdVectorFst,
     SymbolTable,
+    TextNormalizer,
     TropicalWeight,
     add_self_loops,
     arcsort,
@@ -30,8 +31,8 @@ from _kaldifst import (
     plus,
     reverse,
     rmepsilon,
-    times,
     shortest_path,
+    times,
 )
 
 from .iterator import ArcIterator, StateIterator

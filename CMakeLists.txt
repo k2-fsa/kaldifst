@@ -13,7 +13,7 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-set(KALDIFST_VERSION "1.7.6")
+set(KALDIFST_VERSION "1.7.7")
 
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "No CMAKE_BUILD_TYPE given, default to Release")
@@ -52,11 +52,15 @@ set(CMAKE_INSTALL_RPATH ${kaldifst_rpath_origin})
 set(CMAKE_BUILD_RPATH ${kaldifst_rpath_origin})
 
 
-set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ version to be used.")
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ version to be used.")
+endif()
+
+message(STATUS "C++ Standard version: ${CMAKE_CXX_STANDARD}")
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-
 
 if(WIN32)
   set(disabled_warnings

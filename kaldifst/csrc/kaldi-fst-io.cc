@@ -99,6 +99,21 @@ VectorFst<StdArc> *CastOrConvertToVectorFst(Fst<StdArc> *fst) {
   }
 }
 
+ConstFst<StdArc> *CastOrConvertToConstFst(Fst<StdArc> *fst) {
+  // This version currently supports ConstFst<StdArc> or VectorFst<StdArc>
+  std::string real_type = fst->Type();
+  KALDIFST_ASSERT(real_type == "vector" || real_type == "const");
+  if (real_type == "const") {
+    return dynamic_cast<ConstFst<StdArc> *>(fst);
+  } else {
+    // As the 'fst' can't cast to VectorFst, we create a new
+    // VectorFst<StdArc> initialized by 'fst', and delete 'fst'.
+    ConstFst<StdArc> *new_fst = new ConstFst<StdArc>(*fst);
+    delete fst;
+    return new_fst;
+  }
+}
+
 void ReadFstKaldi(std::string rxfilename, fst::StdVectorFst *ofst) {
   fst::StdVectorFst *fst = ReadFstKaldi(rxfilename);
   *ofst = *fst;
