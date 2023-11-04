@@ -469,6 +469,9 @@ name
 
 .. autoattribute:: kaldifst.SymbolTable.name
 
+TextNormalizer
+--------------
+
 TropicalWeight
 --------------
 
