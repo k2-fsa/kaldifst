@@ -17,6 +17,7 @@ class TextNormalizer {
  public:
   // Path to rule.fst
   explicit TextNormalizer(const std::string &rule);
+  explicit TextNormalizer(std::istream &is);
 
   explicit TextNormalizer(std::unique_ptr<fst::StdConstFst> rule);
 
