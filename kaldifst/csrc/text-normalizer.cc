@@ -90,6 +90,15 @@ TextNormalizer::TextNormalizer(const std::string &rule) {
       CastOrConvertToConstFst(fst::ReadFstKaldiGeneric(rule)));
 }
 
+TextNormalizer::TextNormalizer(std::istream &is) {
+  fst::StdVectorFst *fst = new fst::StdVectorFst;
+  bool binary = true;
+  ReadFstKaldi(is, binary, fst);
+
+  // fst is released inside CastOrConvertToConstFst()
+  rule_ = std::unique_ptr<fst::StdConstFst>(CastOrConvertToConstFst(fst));
+}
+
 TextNormalizer::TextNormalizer(std::unique_ptr<fst::StdConstFst> rule)
     : rule_(std::move(rule)) {}
 
