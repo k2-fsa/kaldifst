@@ -31,6 +31,7 @@ from _kaldifst import (
     plus,
     reverse,
     rmepsilon,
+    scale_lattice,
     shortest_path,
     times,
 )

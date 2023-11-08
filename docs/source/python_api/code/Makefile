@@ -16,6 +16,8 @@ all:
 	$(MAKE) -C minimize_encoded
 	$(MAKE) -C reverse
 	$(MAKE) -C rmepsilon
+	$(MAKE) -C shortest_path
+	$(MAKE) -C scale_lattice
 
 clean:
 	$(MAKE) -C add_self_loops clean
@@ -35,3 +37,4 @@ clean:
 	$(MAKE) -C reverse clean
 	$(MAKE) -C rmepsilon clean
 	$(MAKE) -C shortest_path clean
+	$(MAKE) -C scale_lattice clean
