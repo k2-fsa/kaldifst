@@ -33,6 +33,11 @@ connect
 
 .. autofunction:: connect
 
+convert_nbest_to_vector
+-----------------------
+
+.. autofunction:: convert_nbest_to_vector
+
 determinize
 -----------
 
@@ -78,6 +83,11 @@ lattice_scale
 
 .. autofunction:: lattice_scale
 
+lattice_to_nbest
+----------------
+
+.. autofunction:: lattice_to_nbest
+
 make_linear_acceptor
 --------------------
 
@@ -107,6 +117,11 @@ rmepsilon
 ---------
 
 .. autofunction:: rmepsilon
+
+scale_lattice
+-------------
+
+.. autofunction:: scale_lattice
 
 shortest_path
 -------------

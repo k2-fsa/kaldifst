@@ -58,6 +58,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#compose">compose</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compose-context">compose_context</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#connect">connect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert-nbest-to-vector">convert_nbest_to_vector</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#determinize">determinize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#determinize-star">determinize_star</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#divide">divide</a></li>
@@ -67,12 +68,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#info">info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#invert">invert</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lattice-scale">lattice_scale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lattice-to-nbest">lattice_to_nbest</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#make-linear-acceptor">make_linear_acceptor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minimize">minimize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minimize-encoded">minimize_encoded</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#plus">plus</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#reverse">reverse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rmepsilon">rmepsilon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scale-lattice">scale_lattice</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#shortest-path">shortest_path</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#times">times</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#arciterator">ArcIterator</a><ul>
@@ -866,6 +869,278 @@ successful paths.</p>
 </dd></dl>
 
 </section>
+<section id="convert-nbest-to-vector">
+<h2>convert_nbest_to_vector<a class="headerlink" href="#convert-nbest-to-vector" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.convert_nbest_to_vector">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">convert_nbest_to_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.convert_nbest_to_vector" title="Permalink to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>convert_nbest_to_vector(fst: _kaldifst.StdFst) -&gt; List[_kaldifst.StdVectorFst]</p></li>
+</ol>
+<p>This function converts an FST with a special structure, which is
+output by the OpenFst functions ShortestPath and RandGen, and converts
+them into a list of separate FSTs.  This special structure is that
+the only state that has more than one (arcs-out or final-prob) is the
+start state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fst</strong> – The input fst, which should be returned by <code class="docutils literal notranslate"><span class="pre">shortestpath</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a list of linear FSTs.</p>
+</dd>
+</dl>
+<p><strong>Example for a StdVectorFst</strong></p>
+<div class="literal-block-wrapper docutils container" id="id67">
+<div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">convert_nbest_to_vector for a StdVectorFst</span><a class="headerlink" href="#id67" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a 0.1</span>
+<span class="linenos"> 9</span><span class="s2">0 2 b 0.1</span>
+<span class="linenos">10</span><span class="s2">1 3 c 0.4</span>
+<span class="linenos">11</span><span class="s2">1 3 d 0.2</span>
+<span class="linenos">12</span><span class="s2">2 3 c 0.3</span>
+<span class="linenos">13</span><span class="s2">2 3 d 0.2</span>
+<span class="linenos">14</span><span class="s2">3 0</span>
+<span class="linenos">15</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">21</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="n">a</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">a</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="n">a_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">28</span><span class="n">a_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">a_dot</span><span class="p">)</span>
+<span class="linenos">29</span><span class="n">a_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst.svg&quot;</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="n">nbest_3</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos">32</span><span class="n">nbest_3_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">33</span><span class="n">nbest_3_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_3_dot</span><span class="p">)</span>
+<span class="linenos">34</span><span class="n">nbest_3_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">nbest_list</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">convert_nbest_to_vector</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">)</span>
+<span class="linenos">37</span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">nbest_list</span><span class="p">:</span>
+<span class="linenos">38</span>    <span class="n">b</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">input_symbols</span>
+<span class="linenos">39</span>    <span class="n">b</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">output_symbols</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="n">nbest_list_0_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">42</span><span class="n">nbest_list_0_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_0_dot</span><span class="p">)</span>
+<span class="linenos">43</span><span class="n">nbest_list_0_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best-0.svg&quot;</span><span class="p">)</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="n">nbest_list_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">46</span><span class="n">nbest_list_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_1_dot</span><span class="p">)</span>
+<span class="linenos">47</span><span class="n">nbest_list_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best-1.svg&quot;</span><span class="p">)</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span><span class="n">nbest_list_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">50</span><span class="n">nbest_list_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_2_dot</span><span class="p">)</span>
+<span class="linenos">51</span><span class="n">nbest_list_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best-2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id68" style="width: 600px">
+<img alt="vector-fst.svg" src="../_images/vector-fst.svg" /><figcaption>
+<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Visualization of vector-fst.svg</span><a class="headerlink" href="#id68" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id69" style="width: 600px">
+<img alt="vector-fst-3best.svg" src="../_images/vector-fst-3best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Visualization of vector-fst-3best.svg</span><a class="headerlink" href="#id69" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id70" style="width: 600px">
+<img alt="vector-fst-3best-0.svg" src="../_images/vector-fst-3best-0.svg" /><figcaption>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Visualization of vector-fst-3best-0.svg</span><a class="headerlink" href="#id70" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id71" style="width: 600px">
+<img alt="vector-fst-3best-1.svg" src="../_images/vector-fst-3best-1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Visualization of vector-fst-3best-1.svg</span><a class="headerlink" href="#id71" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id72" style="width: 600px">
+<img alt="vector-fst-3best-2.svg" src="../_images/vector-fst-3best-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Visualization of vector-fst-3best-2.svg</span><a class="headerlink" href="#id72" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="2">
+<li><p>convert_nbest_to_vector(fst: _kaldifst.LatticeFst) -&gt; List[_kaldifst.Lattice]</p></li>
+</ol>
+<p>This function converts an FST with a special structure, which is
+output by the OpenFst functions ShortestPath and RandGen, and converts
+them into a list of separate FSTs.  This special structure is that
+the only state that has more than one (arcs-out or final-prob) is the
+start state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fst</strong> – The input fst, which should be returned by <code class="docutils literal notranslate"><span class="pre">shortestpath</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a list of linear FSTs.</p>
+</dd>
+</dl>
+<p><strong>Example for a Lattice</strong></p>
+<div class="literal-block-wrapper docutils container" id="id73">
+<div class="code-block-caption"><span class="caption-number">Listing 21 </span><span class="caption-text">convert_nbest_to_vector for a Lattice</span><a class="headerlink" href="#id73" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos">  2</span>
+<span class="linenos">  3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos">  6</span>
+<span class="linenos">  7</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">()</span>
+<span class="linenos">  8</span><span class="n">s0</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">  9</span><span class="n">s1</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 10</span><span class="n">s2</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 11</span><span class="n">s3</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 12</span>
+<span class="linenos"> 13</span><span class="n">fst</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">s0</span>
+<span class="linenos"> 14</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 15</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos"> 16</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 17</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos"> 18</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos"> 19</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.08</span><span class="p">),</span>
+<span class="linenos"> 20</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 21</span>    <span class="p">),</span>
+<span class="linenos"> 22</span><span class="p">)</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 25</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos"> 26</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 27</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 28</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 29</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.07</span><span class="p">),</span>
+<span class="linenos"> 30</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 31</span>    <span class="p">),</span>
+<span class="linenos"> 32</span><span class="p">)</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 35</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 36</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 37</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 38</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 39</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.3</span><span class="p">),</span>
+<span class="linenos"> 40</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 41</span>    <span class="p">),</span>
+<span class="linenos"> 42</span><span class="p">)</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 45</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 46</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 47</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 48</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 49</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+<span class="linenos"> 50</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 51</span>    <span class="p">),</span>
+<span class="linenos"> 52</span><span class="p">)</span>
+<span class="linenos"> 53</span>
+<span class="linenos"> 54</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 55</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 56</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 57</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 58</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 59</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">),</span>
+<span class="linenos"> 60</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 61</span>    <span class="p">),</span>
+<span class="linenos"> 62</span><span class="p">)</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 65</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 66</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 67</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 68</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 69</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">),</span>
+<span class="linenos"> 70</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 71</span>    <span class="p">),</span>
+<span class="linenos"> 72</span><span class="p">)</span>
+<span class="linenos"> 73</span>
+<span class="linenos"> 74</span><span class="n">fst</span><span class="o">.</span><span class="n">set_final</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="o">.</span><span class="n">one</span><span class="p">)</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos"> 78</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 79</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 80</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 81</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 82</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos"> 85</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 86</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 87</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 88</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 89</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos"> 90</span>
+<span class="linenos"> 91</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos"> 92</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 95</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos"> 96</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice.svg&quot;</span><span class="p">)</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span><span class="n">nbest_3</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 99</span><span class="n">nbest_3_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">100</span><span class="n">nbest_3_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_3_dot</span><span class="p">)</span>
+<span class="linenos">101</span><span class="n">nbest_3_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span><span class="n">nbest_list</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">convert_nbest_to_vector</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">)</span>
+<span class="linenos">104</span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">nbest_list</span><span class="p">:</span>
+<span class="linenos">105</span>    <span class="n">b</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span>
+<span class="linenos">106</span>    <span class="n">b</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span><span class="n">nbest_list_0_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">109</span><span class="n">nbest_list_0_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_0_dot</span><span class="p">)</span>
+<span class="linenos">110</span><span class="n">nbest_list_0_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best-0.svg&quot;</span><span class="p">)</span>
+<span class="linenos">111</span>
+<span class="linenos">112</span><span class="n">nbest_list_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">113</span><span class="n">nbest_list_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_1_dot</span><span class="p">)</span>
+<span class="linenos">114</span><span class="n">nbest_list_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best-1.svg&quot;</span><span class="p">)</span>
+<span class="linenos">115</span>
+<span class="linenos">116</span><span class="n">nbest_list_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">117</span><span class="n">nbest_list_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_2_dot</span><span class="p">)</span>
+<span class="linenos">118</span><span class="n">nbest_list_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best-2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id74" style="width: 600px">
+<img alt="lattice.svg" src="../_images/lattice1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Visualization of lattice.svg</span><a class="headerlink" href="#id74" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id75" style="width: 600px">
+<img alt="lattice-3best.svg" src="../_images/lattice-3best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Visualization of lattice-3best.svg</span><a class="headerlink" href="#id75" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id76" style="width: 600px">
+<img alt="lattice-3best-0.svg" src="../_images/lattice-3best-0.svg" /><figcaption>
+<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Visualization of lattice-3best-0.svg</span><a class="headerlink" href="#id76" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id77" style="width: 600px">
+<img alt="lattice-3best-1.svg" src="../_images/lattice-3best-1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Visualization of lattice-3best-1.svg</span><a class="headerlink" href="#id77" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id78" style="width: 600px">
+<img alt="lattice-3best-2.svg" src="../_images/lattice-3best-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Visualization of lattice-3best-2.svg</span><a class="headerlink" href="#id78" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
+
+</section>
 <section id="determinize">
 <h2>determinize<a class="headerlink" href="#determinize" title="Permalink to this headline"></a></h2>
 <dl class="py function">
@@ -895,8 +1170,8 @@ subsequential transducer</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Determinize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id67">
-<div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id67" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id79">
+<div class="code-block-caption"><span class="caption-number">Listing 22 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id79" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -940,14 +1215,14 @@ subsequential transducer</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id68" style="width: 600px">
+<figure class="align-center" id="id80" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer.svg" /><figcaption>
-<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id68" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id80" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id69" style="width: 600px">
+<figure class="align-center" id="id81" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer22.svg" /><figcaption>
-<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id69" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id81" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -983,8 +1258,8 @@ by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Determinize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id70">
-<div class="code-block-caption"><span class="caption-number">Listing 21 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id70" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id82">
+<div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">Determinize a transducer.</span><a class="headerlink" href="#id82" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1028,14 +1303,14 @@ by reaching the ‘max-states’ limit, and a partial FST was generated.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id71" style="width: 600px">
+<figure class="align-center" id="id83" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer3.svg" /><figcaption>
-<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id71" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Visualization of transducer.svg (before determinization)</span><a class="headerlink" href="#id83" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id72" style="width: 600px">
+<figure class="align-center" id="id84" style="width: 600px">
 <img alt="transducer2.svg" src="../_images/transducer23.svg" /><figcaption>
-<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id72" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Visualization of transducer2.svg (after determinization)</span><a class="headerlink" href="#id84" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1099,8 +1374,8 @@ your browser. You can also share the URL to others.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Draw a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id73">
-<div class="code-block-caption"><span class="caption-number">Listing 22 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id73" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id85">
+<div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id85" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1135,8 +1410,8 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id74">
-<div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id74" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id86">
+<div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id86" title="Permalink to this code"></a></div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">digraph</span> <span class="n">FST</span> <span class="p">{</span>
 <span class="linenos"> 2</span><span class="n">rankdir</span> <span class="o">=</span> <span class="n">LR</span><span class="p">;</span>
 <span class="linenos"> 3</span><span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;8.5,11&quot;</span><span class="p">;</span>
@@ -1154,9 +1429,9 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id75" style="width: 600px">
+<figure class="align-center" id="id87" style="width: 600px">
 <img alt="fst.svg" src="../_images/fst2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id75" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id87" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple" start="2">
@@ -1198,8 +1473,8 @@ your browser. You can also share the URL to others.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Draw a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id76">
-<div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id76" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id88">
+<div class="code-block-caption"><span class="caption-number">Listing 26 </span><span class="caption-text">Draw a transducer.</span><a class="headerlink" href="#id88" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1234,8 +1509,8 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id77">
-<div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id77" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id89">
+<div class="code-block-caption"><span class="caption-number">Listing 27 </span><span class="caption-text">fst_dot.txt</span><a class="headerlink" href="#id89" title="Permalink to this code"></a></div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">digraph</span> <span class="n">FST</span> <span class="p">{</span>
 <span class="linenos"> 2</span><span class="n">rankdir</span> <span class="o">=</span> <span class="n">LR</span><span class="p">;</span>
 <span class="linenos"> 3</span><span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;8.5,11&quot;</span><span class="p">;</span>
@@ -1253,9 +1528,9 @@ your browser. You can also share the URL to others.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id78" style="width: 600px">
+<figure class="align-center" id="id90" style="width: 600px">
 <img alt="fst.svg" src="../_images/fst2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id78" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Visualization of fst.svg</span><a class="headerlink" href="#id90" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1290,8 +1565,8 @@ return False.</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Equal align</strong></p>
-<div class="literal-block-wrapper docutils container" id="id79">
-<div class="code-block-caption"><span class="caption-number">Listing 26 </span><span class="caption-text">Code for equal_align</span><a class="headerlink" href="#id79" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id91">
+<div class="code-block-caption"><span class="caption-number">Listing 28 </span><span class="caption-text">Code for equal_align</span><a class="headerlink" href="#id91" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1363,19 +1638,19 @@ return False.</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id80" style="width: 600px">
+<figure class="align-center" id="id92" style="width: 600px">
 <img alt="input.svg" src="../_images/input.svg" /><figcaption>
-<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Visualization of input.svg</span><a class="headerlink" href="#id80" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Visualization of input.svg</span><a class="headerlink" href="#id92" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id81" style="width: 600px">
+<figure class="align-center" id="id93" style="width: 600px">
 <img alt="first.svg" src="../_images/first.svg" /><figcaption>
-<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Visualization of first.svg</span><a class="headerlink" href="#id81" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 44 </span><span class="caption-text">Visualization of first.svg</span><a class="headerlink" href="#id93" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id82" style="width: 600px">
+<figure class="align-center" id="id94" style="width: 600px">
 <img alt="second.svg" src="../_images/second.svg" /><figcaption>
-<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Visualization of second.svg</span><a class="headerlink" href="#id82" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 45 </span><span class="caption-text">Visualization of second.svg</span><a class="headerlink" href="#id94" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1412,8 +1687,8 @@ case it outputs the symbol</p>
 </dd>
 </dl>
 <p><strong>Example 1: get_linear_symbol_sequence</strong></p>
-<div class="literal-block-wrapper docutils container" id="id83">
-<div class="code-block-caption"><span class="caption-number">Listing 27 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id83" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id95">
+<div class="code-block-caption"><span class="caption-number">Listing 29 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id95" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1470,8 +1745,8 @@ case it outputs the symbol</p>
 </dd>
 </dl>
 <p><strong>Example 1: get_linear_symbol_sequence</strong></p>
-<div class="literal-block-wrapper docutils container" id="id84">
-<div class="code-block-caption"><span class="caption-number">Listing 28 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id84" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id96">
+<div class="code-block-caption"><span class="caption-number">Listing 30 </span><span class="caption-text">Code for get_linear_symbol_sequence</span><a class="headerlink" href="#id96" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1547,8 +1822,8 @@ exchanging the FST’s input and output labels.</p>
 </dd>
 </dl>
 <p><strong>Example Invert a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id85">
-<div class="code-block-caption"><span class="caption-number">Listing 29 </span><span class="caption-text">Invert a transducer</span><a class="headerlink" href="#id85" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id97">
+<div class="code-block-caption"><span class="caption-number">Listing 31 </span><span class="caption-text">Invert a transducer</span><a class="headerlink" href="#id97" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1605,14 +1880,14 @@ exchanging the FST’s input and output labels.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id86" style="width: 600px">
+<figure class="align-center" id="id98" style="width: 600px">
 <img alt="before-invert.svg" src="../_images/before-invert.svg" /><figcaption>
-<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Visualization of before-invert.svg</span><a class="headerlink" href="#id86" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 46 </span><span class="caption-text">Visualization of before-invert.svg</span><a class="headerlink" href="#id98" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id87" style="width: 600px">
+<figure class="align-center" id="id99" style="width: 600px">
 <img alt="after-invert.svg" src="../_images/after-invert.svg" /><figcaption>
-<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Visualization of after-invert.svg</span><a class="headerlink" href="#id87" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 47 </span><span class="caption-text">Visualization of after-invert.svg</span><a class="headerlink" href="#id99" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1642,8 +1917,8 @@ and AM scale <code class="docutils literal notranslate"><span class="pre">amwt</
 </dd>
 </dl>
 <p><strong>Example 1: Return a matrix with lmwt=0.1, acwt=10.0</strong></p>
-<div class="literal-block-wrapper docutils container" id="id88">
-<div class="code-block-caption"><span class="caption-number">Listing 30 </span><span class="caption-text">Return a matrix with lmwt=0.1, acwt=10.0</span><a class="headerlink" href="#id88" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id100">
+<div class="code-block-caption"><span class="caption-number">Listing 32 </span><span class="caption-text">Return a matrix with lmwt=0.1, acwt=10.0</span><a class="headerlink" href="#id100" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos">2</span>
 <span class="linenos">3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1653,6 +1928,244 @@ and AM scale <code class="docutils literal notranslate"><span class="pre">amwt</
 </pre></div>
 </div>
 </div>
+</dd></dl>
+
+</section>
+<section id="lattice-to-nbest">
+<h2>lattice_to_nbest<a class="headerlink" href="#lattice-to-nbest" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.lattice_to_nbest">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">lattice_to_nbest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acoustic_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lm_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kaldifst.lattice_to_nbest" title="Permalink to this definition"></a></dt>
+<dd><p>Work out N-best paths in lattices</p>
+<p>It implements
+<a class="reference external" href="https://github.com/kaldi-asr/kaldi/blob/master/src/latbin/lattice-to-nbest.cc">https://github.com/kaldi-asr/kaldi/blob/master/src/latbin/lattice-to-nbest.cc</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Lattice</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">StdVectorFst</span></code>]) – The input lattice.</p></li>
+<li><p><strong>acoustic_scale</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Scaling factor for acoustic likelihoods.</p></li>
+<li><p><strong>lm_scale</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Scaling factor for language model scores.</p></li>
+<li><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of distinct paths.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Lattice</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">StdVectorFst</span></code>]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Return a list of linear FSTs.</p>
+</dd>
+</dl>
+<p><strong>Example for a StdVectorFst</strong></p>
+<div class="literal-block-wrapper docutils container" id="id101">
+<div class="code-block-caption"><span class="caption-number">Listing 33 </span><span class="caption-text">lattice_to_nbest for a StdVectorFst</span><a class="headerlink" href="#id101" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="s2">0 1 a 0.1</span>
+<span class="linenos"> 9</span><span class="s2">0 2 b 0.1</span>
+<span class="linenos">10</span><span class="s2">1 3 c 0.4</span>
+<span class="linenos">11</span><span class="s2">1 3 d 0.2</span>
+<span class="linenos">12</span><span class="s2">2 3 c 0.3</span>
+<span class="linenos">13</span><span class="s2">2 3 d 0.2</span>
+<span class="linenos">14</span><span class="s2">3 0</span>
+<span class="linenos">15</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">21</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="n">a</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">a</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="n">a_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">28</span><span class="n">a_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">a_dot</span><span class="p">)</span>
+<span class="linenos">29</span><span class="n">a_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst.svg&quot;</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="n">nbest_list</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">lattice_to_nbest</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos">32</span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">nbest_list</span><span class="p">:</span>
+<span class="linenos">33</span>    <span class="n">b</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">input_symbols</span>
+<span class="linenos">34</span>    <span class="n">b</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">output_symbols</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="n">nbest_list_0_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">37</span><span class="n">nbest_list_0_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_0_dot</span><span class="p">)</span>
+<span class="linenos">38</span><span class="n">nbest_list_0_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best-0.svg&quot;</span><span class="p">)</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="n">nbest_list_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">41</span><span class="n">nbest_list_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_1_dot</span><span class="p">)</span>
+<span class="linenos">42</span><span class="n">nbest_list_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best-1.svg&quot;</span><span class="p">)</span>
+<span class="linenos">43</span>
+<span class="linenos">44</span><span class="n">nbest_list_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">45</span><span class="n">nbest_list_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_2_dot</span><span class="p">)</span>
+<span class="linenos">46</span><span class="n">nbest_list_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best-2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id102" style="width: 600px">
+<img alt="vector-fst.svg" src="../_images/vector-fst1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 48 </span><span class="caption-text">Visualization of vector-fst.svg</span><a class="headerlink" href="#id102" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id103" style="width: 600px">
+<img alt="vector-fst-3best-0.svg" src="../_images/vector-fst-3best-01.svg" /><figcaption>
+<p><span class="caption-number">Fig. 49 </span><span class="caption-text">Visualization of vector-fst-3best-0.svg</span><a class="headerlink" href="#id103" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id104" style="width: 600px">
+<img alt="vector-fst-3best-1.svg" src="../_images/vector-fst-3best-11.svg" /><figcaption>
+<p><span class="caption-number">Fig. 50 </span><span class="caption-text">Visualization of vector-fst-3best-1.svg</span><a class="headerlink" href="#id104" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id105" style="width: 600px">
+<img alt="vector-fst-3best-2.svg" src="../_images/vector-fst-3best-21.svg" /><figcaption>
+<p><span class="caption-number">Fig. 51 </span><span class="caption-text">Visualization of vector-fst-3best-2.svg</span><a class="headerlink" href="#id105" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Example for a Lattice</strong></p>
+<div class="literal-block-wrapper docutils container" id="id106">
+<div class="code-block-caption"><span class="caption-number">Listing 34 </span><span class="caption-text">lattice_to_nbest for a Lattice</span><a class="headerlink" href="#id106" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos">  2</span>
+<span class="linenos">  3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos">  6</span>
+<span class="linenos">  7</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">()</span>
+<span class="linenos">  8</span><span class="n">s0</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">  9</span><span class="n">s1</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 10</span><span class="n">s2</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 11</span><span class="n">s3</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 12</span>
+<span class="linenos"> 13</span><span class="n">fst</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">s0</span>
+<span class="linenos"> 14</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 15</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos"> 16</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 17</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos"> 18</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos"> 19</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.08</span><span class="p">),</span>
+<span class="linenos"> 20</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 21</span>    <span class="p">),</span>
+<span class="linenos"> 22</span><span class="p">)</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 25</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos"> 26</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 27</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 28</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 29</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.07</span><span class="p">),</span>
+<span class="linenos"> 30</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 31</span>    <span class="p">),</span>
+<span class="linenos"> 32</span><span class="p">)</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 35</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 36</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 37</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 38</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 39</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.3</span><span class="p">),</span>
+<span class="linenos"> 40</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 41</span>    <span class="p">),</span>
+<span class="linenos"> 42</span><span class="p">)</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 45</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 46</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 47</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 48</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 49</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+<span class="linenos"> 50</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 51</span>    <span class="p">),</span>
+<span class="linenos"> 52</span><span class="p">)</span>
+<span class="linenos"> 53</span>
+<span class="linenos"> 54</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 55</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 56</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 57</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 58</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 59</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">),</span>
+<span class="linenos"> 60</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 61</span>    <span class="p">),</span>
+<span class="linenos"> 62</span><span class="p">)</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 65</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 66</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 67</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 68</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 69</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">),</span>
+<span class="linenos"> 70</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 71</span>    <span class="p">),</span>
+<span class="linenos"> 72</span><span class="p">)</span>
+<span class="linenos"> 73</span>
+<span class="linenos"> 74</span><span class="n">fst</span><span class="o">.</span><span class="n">set_final</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="o">.</span><span class="n">one</span><span class="p">)</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos"> 78</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 79</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 80</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 81</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 82</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos"> 85</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 86</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 87</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 88</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 89</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos"> 90</span>
+<span class="linenos"> 91</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos"> 92</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 95</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos"> 96</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice.svg&quot;</span><span class="p">)</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span><span class="n">nbest_list</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">lattice_to_nbest</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 99</span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">nbest_list</span><span class="p">:</span>
+<span class="linenos">100</span>    <span class="n">b</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span>
+<span class="linenos">101</span>    <span class="n">b</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span><span class="n">nbest_list_0_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">104</span><span class="n">nbest_list_0_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_0_dot</span><span class="p">)</span>
+<span class="linenos">105</span><span class="n">nbest_list_0_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best-0.svg&quot;</span><span class="p">)</span>
+<span class="linenos">106</span>
+<span class="linenos">107</span><span class="n">nbest_list_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">108</span><span class="n">nbest_list_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_1_dot</span><span class="p">)</span>
+<span class="linenos">109</span><span class="n">nbest_list_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best-1.svg&quot;</span><span class="p">)</span>
+<span class="linenos">110</span>
+<span class="linenos">111</span><span class="n">nbest_list_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_list</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">112</span><span class="n">nbest_list_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_list_2_dot</span><span class="p">)</span>
+<span class="linenos">113</span><span class="n">nbest_list_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best-2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id107" style="width: 600px">
+<img alt="lattice.svg" src="../_images/lattice2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 52 </span><span class="caption-text">Visualization of lattice.svg</span><a class="headerlink" href="#id107" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id108" style="width: 600px">
+<img alt="lattice-3best-0.svg" src="../_images/lattice-3best-01.svg" /><figcaption>
+<p><span class="caption-number">Fig. 53 </span><span class="caption-text">Visualization of lattice-3best-0.svg</span><a class="headerlink" href="#id108" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id109" style="width: 600px">
+<img alt="lattice-3best-1.svg" src="../_images/lattice-3best-11.svg" /><figcaption>
+<p><span class="caption-number">Fig. 54 </span><span class="caption-text">Visualization of lattice-3best-1.svg</span><a class="headerlink" href="#id109" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id110" style="width: 600px">
+<img alt="lattice-3best-2.svg" src="../_images/lattice-3best-21.svg" /><figcaption>
+<p><span class="caption-number">Fig. 55 </span><span class="caption-text">Visualization of lattice-3best-2.svg</span><a class="headerlink" href="#id110" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 </dd></dl>
 
 </section>
@@ -1672,8 +2185,8 @@ ilabel == olabel for each arc.</p>
 </dd>
 </dl>
 <p><strong>Example 1: Build a linear acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id89">
-<div class="code-block-caption"><span class="caption-number">Listing 31 </span><span class="caption-text">Example of make_linear_acceptor()</span><a class="headerlink" href="#id89" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id111">
+<div class="code-block-caption"><span class="caption-number">Listing 35 </span><span class="caption-text">Example of make_linear_acceptor()</span><a class="headerlink" href="#id111" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">graphviz</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">kaldifst</span>
@@ -1697,9 +2210,9 @@ ilabel == olabel for each arc.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id90" style="width: 600px">
+<figure class="align-center" id="id112" style="width: 600px">
 <img alt="acceptor.svg" src="../_images/acceptor3.svg" /><figcaption>
-<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Visualization of acceptor.svg</span><a class="headerlink" href="#id90" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 56 </span><span class="caption-text">Visualization of acceptor.svg</span><a class="headerlink" href="#id112" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1731,8 +2244,8 @@ True to minimize non-deterministic FSTs</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Minimize an acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id91">
-<div class="code-block-caption"><span class="caption-number">Listing 32 </span><span class="caption-text">Minimize an acceptor</span><a class="headerlink" href="#id91" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id113">
+<div class="code-block-caption"><span class="caption-number">Listing 36 </span><span class="caption-text">Minimize an acceptor</span><a class="headerlink" href="#id113" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1783,19 +2296,19 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id92" style="width: 600px">
+<figure class="align-center" id="id114" style="width: 600px">
 <img alt="acceptor.svg" src="../_images/acceptor4.svg" /><figcaption>
-<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Visualization of acceptor.svg (before minimize)</span><a class="headerlink" href="#id92" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 57 </span><span class="caption-text">Visualization of acceptor.svg (before minimize)</span><a class="headerlink" href="#id114" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id93" style="width: 600px">
+<figure class="align-center" id="id115" style="width: 600px">
 <img alt="acceptor-minimized.svg" src="../_images/acceptor-minimized.svg" /><figcaption>
-<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Visualization of acceptor-minimized.svg (after minimize)</span><a class="headerlink" href="#id93" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 58 </span><span class="caption-text">Visualization of acceptor-minimized.svg (after minimize)</span><a class="headerlink" href="#id115" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2: Minimize a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id94">
-<div class="code-block-caption"><span class="caption-number">Listing 33 </span><span class="caption-text">Minimize a transducer</span><a class="headerlink" href="#id94" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id116">
+<div class="code-block-caption"><span class="caption-number">Listing 37 </span><span class="caption-text">Minimize a transducer</span><a class="headerlink" href="#id116" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1857,14 +2370,14 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id95" style="width: 600px">
+<figure class="align-center" id="id117" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer4.svg" /><figcaption>
-<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Visualization of transducer.svg (before minimize)</span><a class="headerlink" href="#id95" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 59 </span><span class="caption-text">Visualization of transducer.svg (before minimize)</span><a class="headerlink" href="#id117" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id96" style="width: 600px">
+<figure class="align-center" id="id118" style="width: 600px">
 <img alt="transducer-minimized.svg" src="../_images/transducer-minimized.svg" /><figcaption>
-<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Visualization of transducer-minimized.svg (after minimize)</span><a class="headerlink" href="#id96" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 60 </span><span class="caption-text">Visualization of transducer-minimized.svg (after minimize)</span><a class="headerlink" href="#id118" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -1901,8 +2414,8 @@ True to minimize non-deterministic FSTs</p></li>
 </dd>
 </dl>
 <p><strong>Example 1: Minimize encode an acceptor</strong></p>
-<div class="literal-block-wrapper docutils container" id="id97">
-<div class="code-block-caption"><span class="caption-number">Listing 34 </span><span class="caption-text">Minimize encode an acceptor</span><a class="headerlink" href="#id97" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id119">
+<div class="code-block-caption"><span class="caption-number">Listing 38 </span><span class="caption-text">Minimize encode an acceptor</span><a class="headerlink" href="#id119" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -1954,19 +2467,19 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id98" style="width: 600px">
+<figure class="align-center" id="id120" style="width: 600px">
 <img alt="acceptor.svg" src="../_images/acceptor5.svg" /><figcaption>
-<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Visualization of acceptor.svg (before minimize_encoded)</span><a class="headerlink" href="#id98" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 61 </span><span class="caption-text">Visualization of acceptor.svg (before minimize_encoded)</span><a class="headerlink" href="#id120" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id99" style="width: 600px">
+<figure class="align-center" id="id121" style="width: 600px">
 <img alt="acceptor-minimize-encoded.svg" src="../_images/acceptor-minimize-encoded.svg" /><figcaption>
-<p><span class="caption-number">Fig. 44 </span><span class="caption-text">Visualization of acceptor-minimize-encoded.svg (after minimize_encoded)</span><a class="headerlink" href="#id99" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 62 </span><span class="caption-text">Visualization of acceptor-minimize-encoded.svg (after minimize_encoded)</span><a class="headerlink" href="#id121" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2: Minimize encode a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id100">
-<div class="code-block-caption"><span class="caption-number">Listing 35 </span><span class="caption-text">Minimize encode a transducer</span><a class="headerlink" href="#id100" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id122">
+<div class="code-block-caption"><span class="caption-number">Listing 39 </span><span class="caption-text">Minimize encode a transducer</span><a class="headerlink" href="#id122" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2028,14 +2541,14 @@ True to minimize non-deterministic FSTs</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id101" style="width: 600px">
+<figure class="align-center" id="id123" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer5.svg" /><figcaption>
-<p><span class="caption-number">Fig. 45 </span><span class="caption-text">Visualization of transducer.svg (before minimize_encoded)</span><a class="headerlink" href="#id101" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 63 </span><span class="caption-text">Visualization of transducer.svg (before minimize_encoded)</span><a class="headerlink" href="#id123" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id102" style="width: 600px">
+<figure class="align-center" id="id124" style="width: 600px">
 <img alt="transducer-minimize-encoded.svg" src="../_images/transducer-minimize-encoded.svg" /><figcaption>
-<p><span class="caption-number">Fig. 46 </span><span class="caption-text">Visualization of transducer-minimize-encoded.svg (after minimize encoded)</span><a class="headerlink" href="#id102" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 64 </span><span class="caption-text">Visualization of transducer-minimize-encoded.svg (after minimize encoded)</span><a class="headerlink" href="#id124" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -2075,8 +2588,8 @@ with weight a.Reverse().</p>
 </dd>
 </dl>
 <p><strong>Example 1 Revert an acceptor (require_superinitial=True)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id103">
-<div class="code-block-caption"><span class="caption-number">Listing 36 </span><span class="caption-text">Revert an acceptor using require_superinitial=True</span><a class="headerlink" href="#id103" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id125">
+<div class="code-block-caption"><span class="caption-number">Listing 40 </span><span class="caption-text">Revert an acceptor using require_superinitial=True</span><a class="headerlink" href="#id125" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2124,19 +2637,19 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id104" style="width: 600px">
+<figure class="align-center" id="id126" style="width: 600px">
 <img alt="acceptor-before-reverse.svg" src="../_images/acceptor-before-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 47 </span><span class="caption-text">Visualization of acceptor-before-reverse.svg</span><a class="headerlink" href="#id104" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 65 </span><span class="caption-text">Visualization of acceptor-before-reverse.svg</span><a class="headerlink" href="#id126" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id105" style="width: 600px">
+<figure class="align-center" id="id127" style="width: 600px">
 <img alt="acceptor-after-reverse.svg" src="../_images/acceptor-after-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 48 </span><span class="caption-text">Visualization of acceptor-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id105" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 66 </span><span class="caption-text">Visualization of acceptor-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id127" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 2 Revert an acceptor (require_superinitial=False)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id106">
-<div class="code-block-caption"><span class="caption-number">Listing 37 </span><span class="caption-text">Revert an acceptor using require_superinitial=False</span><a class="headerlink" href="#id106" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id128">
+<div class="code-block-caption"><span class="caption-number">Listing 41 </span><span class="caption-text">Revert an acceptor using require_superinitial=False</span><a class="headerlink" href="#id128" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2184,19 +2697,19 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id107" style="width: 600px">
+<figure class="align-center" id="id129" style="width: 600px">
 <img alt="acceptor-before-reverse-2.svg" src="../_images/acceptor-before-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 49 </span><span class="caption-text">Visualization of acceptor-before-reverse-2.svg</span><a class="headerlink" href="#id107" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 67 </span><span class="caption-text">Visualization of acceptor-before-reverse-2.svg</span><a class="headerlink" href="#id129" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id108" style="width: 600px">
+<figure class="align-center" id="id130" style="width: 600px">
 <img alt="acceptor-after-reverse-2.svg" src="../_images/acceptor-after-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 50 </span><span class="caption-text">Visualization of acceptor-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id108" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 68 </span><span class="caption-text">Visualization of acceptor-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id130" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 3 Revert a transducer  (require_superinitial=False)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id109">
-<div class="code-block-caption"><span class="caption-number">Listing 38 </span><span class="caption-text">Revert a transducer using require_superinitial=True</span><a class="headerlink" href="#id109" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id131">
+<div class="code-block-caption"><span class="caption-number">Listing 42 </span><span class="caption-text">Revert a transducer using require_superinitial=True</span><a class="headerlink" href="#id131" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2241,19 +2754,19 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id110" style="width: 600px">
+<figure class="align-center" id="id132" style="width: 600px">
 <img alt="transducer-before-reverse.svg" src="../_images/transducer-before-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 51 </span><span class="caption-text">Visualization of transducer-before-reverse.svg</span><a class="headerlink" href="#id110" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 69 </span><span class="caption-text">Visualization of transducer-before-reverse.svg</span><a class="headerlink" href="#id132" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id111" style="width: 600px">
+<figure class="align-center" id="id133" style="width: 600px">
 <img alt="transducer-after-reverse.svg" src="../_images/transducer-after-reverse.svg" /><figcaption>
-<p><span class="caption-number">Fig. 52 </span><span class="caption-text">Visualization of transducer-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id111" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 70 </span><span class="caption-text">Visualization of transducer-after-reverse.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=True</span></code></span><a class="headerlink" href="#id133" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Example 4 Revert a transducer (require_superinitial=False)</strong></p>
-<div class="literal-block-wrapper docutils container" id="id112">
-<div class="code-block-caption"><span class="caption-number">Listing 39 </span><span class="caption-text">Revert a transducer using require_superinitial=False</span><a class="headerlink" href="#id112" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id134">
+<div class="code-block-caption"><span class="caption-number">Listing 43 </span><span class="caption-text">Revert a transducer using require_superinitial=False</span><a class="headerlink" href="#id134" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2298,14 +2811,14 @@ with weight a.Reverse().</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id113" style="width: 600px">
+<figure class="align-center" id="id135" style="width: 600px">
 <img alt="transducer-before-reverse-2.svg" src="../_images/transducer-before-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 53 </span><span class="caption-text">Visualization of transducer-before-reverse-2.svg</span><a class="headerlink" href="#id113" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 71 </span><span class="caption-text">Visualization of transducer-before-reverse-2.svg</span><a class="headerlink" href="#id135" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id114" style="width: 600px">
+<figure class="align-center" id="id136" style="width: 600px">
 <img alt="transducer-after-reverse-2.svg" src="../_images/transducer-after-reverse-2.svg" /><figcaption>
-<p><span class="caption-number">Fig. 54 </span><span class="caption-text">Visualization of transducer-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id114" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 72 </span><span class="caption-text">Visualization of transducer-after-reverse-2.svg using <code class="docutils literal notranslate"><span class="pre">require_superinitial=False</span></code></span><a class="headerlink" href="#id136" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -2340,8 +2853,8 @@ that has no such epsilon transitions.</p>
 </dd>
 </dl>
 <p><strong>Example Remove epsilon of a transducer</strong></p>
-<div class="literal-block-wrapper docutils container" id="id115">
-<div class="code-block-caption"><span class="caption-number">Listing 40 </span><span class="caption-text">Remove epsilon of transducer</span><a class="headerlink" href="#id115" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id137">
+<div class="code-block-caption"><span class="caption-number">Listing 44 </span><span class="caption-text">Remove epsilon of transducer</span><a class="headerlink" href="#id137" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2393,14 +2906,217 @@ that has no such epsilon transitions.</p>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id116" style="width: 600px">
+<figure class="align-center" id="id138" style="width: 600px">
 <img alt="transducer.svg" src="../_images/transducer6.svg" /><figcaption>
-<p><span class="caption-number">Fig. 55 </span><span class="caption-text">Visualization of transducer.svg</span><a class="headerlink" href="#id116" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 73 </span><span class="caption-text">Visualization of transducer.svg</span><a class="headerlink" href="#id138" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id117" style="width: 600px">
+<figure class="align-center" id="id139" style="width: 600px">
 <img alt="transducer-after-rmepislon.svg" src="../_images/transducer-after-rmepsilon.svg" /><figcaption>
-<p><span class="caption-number">Fig. 56 </span><span class="caption-text">Visualization of transducer-after-rmepsilon.svg</span><a class="headerlink" href="#id117" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 74 </span><span class="caption-text">Visualization of transducer-after-rmepsilon.svg</span><a class="headerlink" href="#id139" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</dd></dl>
+
+</section>
+<section id="scale-lattice">
+<h2>scale_lattice<a class="headerlink" href="#scale-lattice" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.scale_lattice">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">scale_lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_kaldifst.LatticeMutableFst</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kaldifst.scale_lattice" title="Permalink to this definition"></a></dt>
+<dd><p>Scales the pairs of weights in <code class="docutils literal notranslate"><span class="pre">LatticeWeight</span></code> by
+viewing the pair <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span></code> as a 2-vector and pre-multiplying by
+the 2x2 matrix in “scale”.  E.g. typically scale would equal</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="w"> </span><span class="m">1</span><span class="w">   </span><span class="m">0</span><span class="p">;</span>
+<span class="w">  </span><span class="m">0</span><span class="w">  </span>acwt<span class="w"> </span><span class="o">]</span>
+</pre></div>
+</div>
+<p>if we want to scale the acoustics by <code class="docutils literal notranslate"><span class="pre">acwt</span></code>.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>out_value1 = scale[0][0]*in_value1 + scale[0][1]*in_value2</p></li>
+<li><p>out_value2 = scale[1][0]*in_value1 + scale[1][1]*in_value2</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scale</strong> – A list-of-list containing the weight</p></li>
+<li><p><strong>in_out</strong> – The lattice is changed in-place.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+<p>Example 1: Use a diagonal scale <code class="docutils literal notranslate"><span class="pre">[[0.1,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">10]]</span></code></p>
+<div class="literal-block-wrapper docutils container" id="id140">
+<div class="code-block-caption"><span class="caption-number">Listing 45 </span><span class="caption-text">Scale a lattice.</span><a class="headerlink" href="#id140" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">()</span>
+<span class="linenos"> 9</span><span class="n">s0</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">10</span><span class="n">s1</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">11</span><span class="n">s2</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">12</span><span class="n">s3</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="n">fst</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">s0</span>
+<span class="linenos">15</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">16</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos">17</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">18</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos">19</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos">20</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.2</span><span class="p">),</span>
+<span class="linenos">21</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos">22</span>    <span class="p">),</span>
+<span class="linenos">23</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">26</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos">27</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">28</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos">29</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos">30</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.4</span><span class="p">),</span>
+<span class="linenos">31</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos">32</span>    <span class="p">),</span>
+<span class="linenos">33</span><span class="p">)</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">36</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos">37</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">38</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="linenos">39</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+<span class="linenos">40</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.6</span><span class="p">),</span>
+<span class="linenos">41</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos">42</span>    <span class="p">),</span>
+<span class="linenos">43</span><span class="p">)</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">46</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos">47</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">48</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+<span class="linenos">49</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="linenos">50</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.8</span><span class="p">),</span>
+<span class="linenos">51</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos">52</span>    <span class="p">),</span>
+<span class="linenos">53</span><span class="p">)</span>
+<span class="linenos">54</span>
+<span class="linenos">55</span><span class="n">fst</span><span class="o">.</span><span class="n">set_final</span><span class="p">(</span>
+<span class="linenos">56</span>    <span class="n">state</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">57</span><span class="p">)</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">60</span><span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">61</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;before-scale.svg&quot;</span><span class="p">)</span>
+<span class="linenos">62</span>
+<span class="linenos">63</span><span class="n">scale</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">lattice_scale</span><span class="p">(</span><span class="n">lmwt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">acwt</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+<span class="linenos">64</span>
+<span class="linenos">65</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">scale_lattice</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">fst</span><span class="p">)</span>
+<span class="linenos">66</span>
+<span class="linenos">67</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">68</span><span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">69</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;after-scale.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id141" style="width: 600px">
+<img alt="before-scale.svg" src="../_images/before-scale.svg" /><figcaption>
+<p><span class="caption-number">Fig. 75 </span><span class="caption-text">Before scale.</span><a class="headerlink" href="#id141" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id142" style="width: 600px">
+<img alt="after-scale.svg" src="../_images/after-scale.svg" /><figcaption>
+<p><span class="caption-number">Fig. 76 </span><span class="caption-text">After scale using <code class="docutils literal notranslate"><span class="pre">[[0.1,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">10]]</span></code>.</span><a class="headerlink" href="#id142" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Example 2: Use a non-diagonal scale <code class="docutils literal notranslate"><span class="pre">[[0.1,</span> <span class="pre">1],</span> <span class="pre">[0.5,</span> <span class="pre">10]]</span></code></p>
+<div class="literal-block-wrapper docutils container" id="id143">
+<div class="code-block-caption"><span class="caption-number">Listing 46 </span><span class="caption-text">Scale a lattice.</span><a class="headerlink" href="#id143" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">()</span>
+<span class="linenos"> 9</span><span class="n">s0</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">10</span><span class="n">s1</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">11</span><span class="n">s2</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">12</span><span class="n">s3</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="n">fst</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">s0</span>
+<span class="linenos">15</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">16</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos">17</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">18</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos">19</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos">20</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.2</span><span class="p">),</span>
+<span class="linenos">21</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos">22</span>    <span class="p">),</span>
+<span class="linenos">23</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">26</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos">27</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">28</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos">29</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos">30</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.4</span><span class="p">),</span>
+<span class="linenos">31</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos">32</span>    <span class="p">),</span>
+<span class="linenos">33</span><span class="p">)</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">36</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos">37</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">38</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="linenos">39</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+<span class="linenos">40</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.6</span><span class="p">),</span>
+<span class="linenos">41</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos">42</span>    <span class="p">),</span>
+<span class="linenos">43</span><span class="p">)</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos">46</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos">47</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos">48</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+<span class="linenos">49</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="linenos">50</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.8</span><span class="p">),</span>
+<span class="linenos">51</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos">52</span>    <span class="p">),</span>
+<span class="linenos">53</span><span class="p">)</span>
+<span class="linenos">54</span>
+<span class="linenos">55</span><span class="n">fst</span><span class="o">.</span><span class="n">set_final</span><span class="p">(</span>
+<span class="linenos">56</span>    <span class="n">state</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">57</span><span class="p">)</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">60</span><span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">61</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;before-scale-2.svg&quot;</span><span class="p">)</span>
+<span class="linenos">62</span>
+<span class="linenos">63</span><span class="n">scale</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]</span>
+<span class="linenos">64</span>
+<span class="linenos">65</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">scale_lattice</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">fst</span><span class="p">)</span>
+<span class="linenos">66</span>
+<span class="linenos">67</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">68</span><span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos">69</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;after-scale-2.svg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<figure class="align-center" id="id144" style="width: 600px">
+<img alt="before-scale-2.svg" src="../_images/before-scale-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 77 </span><span class="caption-text">Before scale.</span><a class="headerlink" href="#id144" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id145" style="width: 600px">
+<img alt="after-scale-2.svg" src="../_images/after-scale-2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 78 </span><span class="caption-text">After scale using <code class="docutils literal notranslate"><span class="pre">[[0.1,</span> <span class="pre">1],</span> <span class="pre">[0.5,</span> <span class="pre">10]]</span></code>.</span><a class="headerlink" href="#id145" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
@@ -2429,12 +3145,12 @@ treated as regular symbols)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Return a VectorFst containing n paths.</p>
+<dd class="field-even"><p>Return a VectorFst containing n linear paths.</p>
 </dd>
 </dl>
-<p><strong>Example 1: StdVectorFst</strong></p>
-<div class="literal-block-wrapper docutils container" id="id118">
-<div class="code-block-caption"><span class="caption-number">Listing 41 </span><span class="caption-text">ShortestPath for a StdVectorFst</span><a class="headerlink" href="#id118" title="Permalink to this code"></a></div>
+<p><strong>Example: shortest_path of a StdVectorFst</strong></p>
+<div class="literal-block-wrapper docutils container" id="id146">
+<div class="code-block-caption"><span class="caption-number">Listing 47 </span><span class="caption-text">ShortestPath for a StdVectorFst</span><a class="headerlink" href="#id146" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
@@ -2482,47 +3198,30 @@ treated as regular symbols)</p></li>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id119" style="width: 600px">
-<img alt="vector-fst.svg" src="python_api/code/shortest_path/vector-fst.svg" /><figcaption>
-<p><span class="caption-number">Fig. 57 </span><span class="caption-text">Visualization of vector-fst.svg</span><a class="headerlink" href="#id119" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id147" style="width: 600px">
+<img alt="vector-fst.svg" src="../_images/vector-fst2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 79 </span><span class="caption-text">Visualization of vector-fst.svg</span><a class="headerlink" href="#id147" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id120" style="width: 600px">
-<img alt="vector-fst-1best.svg" src="python_api/code/shortest_path/vector-fst-1best.svg" /><figcaption>
-<p><span class="caption-number">Fig. 58 </span><span class="caption-text">Visualization of vector-fst-1best.svg</span><a class="headerlink" href="#id120" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id148" style="width: 600px">
+<img alt="vector-fst-1best.svg" src="../_images/vector-fst-1best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 80 </span><span class="caption-text">Visualization of vector-fst-1best.svg</span><a class="headerlink" href="#id148" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id121" style="width: 600px">
-<img alt="vector-fst-2best.svg" src="python_api/code/shortest_path/vector-fst-2best.svg" /><figcaption>
-<p><span class="caption-number">Fig. 59 </span><span class="caption-text">Visualization of vector-fst-2best.svg</span><a class="headerlink" href="#id121" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id149" style="width: 600px">
+<img alt="vector-fst-2best.svg" src="../_images/vector-fst-2best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 81 </span><span class="caption-text">Visualization of vector-fst-2best.svg</span><a class="headerlink" href="#id149" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id122" style="width: 600px">
-<img alt="vector-fst-3best.svg" src="python_api/code/shortest_path/vector-fst-3best.svg" /><figcaption>
-<p><span class="caption-number">Fig. 60 </span><span class="caption-text">Visualization of vector-fst-3best.svg</span><a class="headerlink" href="#id122" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<p><strong>Example 2: Lattice</strong></p>
-<div class="literal-block-wrapper docutils container" id="id123">
-<div class="code-block-caption"><span class="caption-number">Listing 42 </span><span class="caption-text">ShortestPath for a Lattice</span><a class="headerlink" href="#id123" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>
-</pre></div>
-</div>
-</div>
-<figure class="align-center" id="id124" style="width: 600px">
-<img alt="lattice.svg" src="python_api/code/shortest_path/lattice.svg" /><figcaption>
-<p><span class="caption-number">Fig. 61 </span><span class="caption-text">Visualization of lattice.svg</span><a class="headerlink" href="#id124" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id125" style="width: 600px">
-<img alt="lattice-nbest.svg" src="python_api/code/shortest_path/lattice-nbest.svg" /><figcaption>
-<p><span class="caption-number">Fig. 62 </span><span class="caption-text">Visualization of lattice-nbest.svg</span><a class="headerlink" href="#id125" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id150" style="width: 600px">
+<img alt="vector-fst-3best.svg" src="../_images/vector-fst-3best1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 82 </span><span class="caption-text">Visualization of vector-fst-3best.svg</span><a class="headerlink" href="#id150" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple" start="2">
 <li><p>shortest_path(fst: _kaldifst.LatticeFst, n: int = 1) -&gt; _kaldifst.Lattice</p></li>
 </ol>
-<p>This operation produces an FST containing the n-shortest paths in the input FST.</p>
+<p>This operation produces an FST containing the n-shortest paths in the input <code class="docutils literal notranslate"><span class="pre">Lattice</span></code>.</p>
 <p>The n -shortest paths are the n -lowest weight paths w.r.t. the natural semiring
 order. The single path that can be read from the ith of at most n transitions
 leaving the initial state of the resulting FST is the ith shortest path.</p>
@@ -2536,94 +3235,144 @@ treated as regular symbols)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Return a VectorFst containing n paths.</p>
+<dd class="field-even"><p>Return a Lattice containing n linear paths.</p>
 </dd>
 </dl>
-<p><strong>Example 1: StdVectorFst</strong></p>
-<div class="literal-block-wrapper docutils container" id="id126">
-<div class="code-block-caption"><span class="caption-number">Listing 43 </span><span class="caption-text">ShortestPath for a StdVectorFst</span><a class="headerlink" href="#id126" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="linenos"> 8</span><span class="s2">0 1 a 0.1</span>
-<span class="linenos"> 9</span><span class="s2">0 2 b 0.1</span>
-<span class="linenos">10</span><span class="s2">1 3 c 0.4</span>
-<span class="linenos">11</span><span class="s2">1 3 d 0.2</span>
-<span class="linenos">12</span><span class="s2">2 3 c 0.3</span>
-<span class="linenos">13</span><span class="s2">2 3 d 0.2</span>
-<span class="linenos">14</span><span class="s2">3 0</span>
-<span class="linenos">15</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="linenos">16</span>
-<span class="linenos">17</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
-<span class="linenos">18</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="linenos">19</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos">20</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="linenos">21</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="linenos">22</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="linenos">23</span>
-<span class="linenos">24</span><span class="n">a</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">isymbols</span><span class="o">=</span><span class="n">sym1</span><span class="p">)</span>
-<span class="linenos">25</span><span class="n">a</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
-<span class="linenos">26</span>
-<span class="linenos">27</span><span class="n">a_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">28</span><span class="n">a_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">a_dot</span><span class="p">)</span>
-<span class="linenos">29</span><span class="n">a_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst.svg&quot;</span><span class="p">)</span>
-<span class="linenos">30</span>
-<span class="linenos">31</span><span class="n">nbest_1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">32</span><span class="n">nbest_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">33</span><span class="n">nbest_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_1_dot</span><span class="p">)</span>
-<span class="linenos">34</span><span class="n">nbest_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-1best.svg&quot;</span><span class="p">)</span>
-<span class="linenos">35</span>
-<span class="linenos">36</span><span class="n">nbest_2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos">37</span><span class="n">nbest_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_2</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">38</span><span class="n">nbest_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_2_dot</span><span class="p">)</span>
-<span class="linenos">39</span><span class="n">nbest_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-2best.svg&quot;</span><span class="p">)</span>
-<span class="linenos">40</span>
-<span class="linenos">41</span><span class="n">nbest_3</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="linenos">42</span><span class="n">nbest_3_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">43</span><span class="n">nbest_3_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_3_dot</span><span class="p">)</span>
-<span class="linenos">44</span><span class="n">nbest_3_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;vector-fst-3best.svg&quot;</span><span class="p">)</span>
+<p><strong>Example: shortest_path of a Lattice</strong></p>
+<div class="literal-block-wrapper docutils container" id="id151">
+<div class="code-block-caption"><span class="caption-number">Listing 48 </span><span class="caption-text">ShortestPath for a Lattice</span><a class="headerlink" href="#id151" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos">  2</span>
+<span class="linenos">  3</span><span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos">  6</span>
+<span class="linenos">  7</span><span class="n">fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">Lattice</span><span class="p">()</span>
+<span class="linenos">  8</span><span class="n">s0</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos">  9</span><span class="n">s1</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 10</span><span class="n">s2</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 11</span><span class="n">s3</span> <span class="o">=</span> <span class="n">fst</span><span class="o">.</span><span class="n">add_state</span><span class="p">()</span>
+<span class="linenos"> 12</span>
+<span class="linenos"> 13</span><span class="n">fst</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">s0</span>
+<span class="linenos"> 14</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 15</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos"> 16</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 17</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos"> 18</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos"> 19</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.08</span><span class="p">),</span>
+<span class="linenos"> 20</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 21</span>    <span class="p">),</span>
+<span class="linenos"> 22</span><span class="p">)</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 25</span>    <span class="n">state</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span>
+<span class="linenos"> 26</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 27</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 28</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 29</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.07</span><span class="p">),</span>
+<span class="linenos"> 30</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 31</span>    <span class="p">),</span>
+<span class="linenos"> 32</span><span class="p">)</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 35</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 36</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 37</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 38</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 39</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.3</span><span class="p">),</span>
+<span class="linenos"> 40</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 41</span>    <span class="p">),</span>
+<span class="linenos"> 42</span><span class="p">)</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 45</span>    <span class="n">state</span><span class="o">=</span><span class="n">s1</span><span class="p">,</span>
+<span class="linenos"> 46</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 47</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 48</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 49</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+<span class="linenos"> 50</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 51</span>    <span class="p">),</span>
+<span class="linenos"> 52</span><span class="p">)</span>
+<span class="linenos"> 53</span>
+<span class="linenos"> 54</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 55</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 56</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 57</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 58</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos"> 59</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">),</span>
+<span class="linenos"> 60</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 61</span>    <span class="p">),</span>
+<span class="linenos"> 62</span><span class="p">)</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span><span class="n">fst</span><span class="o">.</span><span class="n">add_arc</span><span class="p">(</span>
+<span class="linenos"> 65</span>    <span class="n">state</span><span class="o">=</span><span class="n">s2</span><span class="p">,</span>
+<span class="linenos"> 66</span>    <span class="n">arc</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeArc</span><span class="p">(</span>
+<span class="linenos"> 67</span>        <span class="n">ilabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 68</span>        <span class="n">olabel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos"> 69</span>        <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="p">(</span><span class="n">graph_cost</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">acoustic_cost</span><span class="o">=</span><span class="mf">0.15</span><span class="p">),</span>
+<span class="linenos"> 70</span>        <span class="n">nextstate</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span>
+<span class="linenos"> 71</span>    <span class="p">),</span>
+<span class="linenos"> 72</span><span class="p">)</span>
+<span class="linenos"> 73</span>
+<span class="linenos"> 74</span><span class="n">fst</span><span class="o">.</span><span class="n">set_final</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">kaldifst</span><span class="o">.</span><span class="n">LatticeWeight</span><span class="o">.</span><span class="n">one</span><span class="p">)</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span><span class="n">sym1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym1&quot;</span><span class="p">)</span>
+<span class="linenos"> 78</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 79</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 80</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 81</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 82</span><span class="n">sym1</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span><span class="n">sym2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sym2&quot;</span><span class="p">)</span>
+<span class="linenos"> 85</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 86</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 87</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 88</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 89</span><span class="n">sym2</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos"> 90</span>
+<span class="linenos"> 91</span><span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">sym1</span>
+<span class="linenos"> 92</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">sym2</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 95</span><span class="n">fst_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
+<span class="linenos"> 96</span><span class="n">fst_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice.svg&quot;</span><span class="p">)</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span><span class="n">nbest_1</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 99</span><span class="n">nbest_1_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_1</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">100</span><span class="n">nbest_1_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_1_dot</span><span class="p">)</span>
+<span class="linenos">101</span><span class="n">nbest_1_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-1best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span><span class="n">nbest_2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">104</span><span class="n">nbest_2_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_2</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">105</span><span class="n">nbest_2_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_2_dot</span><span class="p">)</span>
+<span class="linenos">106</span><span class="n">nbest_2_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-2best.svg&quot;</span><span class="p">)</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span><span class="n">nbest_3</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos">109</span><span class="n">nbest_3_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nbest_3</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">110</span><span class="n">nbest_3_source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">nbest_3_dot</span><span class="p">)</span>
+<span class="linenos">111</span><span class="n">nbest_3_source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice-3best.svg&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<figure class="align-center" id="id127" style="width: 600px">
-<img alt="vector-fst.svg" src="python_api/code/shortest_path/vector-fst.svg" /><figcaption>
-<p><span class="caption-number">Fig. 63 </span><span class="caption-text">Visualization of vector-fst.svg</span><a class="headerlink" href="#id127" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id152" style="width: 600px">
+<img alt="lattice.svg" src="../_images/lattice3.svg" /><figcaption>
+<p><span class="caption-number">Fig. 83 </span><span class="caption-text">Visualization of lattice.svg</span><a class="headerlink" href="#id152" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id128" style="width: 600px">
-<img alt="vector-fst-1best.svg" src="python_api/code/shortest_path/vector-fst-1best.svg" /><figcaption>
-<p><span class="caption-number">Fig. 64 </span><span class="caption-text">Visualization of vector-fst-1best.svg</span><a class="headerlink" href="#id128" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id153" style="width: 600px">
+<img alt="lattice-1best.svg" src="../_images/lattice-1best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 84 </span><span class="caption-text">Visualization of lattice-1best.svg</span><a class="headerlink" href="#id153" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id129" style="width: 600px">
-<img alt="vector-fst-2best.svg" src="python_api/code/shortest_path/vector-fst-2best.svg" /><figcaption>
-<p><span class="caption-number">Fig. 65 </span><span class="caption-text">Visualization of vector-fst-2best.svg</span><a class="headerlink" href="#id129" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id154" style="width: 600px">
+<img alt="lattice-2best.svg" src="../_images/lattice-2best.svg" /><figcaption>
+<p><span class="caption-number">Fig. 85 </span><span class="caption-text">Visualization of lattice-2best.svg</span><a class="headerlink" href="#id154" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id130" style="width: 600px">
-<img alt="vector-fst-3best.svg" src="python_api/code/shortest_path/vector-fst-3best.svg" /><figcaption>
-<p><span class="caption-number">Fig. 66 </span><span class="caption-text">Visualization of vector-fst-3best.svg</span><a class="headerlink" href="#id130" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<p><strong>Example 2: Lattice</strong></p>
-<div class="literal-block-wrapper docutils container" id="id131">
-<div class="code-block-caption"><span class="caption-number">Listing 44 </span><span class="caption-text">ShortestPath for a Lattice</span><a class="headerlink" href="#id131" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>
-</pre></div>
-</div>
-</div>
-<figure class="align-center" id="id132" style="width: 600px">
-<img alt="lattice.svg" src="python_api/code/shortest_path/lattice.svg" /><figcaption>
-<p><span class="caption-number">Fig. 67 </span><span class="caption-text">Visualization of lattice.svg</span><a class="headerlink" href="#id132" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id133" style="width: 600px">
-<img alt="lattice-nbest.svg" src="python_api/code/shortest_path/lattice-nbest.svg" /><figcaption>
-<p><span class="caption-number">Fig. 68 </span><span class="caption-text">Visualization of lattice-nbest.svg</span><a class="headerlink" href="#id133" title="Permalink to this image"></a></p>
+<figure class="align-center" id="id155" style="width: 600px">
+<img alt="lattice-3best.svg" src="../_images/lattice-3best1.svg" /><figcaption>
+<p><span class="caption-number">Fig. 86 </span><span class="caption-text">Visualization of lattice-3best.svg</span><a class="headerlink" href="#id155" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </dd></dl>
