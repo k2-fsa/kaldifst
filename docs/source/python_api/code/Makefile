@@ -19,6 +19,7 @@ all:
 	$(MAKE) -C shortest_path
 	$(MAKE) -C scale_lattice
 	$(MAKE) -C convert_nbest_to_vector
+	$(MAKE) -C lattice_to_nbest
 
 clean:
 	$(MAKE) -C add_self_loops clean
@@ -40,3 +41,4 @@ clean:
 	$(MAKE) -C shortest_path clean
 	$(MAKE) -C scale_lattice clean
 	$(MAKE) -C convert_nbest_to_vector clean
+	$(MAKE) -C lattice_to_nbest clean

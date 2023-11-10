@@ -38,6 +38,7 @@ from _kaldifst import (
 )
 
 from .iterator import ArcIterator, StateIterator
+from .lattice_to_nbest import lattice_to_nbest
 from .table_types import (
     RandomAccessVectorFstReader,
     SequentialVectorFstReader,
