@@ -138,6 +138,15 @@ template <class Arc, class I>
 void GetInputSymbols(const Fst<Arc> &fst, bool include_eps,
                      std::vector<I> *symbols);
 
+/// This function converts an FST with a special structure, which is
+/// output by the OpenFst functions ShortestPath and RandGen, and converts
+/// them into a std::vector of separate FSTs.  This special structure is that
+/// the only state that has more than one (arcs-out or final-prob) is the
+/// start state.  fsts_out is resized to the appropriate size.
+template <class Arc>
+void ConvertNbestToVector(const Fst<Arc> &fst,
+                          std::vector<VectorFst<Arc>> *fsts_out);
+
 }  // namespace fst
 
 #include "kaldifst/csrc/fstext-utils-inl.h"

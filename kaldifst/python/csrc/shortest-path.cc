@@ -23,9 +23,9 @@ Args:
      Return only distinct strings. (NB: must be acceptor; epsilons
      treated as regular symbols)
 Returns:
-  Return a VectorFst containing n paths.
+  Return a VectorFst containing n linear paths.
 
-**Example 1: StdVectorFst**
+**Example: shortest_path of a StdVectorFst**
 
 .. literalinclude:: ./code/shortest_path/ex1.py
    :language: python
@@ -59,8 +59,27 @@ Returns:
     :figwidth: 600px
 
     Visualization of vector-fst-3best.svg
+)doc";
 
-**Example 2: Lattice**
+static constexpr const char *kShortestPathLatticeDoc = R"doc(
+This operation produces an FST containing the n-shortest paths in the input ``Lattice``.
+
+The n -shortest paths are the n -lowest weight paths w.r.t. the natural semiring
+order. The single path that can be read from the ith of at most n transitions
+leaving the initial state of the resulting FST is the ith shortest path.
+
+See also `<https://www.openfst.org/twiki/bin/view/FST/ShortestPathDoc>`_.
+
+Args:
+  n:
+    Size of n-best.
+  unique:
+     Return only distinct strings. (NB: must be acceptor; epsilons
+     treated as regular symbols)
+Returns:
+  Return a Lattice containing n linear paths.
+
+**Example: shortest_path of a Lattice**
 
 .. literalinclude:: ./code/shortest_path/ex2.py
    :language: python
@@ -74,17 +93,31 @@ Returns:
 
     Visualization of lattice.svg
 
-.. figure:: ./code/shortest_path/lattice-nbest.svg
-    :alt: lattice-nbest.svg
+.. figure:: ./code/shortest_path/lattice-1best.svg
+    :alt: lattice-1best.svg
     :align: center
     :figwidth: 600px
 
-    Visualization of lattice-nbest.svg
+    Visualization of lattice-1best.svg
+
+.. figure:: ./code/shortest_path/lattice-2best.svg
+    :alt: lattice-2best.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of lattice-2best.svg
+
+.. figure:: ./code/shortest_path/lattice-3best.svg
+    :alt: lattice-3best.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of lattice-3best.svg
 )doc";
 
 void PybindShortestPath(py::module *m) {
   PybindShortestPath<fst::StdArc>(m, kShortestPathDoc);
-  PybindShortestPath<fst::LatticeArc>(m, kShortestPathDoc);
+  PybindShortestPath<fst::LatticeArc>(m, kShortestPathLatticeDoc);
 }
 
 }  // namespace kaldifst

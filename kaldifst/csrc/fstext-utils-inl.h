@@ -549,5 +549,64 @@ void GetInputSymbols(const Fst<Arc> &fst, bool include_eps,
   std::sort(symbols->begin(), symbols->end());
 }
 
+// see fstext-utils.h for comment.
+template <class Arc>
+void ConvertNbestToVector(const Fst<Arc> &fst,
+                          std::vector<VectorFst<Arc>> *fsts_out) {
+  typedef typename Arc::Weight Weight;
+  typedef typename Arc::StateId StateId;
+  fsts_out->clear();
+  StateId start_state = fst.Start();
+
+  if (start_state == kNoStateId) {
+    return;  // No output.
+  }
+
+  size_t n_arcs = fst.NumArcs(start_state);
+  bool start_is_final = (fst.Final(start_state) != Weight::Zero());
+  fsts_out->reserve(n_arcs + (start_is_final ? 1 : 0));
+
+  if (start_is_final) {
+    fsts_out->resize(fsts_out->size() + 1);
+    StateId start_state_out = fsts_out->back().AddState();
+    fsts_out->back().SetFinal(start_state_out, fst.Final(start_state));
+  }
+
+  for (ArcIterator<Fst<Arc>> start_aiter(fst, start_state); !start_aiter.Done();
+       start_aiter.Next()) {
+    fsts_out->resize(fsts_out->size() + 1);
+    VectorFst<Arc> &ofst = fsts_out->back();
+    const Arc &first_arc = start_aiter.Value();
+    StateId cur_state = start_state, cur_ostate = ofst.AddState();
+    ofst.SetStart(cur_ostate);
+    StateId next_ostate = ofst.AddState();
+    ofst.AddArc(cur_ostate, Arc(first_arc.ilabel, first_arc.olabel,
+                                first_arc.weight, next_ostate));
+    cur_state = first_arc.nextstate;
+    cur_ostate = next_ostate;
+    while (1) {
+      size_t this_n_arcs = fst.NumArcs(cur_state);
+      KALDIFST_ASSERT(this_n_arcs <= 1);  // or it violates our assumptions
+                                          // about the input.
+      if (this_n_arcs == 1) {
+        KALDIFST_ASSERT(fst.Final(cur_state) == Weight::Zero());
+        // or problem with ShortestPath.
+        ArcIterator<Fst<Arc>> aiter(fst, cur_state);
+        const Arc &arc = aiter.Value();
+        next_ostate = ofst.AddState();
+        ofst.AddArc(cur_ostate,
+                    Arc(arc.ilabel, arc.olabel, arc.weight, next_ostate));
+        cur_state = arc.nextstate;
+        cur_ostate = next_ostate;
+      } else {
+        KALDIFST_ASSERT(fst.Final(cur_state) != Weight::Zero());
+        // or problem with ShortestPath.
+        ofst.SetFinal(cur_ostate, fst.Final(cur_state));
+        break;
+      }
+    }
+  }
+}
+
 }  // namespace fst
 #endif  // KALDIFST_CSRC_FSTEXT_UTILS_INL_H_

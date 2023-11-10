@@ -95,17 +95,24 @@ fst_dot = kaldifst.draw(fst, acceptor=False, portrait=True)
 fst_source = graphviz.Source(fst_dot)
 fst_source.render(outfile="lattice.svg")
 
-nbest_1 = kaldifst.shortest_path(fst, n=1)
-nbest_1_dot = kaldifst.draw(nbest_1, acceptor=False, portrait=True)
-nbest_1_source = graphviz.Source(nbest_1_dot)
-nbest_1_source.render(outfile="lattice-1best.svg")
-
-nbest_2 = kaldifst.shortest_path(fst, n=2)
-nbest_2_dot = kaldifst.draw(nbest_2, acceptor=False, portrait=True)
-nbest_2_source = graphviz.Source(nbest_2_dot)
-nbest_2_source.render(outfile="lattice-2best.svg")
-
 nbest_3 = kaldifst.shortest_path(fst, n=3)
 nbest_3_dot = kaldifst.draw(nbest_3, acceptor=False, portrait=True)
 nbest_3_source = graphviz.Source(nbest_3_dot)
 nbest_3_source.render(outfile="lattice-3best.svg")
+
+nbest_list = kaldifst.convert_nbest_to_vector(nbest_3)
+for b in nbest_list:
+    b.input_symbols = fst.input_symbols
+    b.output_symbols = fst.output_symbols
+
+nbest_list_0_dot = kaldifst.draw(nbest_list[0], acceptor=True, portrait=True)
+nbest_list_0_source = graphviz.Source(nbest_list_0_dot)
+nbest_list_0_source.render(outfile="lattice-3best-0.svg")
+
+nbest_list_1_dot = kaldifst.draw(nbest_list[1], acceptor=True, portrait=True)
+nbest_list_1_source = graphviz.Source(nbest_list_1_dot)
+nbest_list_1_source.render(outfile="lattice-3best-1.svg")
+
+nbest_list_2_dot = kaldifst.draw(nbest_list[2], acceptor=True, portrait=True)
+nbest_list_2_source = graphviz.Source(nbest_list_2_dot)
+nbest_list_2_source.render(outfile="lattice-3best-2.svg")

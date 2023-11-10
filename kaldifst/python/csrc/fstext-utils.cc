@@ -183,8 +183,121 @@ Returns:
    :caption: Code for get_linear_symbol_sequence
 )doc";
 
+static constexpr const char *kConvertNbestToVectorDoc = R"doc(
+This function converts an FST with a special structure, which is
+output by the OpenFst functions ShortestPath and RandGen, and converts
+them into a list of separate FSTs.  This special structure is that
+the only state that has more than one (arcs-out or final-prob) is the
+start state.
+
+Args:
+  fst:
+    The input fst, which should be returned by ``shortestpath``.
+Returns:
+  Return a list of linear FSTs.
+
+**Example for a StdVectorFst**
+
+.. literalinclude:: ./code/convert_nbest_to_vector/ex1.py
+   :language: python
+   :linenos:
+   :caption: convert_nbest_to_vector for a StdVectorFst
+
+.. figure:: ./code/convert_nbest_to_vector/vector-fst.svg
+    :alt: vector-fst.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of vector-fst.svg
+
+.. figure:: ./code/convert_nbest_to_vector/vector-fst-3best.svg
+    :alt: vector-fst-3best.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of vector-fst-3best.svg
+
+.. figure:: ./code/convert_nbest_to_vector/vector-fst-3best-0.svg
+    :alt: vector-fst-3best-0.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of vector-fst-3best-0.svg
+
+.. figure:: ./code/convert_nbest_to_vector/vector-fst-3best-1.svg
+    :alt: vector-fst-3best-1.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of vector-fst-3best-1.svg
+
+.. figure:: ./code/convert_nbest_to_vector/vector-fst-3best-2.svg
+    :alt: vector-fst-3best-2.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of vector-fst-3best-2.svg
+)doc";
+
+static constexpr const char *kConvertNbestToVectorLatticeDoc = R"doc(
+This function converts an FST with a special structure, which is
+output by the OpenFst functions ShortestPath and RandGen, and converts
+them into a list of separate FSTs.  This special structure is that
+the only state that has more than one (arcs-out or final-prob) is the
+start state.
+
+Args:
+  fst:
+    The input fst, which should be returned by ``shortestpath``.
+Returns:
+  Return a list of linear FSTs.
+
+**Example for a Lattice**
+
+.. literalinclude:: ./code/convert_nbest_to_vector/ex2.py
+   :language: python
+   :linenos:
+   :caption: convert_nbest_to_vector for a Lattice
+
+.. figure:: ./code/convert_nbest_to_vector/lattice.svg 
+    :alt: lattice.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of lattice.svg
+
+.. figure:: ./code/convert_nbest_to_vector/lattice-3best.svg
+    :alt: lattice-3best.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of lattice-3best.svg
+
+.. figure:: ./code/convert_nbest_to_vector/lattice-3best-0.svg
+    :alt: lattice-3best-0.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of lattice-3best-0.svg
+
+.. figure:: ./code/convert_nbest_to_vector/lattice-3best-1.svg
+    :alt: lattice-3best-1.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of lattice-3best-1.svg
+
+.. figure:: ./code/convert_nbest_to_vector/lattice-3best-2.svg
+    :alt: lattice-3best-2.svg
+    :align: center
+    :figwidth: 600px
+
+    Visualization of lattice-3best-2.svg
+)doc";
+
 namespace kaldifst {
 
+namespace {
 template <class Arc, class I = int32_t>
 std::tuple<bool, std::vector<I>, std::vector<I>, typename Arc::Weight>
 GetLinearSymbolSequenceWrapper(const fst::Fst<Arc> &fst) {
@@ -197,6 +310,15 @@ GetLinearSymbolSequenceWrapper(const fst::Fst<Arc> &fst) {
 
   return std::make_tuple(succeeded, isymbols_out, osymbols_out, w);
 }
+
+template <class Arc>
+std::vector<fst::VectorFst<Arc>> ConvertNbestToVectorWrapper(
+    const fst::Fst<Arc> &fst) {
+  std::vector<fst::VectorFst<Arc>> fsts_out;
+  ConvertNbestToVector(fst, &fsts_out);
+  return fsts_out;
+}
+}  // namespace
 
 void PybindFstExtUtils(py::module &m) {  // NOLINT
   m.def(
@@ -234,6 +356,13 @@ void PybindFstExtUtils(py::module &m) {  // NOLINT
   m.def("get_linear_symbol_sequence",
         &(GetLinearSymbolSequenceWrapper<fst::LatticeArc>), py::arg("fst"),
         kGetLinearSymbolSequenceDoc);
+
+  m.def("convert_nbest_to_vector", &(ConvertNbestToVectorWrapper<fst::StdArc>),
+        py::arg("fst"), kConvertNbestToVectorDoc);
+
+  m.def("convert_nbest_to_vector",
+        &(ConvertNbestToVectorWrapper<fst::LatticeArc>), py::arg("fst"),
+        kConvertNbestToVectorLatticeDoc);
 }
 
 }  // namespace kaldifst

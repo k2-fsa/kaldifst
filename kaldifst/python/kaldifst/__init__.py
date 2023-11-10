@@ -16,6 +16,7 @@ from _kaldifst import (
     compose,
     compose_context,
     connect,
+    convert_nbest_to_vector,
     determinize,
     determinize_star,
     divide,
@@ -31,11 +32,13 @@ from _kaldifst import (
     plus,
     reverse,
     rmepsilon,
+    scale_lattice,
     shortest_path,
     times,
 )
 
 from .iterator import ArcIterator, StateIterator
+from .lattice_to_nbest import lattice_to_nbest
 from .table_types import (
     RandomAccessVectorFstReader,
     SequentialVectorFstReader,
