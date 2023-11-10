@@ -16,6 +16,7 @@ from _kaldifst import (
     compose,
     compose_context,
     connect,
+    convert_nbest_to_vector,
     determinize,
     determinize_star,
     divide,

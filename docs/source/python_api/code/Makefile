@@ -18,6 +18,7 @@ all:
 	$(MAKE) -C rmepsilon
 	$(MAKE) -C shortest_path
 	$(MAKE) -C scale_lattice
+	$(MAKE) -C convert_nbest_to_vector
 
 clean:
 	$(MAKE) -C add_self_loops clean
@@ -38,3 +39,4 @@ clean:
 	$(MAKE) -C rmepsilon clean
 	$(MAKE) -C shortest_path clean
 	$(MAKE) -C scale_lattice clean
+	$(MAKE) -C convert_nbest_to_vector clean
