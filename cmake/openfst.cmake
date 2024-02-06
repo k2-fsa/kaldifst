@@ -11,8 +11,8 @@ function(download_openfst)
   # please pre-download it
   set(possible_file_locations
     $ENV{HOME}/Downloads/openfst-win-1.6.5.1.tar.gz
-    ${PROJECT_SOURCE_DIR}/openfst-win-1.6.5.1.tar.gz
-    ${PROJECT_BINARY_DIR}/openfst-win-1.6.5.1.tar.gz
+    ${CMAKE_SOURCE_DIR}/openfst-win-1.6.5.1.tar.gz
+    ${CMAKE_BINARY_DIR}/openfst-win-1.6.5.1.tar.gz
     /tmp/openfst-win-1.6.5.1.tar.gz
     /star-fj/fangjun/download/github/openfst-win-1.6.5.1.tar.gz
   )
