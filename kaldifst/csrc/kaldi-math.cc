@@ -64,6 +64,8 @@ int32_t RandInt(int32_t min_val, int32_t max_val,
     } else {
       KALDIFST_ERR << "rand_int failed because we do not support such large "
                       "random numbers. (Extend this function).";
+
+      return min_val;  // unreachable code
     }
   }
 #else
