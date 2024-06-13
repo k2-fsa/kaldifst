@@ -56,6 +56,12 @@ if(KALDIFST_BUILD_TESTS)
   endforeach()
 endif()
 
-install(TARGETS kaldifst_core
-  DESTINATION lib
-)
+if(KALDIFST_BUILD_PYTHON AND WIN32)
+  install(TARGETS kaldifst_core DESTINATION ..)
+else()
+  install(TARGETS kaldifst_core DESTINATION lib)
+endif()
+
+if(WIN32 AND BUILD_SHARED_LIBS)
+  install(TARGETS kaldifst_core DESTINATION bin)
+endif()
