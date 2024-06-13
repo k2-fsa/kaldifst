@@ -23,6 +23,7 @@ on:
     branches:
       - master
       - doc
+  workflow_dispatch:
 
 concurrency:
   group: build-doc-${{ github.ref }}
@@ -34,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest]
         python-version: [3.8]
     steps:
       # refer to https://github.com/actions/checkout
@@ -70,8 +71,11 @@ jobs:
           cd docs
           python3 -m pip install -r ./requirements.txt
 
-          brew install graphviz
-          python3 -m pip install k2
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+          python3 -m pip install torch==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+          python3 -m pip install k2==1.24.3.dev20230719+cpu.torch2.0.1 -f https://k2-fsa.github.io/k2/cpu.html
+
           python3 -m pip install graphviz
 
           make html
