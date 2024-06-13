@@ -78,10 +78,18 @@ function(download_openfst)
 
   if(KALDIFST_BUILD_PYTHON)
     set_target_properties(fstscript PROPERTIES OUTPUT_NAME "kaldifst_fstscript")
-    install(TARGETS fstscript
-      DESTINATION lib
-    )
   endif()
+
+  if(KALDIFST_BUILD_PYTHON AND WIN32)
+    install(TARGETS fst fstscript DESTINATION ..)
+  else()
+    install(TARGETS fst fstscript DESTINATION lib)
+  endif()
+
+  if(WIN32 AND BUILD_SHARED_LIBS)
+    install(TARGETS fst fstscript DESTINATION bin)
+  endif()
+
 endfunction()
 
 download_openfst()

@@ -30,6 +30,7 @@ concurrency:
 
 jobs:
   build-windows:
+    name: ${{ matrix.python-version }}
     # see https://github.com/actions/virtual-environments/blob/win19/20210525.0/images/win/Windows2019-Readme.md
     runs-on: ${{ matrix.os }}
     strategy:
@@ -57,7 +58,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip3 install -qq wheel twine dataclasses numpy typing_extensions
+          pip3 install -qq wheel twine dataclasses numpy typing_extensions setuptools
 
       - name: Display CMake version
         run: |

@@ -24,6 +24,7 @@ permissions:
 
 jobs:
   test_pip_install:
+    name: ${{ matrix.os }} ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

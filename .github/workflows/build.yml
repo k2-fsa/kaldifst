@@ -30,6 +30,7 @@ concurrency:
 
 jobs:
   build:
+    name: ${{ matrix.os }} ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -53,7 +54,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip3 install -qq wheel twine dataclasses numpy typing_extensions
+          pip3 install -qq wheel twine dataclasses numpy typing_extensions setuptools
 
       - name: Display CMake version
         run: |
