@@ -3,18 +3,18 @@
 function(download_openfst)
   include(FetchContent)
 
-  set(openfst_URL  "https://github.com/kkm000/openfst/archive/refs/tags/win/1.6.5.1.tar.gz")
-  set(openfst_URL2  "https://huggingface.co/csukuangfj/kaldi-hmm-gmm-cmake-deps/resolve/main/openfst-win-1.6.5.1.tar.gz")
-  set(openfst_HASH "SHA256=02c49b559c3976a536876063369efc0e41ab374be1035918036474343877046e")
+  set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/tags/sherpa-onnx-2024-06-13.tar.gz")
+  set(openfst_URL2 "https://hub.nuaa.cf/csukuangfj/openfst/archive/refs/tags/sherpa-onnx-2024-06-13.tar.gz")
+  set(openfst_HASH "SHA256=f10a71c6b64d89eabdc316d372b956c30c825c7c298e2f20c780320e8181ffb6")
 
   # If you don't have access to the Internet,
   # please pre-download it
   set(possible_file_locations
-    $ENV{HOME}/Downloads/openfst-win-1.6.5.1.tar.gz
-    ${CMAKE_SOURCE_DIR}/openfst-win-1.6.5.1.tar.gz
-    ${CMAKE_BINARY_DIR}/openfst-win-1.6.5.1.tar.gz
-    /tmp/openfst-win-1.6.5.1.tar.gz
-    /star-fj/fangjun/download/github/openfst-win-1.6.5.1.tar.gz
+    $ENV{HOME}/Downloads/openfst-sherpa-onnx-2024-06-13.tar.gz
+    ${CMAKE_SOURCE_DIR}/openfst-sherpa-onnx-2024-06-13.tar.gz
+    ${CMAKE_BINARY_DIR}/openfst-sherpa-onnx-2024-06-13.tar.gz
+    /tmp/openfst-sherpa-onnx-2024-06-13.tar.gz
+    /star-fj/fangjun/download/github/openfst-sherpa-onnx-2024-06-13.tar.gz
   )
 
   foreach(f IN LISTS possible_file_locations)
@@ -70,8 +70,6 @@ function(download_openfst)
   add_subdirectory(${openfst_SOURCE_DIR} ${openfst_BINARY_DIR} EXCLUDE_FROM_ALL)
   set(openfst_SOURCE_DIR ${openfst_SOURCE_DIR} PARENT_SCOPE)
 
-  # Rename libfst.so.6 to libkaldifst_fst.so.6 to avoid potential conflicts
-  # when kaldifst is installed.
   set_target_properties(fst PROPERTIES OUTPUT_NAME "kaldifst_fst")
 
   install(TARGETS fst
