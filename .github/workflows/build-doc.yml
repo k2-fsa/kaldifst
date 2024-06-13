@@ -38,7 +38,7 @@ jobs:
         python-version: [3.8]
     steps:
       # refer to https://github.com/actions/checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -48,7 +48,7 @@ jobs:
           key: ${{ matrix.os }}-${{ matrix.python-version }}
 
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 

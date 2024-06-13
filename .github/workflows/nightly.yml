@@ -21,14 +21,15 @@ jobs:
   nightly-pip:
     # see https://github.com/actions/virtual-environments/blob/win19/20210525.0/images/win/Windows2019-Readme.md
     runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} ${{ matrix.python-version }}
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -43,7 +44,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -52,7 +53,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip3 install -qq wheel twine dataclasses numpy typing_extensions
+          pip3 install -qq wheel twine dataclasses numpy typing_extensions setuptools
 
       - name: Display CMake version
         run: |

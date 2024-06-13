@@ -13,7 +13,7 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-set(KALDIFST_VERSION "1.7.10")
+set(KALDIFST_VERSION "1.7.11")
 
 # Disable warning about
 #
@@ -33,14 +33,13 @@ option(KALDIFST_BUILD_TESTS "Whether to build tests or not" OFF)
 option(KALDIFST_BUILD_PYTHON "Whether to build Python" ON)
 option(BUILD_SHARED_LIBS "Whether to build shared libraries" ON)
 
-if(BUILD_SHARED_LIBS AND MSVC)
-  message(STATUS "Disable building shared libraries for Windows")
-  set(BUILD_SHARED_LIBS OFF)
-endif()
-
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS}")
+
+if(BUILD_SHARED_LIBS AND MSVC)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
