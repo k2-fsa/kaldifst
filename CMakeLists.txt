@@ -13,7 +13,7 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-set(KALDIFST_VERSION "1.7.11")
+set(KALDIFST_VERSION "1.7.12")
 
 # Disable warning about
 #
