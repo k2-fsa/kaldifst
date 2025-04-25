@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Read and write ark/scp files from Kaldi &mdash; kaldifst 1.7.12 documentation</title>
+  <title>Read and write ark/scp files from Kaldi &mdash; kaldifst 1.7.13 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.7.12
+                1.7.13
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -102,10 +102,10 @@ The following is an example:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">Create ark/scp files with <code class="docutils literal notranslate"><span class="pre">kaldifst.VectorFstWriter</span></code>.</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
-<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">kaldifst</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="k">def</span> <span class="nf">generate_acceptor</span><span class="p">():</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">generate_acceptor</span><span class="p">():</span>
 <span class="linenos"> 6</span>    <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos"> 7</span><span class="s2">    0 1 a 0.5</span>
 <span class="linenos"> 8</span><span class="s2">    1 2 b 0.8</span>
@@ -126,7 +126,7 @@ The following is an example:</p>
 <span class="linenos">23</span>    <span class="k">return</span> <span class="n">fsa</span>
 <span class="linenos">24</span>
 <span class="linenos">25</span>
-<span class="linenos">26</span><span class="k">def</span> <span class="nf">generate_transducer</span><span class="p">():</span>
+<span class="linenos">26</span><span class="k">def</span><span class="w"> </span><span class="nf">generate_transducer</span><span class="p">():</span>
 <span class="linenos">27</span>    <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">28</span><span class="s2">    0 1 a A 0.5</span>
 <span class="linenos">29</span><span class="s2">    1 2 b B 0.8</span>
@@ -156,7 +156,7 @@ The following is an example:</p>
 <span class="linenos">53</span>    <span class="k">return</span> <span class="n">fst</span>
 <span class="linenos">54</span>
 <span class="linenos">55</span>
-<span class="linenos">56</span><span class="k">def</span> <span class="nf">test_writer</span><span class="p">():</span>
+<span class="linenos">56</span><span class="k">def</span><span class="w"> </span><span class="nf">test_writer</span><span class="p">():</span>
 <span class="linenos">57</span>    <span class="n">fsa</span> <span class="o">=</span> <span class="n">generate_acceptor</span><span class="p">()</span>
 <span class="linenos">58</span>    <span class="n">fst</span> <span class="o">=</span> <span class="n">generate_transducer</span><span class="p">()</span>
 <span class="linenos">59</span>
@@ -166,7 +166,7 @@ The following is an example:</p>
 <span class="linenos">63</span>        <span class="n">ko</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;lat2&quot;</span><span class="p">,</span> <span class="n">fst</span><span class="p">)</span>
 <span class="linenos">64</span>
 <span class="linenos">65</span>
-<span class="linenos">66</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="linenos">66</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 <span class="linenos">67</span>    <span class="n">test_writer</span><span class="p">()</span>
 <span class="linenos">68</span>
 <span class="linenos">69</span>
@@ -206,10 +206,10 @@ sequentially. The following is an example:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-number">Listing 7 </span><span class="caption-text">Read ark/scp files sequentially with <code class="docutils literal notranslate"><span class="pre">kaldifst.SequentialVectorFstReader</span></code>.</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
-<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">kaldifst</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="k">def</span> <span class="nf">test_sequential_reader</span><span class="p">():</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">test_sequential_reader</span><span class="p">():</span>
 <span class="linenos"> 6</span>    <span class="n">rspecifier</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;scp:lat.scp&quot;</span>
 <span class="linenos"> 7</span>    <span class="k">with</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SequentialVectorFstReader</span><span class="p">(</span><span class="n">rspecifier</span><span class="p">)</span> <span class="k">as</span> <span class="n">ki</span><span class="p">:</span>
 <span class="linenos"> 8</span>        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ki</span><span class="p">:</span>
@@ -218,7 +218,7 @@ sequentially. The following is an example:</p>
 <span class="linenos">11</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;value</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 <span class="linenos">12</span>
 <span class="linenos">13</span>
-<span class="linenos">14</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="linenos">14</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 <span class="linenos">15</span>    <span class="n">test_sequential_reader</span><span class="p">()</span>
 <span class="linenos">16</span>
 <span class="linenos">17</span>
@@ -249,10 +249,10 @@ randomly. The following is an example:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-number">Listing 8 </span><span class="caption-text">Read ark/scp files randomly with <code class="docutils literal notranslate"><span class="pre">kaldifst.RandomAccessVectorFstReader</span></code>.</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
-<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">kaldifst</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="k">def</span> <span class="nf">test_random_access_reader</span><span class="p">():</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">test_random_access_reader</span><span class="p">():</span>
 <span class="linenos"> 6</span>    <span class="n">rspecifier</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;scp:lat.scp&quot;</span>
 <span class="linenos"> 7</span>    <span class="k">with</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">RandomAccessVectorFstReader</span><span class="p">(</span><span class="n">rspecifier</span><span class="p">)</span> <span class="k">as</span> <span class="n">ki</span><span class="p">:</span>
 <span class="linenos"> 8</span>        <span class="k">assert</span> <span class="s2">&quot;lat1&quot;</span> <span class="ow">in</span> <span class="n">ki</span>
@@ -264,7 +264,7 @@ randomly. The following is an example:</p>
 <span class="linenos">14</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lat2&quot;</span><span class="p">,</span> <span class="n">lat2</span><span class="p">)</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="linenos">17</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 <span class="linenos">18</span>    <span class="n">test_random_access_reader</span><span class="p">()</span>
 <span class="linenos">19</span>
 <span class="linenos">20</span>

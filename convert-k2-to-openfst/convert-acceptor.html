@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Convert acceptors &mdash; kaldifst 1.7.12 documentation</title>
+  <title>Convert acceptors &mdash; kaldifst 1.7.13 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.7.12
+                1.7.13
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -104,14 +104,14 @@ Pay attention to the <code class="docutils literal notranslate"><span class="pre
 <div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">Convert an acceptor from <a class="reference external" href="https://github.com/k2-fsa/k2">k2</a> to <a class="reference external" href="https://www.openfst.org/">OpenFst</a></span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
 <span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">graphviz</span>
-<span class="linenos"> 4</span><span class="kn">import</span> <span class="nn">k2</span>
-<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">kaldifst.utils</span> <span class="kn">import</span> <span class="n">k2_to_openfst</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">k2</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">kaldifst.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">k2_to_openfst</span>
 <span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="kn">import</span> <span class="nn">kaldifst</span>
+<span class="linenos"> 7</span><span class="kn">import</span><span class="w"> </span><span class="nn">kaldifst</span>
 <span class="linenos"> 8</span>
 <span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="linenos">10</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 <span class="linenos">11</span>    <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos">12</span><span class="s2">    0 1 1 0.5</span>
 <span class="linenos">13</span><span class="s2">    0 1 2 1.5</span>
