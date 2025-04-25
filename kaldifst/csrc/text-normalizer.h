@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "fst/fst.h"
 #include "fst/fstlib.h"
@@ -26,6 +27,9 @@ class TextNormalizer {
   //                           output.
   std::string Normalize(const std::string &s,
                         bool remove_output_zero = true) const;
+
+  std::string Normalize(const std::vector<std::string> &words,
+                        const std::vector<std::string> &pronunciations) const;
 
  private:
   std::unique_ptr<fst::StdConstFst> rule_;

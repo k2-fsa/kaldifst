@@ -1,3 +1,7 @@
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0")
+  set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+endif()
+
 if("x${CMAKE_SOURCE_DIR}" STREQUAL "x${CMAKE_BINARY_DIR}")
   message(FATAL_ERROR "\
 In-source build is not a good practice.
@@ -13,7 +17,7 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-set(KALDIFST_VERSION "1.7.12")
+set(KALDIFST_VERSION "1.7.13")
 
 # Disable warning about
 #
