@@ -5,6 +5,7 @@
 #include "kaldifst/csrc/text-normalizer.h"
 
 #include <string>
+#include <vector>
 
 #include "kaldifst/python/csrc/text-normalizer.h"
 

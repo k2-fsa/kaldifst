@@ -4,6 +4,7 @@
 
 #include "kaldifst/csrc/text-normalizer.h"
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <utility>

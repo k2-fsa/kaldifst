@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "fst/fst.h"
 #include "fst/fstlib.h"
