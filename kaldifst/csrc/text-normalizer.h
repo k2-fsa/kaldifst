@@ -27,6 +27,9 @@ class TextNormalizer {
   std::string Normalize(const std::string &s,
                         bool remove_output_zero = true) const;
 
+  std::string Normalize(const std::vector<std::string> &words,
+                        const std::vector<std::string> &pronunciations) const;
+
  private:
   std::unique_ptr<fst::StdConstFst> rule_;
 };
