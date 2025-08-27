@@ -122,6 +122,7 @@ package_name = "kaldifst"
 
 setuptools.setup(
     name=package_name,
+    python_requires=">=3.8",
     version=get_package_version(),
     author="Next-gen Kaldi development team",
     author_email="csukuangfj@gmail.com",
@@ -141,7 +142,7 @@ setuptools.setup(
         "Programming Language :: Python",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
-    license="Apache licensed, as found in the LICENSE file",
+    license="Apache-2.0",
 )
 
 # remove the line __dev_version__ from k2/python/k2/__init__.py

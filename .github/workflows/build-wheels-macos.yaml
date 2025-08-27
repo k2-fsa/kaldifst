@@ -15,23 +15,46 @@ concurrency:
 
 jobs:
   build_wheels:
-    name: ${{ matrix.python-version }}
+    name: ${{ matrix.python-version }} ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        python-version: ["cp38", "cp39", "cp310", "cp311", "cp312", "cp313"]
+        python-version: ["cp38", "cp39", "cp310", "cp311", "cp312", "cp313", "cp314"]
+        arch: ["arm64", "x86_64", "universal2"]
 
     steps:
       - uses: actions/checkout@v4
 
+      - name: Display
+        if: matrix.arch == 'universal2'
+        shell: bash
+        run: |
+          echo "${{ matrix.arch }} is universal2"
+
+      - name: Display
+        if: matrix.arch == 'x86_64'
+        shell: bash
+        run: |
+          echo "${{ matrix.arch }} is x86_64"
+
+      - name: Display
+        if: matrix.arch == 'arm64'
+        shell: bash
+        run: |
+          echo "${{ matrix.arch }} is arm64"
+
       # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
       # for a list of versions
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21.3
+        if: matrix.arch == 'universal2'
+        uses: pypa/cibuildwheel@v3.1.4
         env:
-          CIBW_ENVIRONMENT: KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'"
+          CIBW_ENVIRONMENT: >
+            KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES='arm64;x86_64' -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
+            MACOSX_DEPLOYMENT_TARGET=10.15
+
           CIBW_BUILD: "${{ matrix.python-version}}-* "
           CIBW_ARCHS: "universal2"
           CIBW_BUILD_VERBOSITY: 3
@@ -39,14 +62,40 @@ jobs:
           #  Don't repair macOS wheels
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
+      - name: Build wheels
+        if: matrix.arch == 'x86_64'
+        uses: pypa/cibuildwheel@v3.1.4
+        env:
+          CIBW_ENVIRONMENT: >
+            KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
+            MACOSX_DEPLOYMENT_TARGET=10.15
+
+          CIBW_BUILD: "${{ matrix.python-version}}-* "
+          CIBW_ARCHS: "x86_64"
+          CIBW_BUILD_VERBOSITY: 3
+
+      - name: Build wheels
+        if: matrix.arch == 'arm64'
+        uses: pypa/cibuildwheel@v3.1.4
+        env:
+          CIBW_ENVIRONMENT: >
+            KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64"
+
+          CIBW_BUILD: "${{ matrix.python-version}}-* "
+          CIBW_ARCHS: "arm64"
+          CIBW_BUILD_VERBOSITY: 3
+          #  Don't repair macOS wheels
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+
       - name: Display wheels
         shell: bash
         run: |
           ls -lh ./wheelhouse/
+          unzip -l wheelhouse/*.whl
 
       - uses: actions/upload-artifact@v4
         with:
-          name: wheel-${{ matrix.python-version }}
+          name: wheel-${{ matrix.python-version }}-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
       - name: Publish wheels to PyPI
