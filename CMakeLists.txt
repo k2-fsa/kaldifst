@@ -17,7 +17,7 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 project(kaldifst CXX)
 
-set(KALDIFST_VERSION "1.7.14")
+set(KALDIFST_VERSION "1.7.15")
 
 # Disable warning about
 #
@@ -64,7 +64,7 @@ set(CMAKE_BUILD_RPATH ${kaldifst_rpath_origin})
 
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ version to be used.")
+  set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ version to be used.")
 endif()
 
 message(STATUS "C++ Standard version: ${CMAKE_CXX_STANDARD}")
