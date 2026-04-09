@@ -18,6 +18,15 @@ set(srcs
 add_library(kaldifst_core ${srcs})
 target_link_libraries(kaldifst_core PUBLIC fst)
 
+if(MSVC)
+  set_source_files_properties(
+    context-fst.cc
+    text-normalizer.cc
+    PROPERTIES
+      COMPILE_OPTIONS "/Od;/Ob0"
+  )
+endif()
+
 if(APPLE)
   execute_process(
     COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
