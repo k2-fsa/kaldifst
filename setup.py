@@ -21,12 +21,8 @@ def is_windows():
 
 
 def get_windows_build_args(make_args: str, system_make_args: str) -> str:
-    for args in (make_args, system_make_args):
-        match = re.search(r"-j\s*(\d+)", args)
-        if match is not None:
-            return f"/m:{match.group(1)}"
-        if "-j" in args:
-            return "/m"
+    del make_args
+    del system_make_args
     return "/m:1"
 
 
@@ -60,8 +56,8 @@ class BuildExtension(build_ext):
         if make_args == "" and system_make_args == "":
             print("For fast compilation, run:")
             print('export KALDIFST_MAKE_ARGS="-j"; python setup.py install')
-            make_args = "-j4"
-            print("Setting make_args to '-j4'")
+            make_args = "-j1" if is_windows() else "-j4"
+            print(f"Setting make_args to '{make_args}'")
 
         if "PYTHON_EXECUTABLE" not in cmake_args:
             print(f"Setting PYTHON_EXECUTABLE to {sys.executable}")
@@ -90,6 +86,8 @@ class BuildExtension(build_ext):
             return
 
         # for windows
+        make_args = "-j1"
+        system_make_args = ""
         windows_build_args = get_windows_build_args(make_args, system_make_args)
         build_cmd = f"""
             cmake {cmake_args} -B {self.build_temp} -S {cur_dir}
