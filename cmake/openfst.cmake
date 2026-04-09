@@ -4,7 +4,7 @@ function(download_openfst)
   include(FetchContent)
 
   set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/heads/openfst-1.8.5.zip")
-  set(openfst_HASH "SHA256=7a0001d8891b48bd6312cb00818a1d327e7dc3edce164b264a5a6e926358720a")
+  set(openfst_HASH "SHA256=66914a909586bd83637bf4cefd95dfa8d1b5013a834c0793676a36005e6122a4")
 
   # If you don't have access to the Internet,
   # please pre-download it
@@ -50,7 +50,24 @@ function(download_openfst)
     FetchContent_Populate(openfst)
   endif()
   message(STATUS "openfst is downloaded to ${openfst_SOURCE_DIR}")
+
+  if(_build_shared_libs_bak)
+    set(_build_shared_libs_bak ${BUILD_SHARED_LIBS})
+    set(BUILD_SHARED_LIBS OFF)
+  endif()
+
   add_subdirectory(${openfst_SOURCE_DIR} ${openfst_BINARY_DIR} EXCLUDE_FROM_ALL)
+
+  if(_build_shared_libs_bak)
+    set_target_properties(fst fstfar
+      PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+        C_VISIBILITY_PRESET hidden
+        CXX_VISIBILITY_PRESET hidden
+    )
+    set(BUILD_SHARED_LIBS ON)
+  endif()
+
   set(openfst_SOURCE_DIR ${openfst_SOURCE_DIR} PARENT_SCOPE)
 
   set_target_properties(fst PROPERTIES OUTPUT_NAME "kaldifst_fst")
