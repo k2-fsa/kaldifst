@@ -69,7 +69,7 @@ jobs:
           python3 -c "import kaldifst; print(kaldifst.__file__)"
 
           cd kaldifst/python/tests
-          for f in "*.py"; do
+          for f in *.py; do
             python3 ./$f
           done
 
