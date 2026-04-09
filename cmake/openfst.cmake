@@ -63,26 +63,6 @@ function(download_openfst)
     set_target_properties(fstscript PROPERTIES OUTPUT_NAME "kaldifst_fstscript")
   endif()
 
-  if(MSVC)
-    foreach(target fst fstscript)
-      if(TARGET ${target})
-        set_target_properties(${target} PROPERTIES
-          INTERPROCEDURAL_OPTIMIZATION FALSE
-        )
-        target_compile_options(${target} PRIVATE
-          $<$<CONFIG:Release>:/GL->
-          $<$<CONFIG:RelWithDebInfo>:/GL->
-          $<$<CONFIG:MinSizeRel>:/GL->
-        )
-        target_link_options(${target} PRIVATE
-          $<$<CONFIG:Release>:/LTCG:OFF>
-          $<$<CONFIG:RelWithDebInfo>:/LTCG:OFF>
-          $<$<CONFIG:MinSizeRel>:/LTCG:OFF>
-        )
-      endif()
-    endforeach()
-  endif()
-
   if(KALDIFST_BUILD_PYTHON AND WIN32)
     install(TARGETS fst fstscript DESTINATION ..)
   else()
