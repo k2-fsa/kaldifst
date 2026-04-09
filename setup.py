@@ -23,7 +23,7 @@ def is_windows():
 def get_windows_build_args(make_args: str, system_make_args: str) -> str:
     del make_args
     del system_make_args
-    return "/m:1"
+    return "/m:1 /p:CL_MPCount=1 /p:UseMultiToolTask=false"
 
 
 def cmake_extension(name, *args, **kwargs) -> setuptools.Extension:
@@ -88,6 +88,10 @@ class BuildExtension(build_ext):
         # for windows
         make_args = "-j1"
         system_make_args = ""
+        local_temp_dir = Path(self.build_temp).resolve() / "tmp"
+        os.makedirs(local_temp_dir, exist_ok=True)
+        os.environ["TMP"] = str(local_temp_dir)
+        os.environ["TEMP"] = str(local_temp_dir)
         windows_build_args = get_windows_build_args(make_args, system_make_args)
         build_cmd = f"""
             cmake {cmake_args} -B {self.build_temp} -S {cur_dir}
