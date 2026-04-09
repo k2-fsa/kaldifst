@@ -35,7 +35,11 @@ message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 option(KALDIFST_BUILD_TESTS "Whether to build tests or not" OFF)
 option(KALDIFST_BUILD_PYTHON "Whether to build Python" ON)
-option(BUILD_SHARED_LIBS "Whether to build shared libraries" ON)
+if(WIN32)
+  option(BUILD_SHARED_LIBS "Whether to build shared libraries" OFF)
+else()
+  option(BUILD_SHARED_LIBS "Whether to build shared libraries" ON)
+endif()
 
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
@@ -87,6 +91,8 @@ if(WIN32)
   foreach(w IN LISTS disabled_warnings)
     string(APPEND CMAKE_CXX_FLAGS " ${w} ")
   endforeach()
+
+  add_compile_options(/bigobj)
 endif()
 
 if(WIN32)
