@@ -16,6 +16,16 @@ set(srcs
   )
 
 add_library(kaldifst_core STATIC ${srcs})
+
+if(NOT WIN32)
+  set_target_properties(kaldifst_core
+    PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+      C_VISIBILITY_PRESET hidden
+      CXX_VISIBILITY_PRESET hidden
+  )
+endif()
+
 target_link_libraries(kaldifst_core PUBLIC fst)
 
 if(MSVC)
