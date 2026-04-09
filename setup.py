@@ -20,6 +20,16 @@ def is_windows():
     return platform.system() == "Windows"
 
 
+def get_windows_build_args(make_args: str, system_make_args: str) -> str:
+    for args in (make_args, system_make_args):
+        match = re.search(r"-j\s*(\d+)", args)
+        if match is not None:
+            return f"/m:{match.group(1)}"
+        if "-j" in args:
+            return "/m"
+    return "/m:1"
+
+
 def cmake_extension(name, *args, **kwargs) -> setuptools.Extension:
     kwargs["language"] = "c++"
     sources = []
@@ -80,9 +90,10 @@ class BuildExtension(build_ext):
             return
 
         # for windows
+        windows_build_args = get_windows_build_args(make_args, system_make_args)
         build_cmd = f"""
             cmake {cmake_args} -B {self.build_temp} -S {cur_dir}
-            cmake --build {self.build_temp} --target install --config Release -- -m
+            cmake --build {self.build_temp} --target install --config Release -- {windows_build_args}
         """
         print(f"build command is:\n{build_cmd}")
 
@@ -91,7 +102,7 @@ class BuildExtension(build_ext):
             raise Exception("Failed to build kaldifst")
 
         ret = os.system(
-            f"cmake --build {self.build_temp} --target install --config Release -- -m"
+            f"cmake --build {self.build_temp} --target install --config Release -- {windows_build_args}"
         )
         if ret != 0:
             raise Exception("Failed to build kaldifst")
