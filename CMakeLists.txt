@@ -89,6 +89,10 @@ if(WIN32)
   endforeach()
 endif()
 
+if(WIN32)
+  add_definitions(-DNOMINMAX) # Otherwise, std::max() and std::min() won't work
+endif()
+
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 if(KALDIFST_BUILD_PYTHON)
