@@ -54,8 +54,8 @@ class StringRepository {
     }
   };
 
-  typedef unordered_map<const std::vector<Label> *, StringId, VectorKey,
-                        VectorEqual>
+  typedef std::unordered_map<const std::vector<Label> *, StringId, VectorKey,
+                             VectorEqual>
       MapType;
 
   StringId IdOfEmpty() { return no_symbol; }

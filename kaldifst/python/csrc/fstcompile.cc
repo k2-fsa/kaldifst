@@ -99,6 +99,30 @@ Return:
 
 namespace kaldifst {
 
+static std::unique_ptr<const fst::SymbolTable> GetSymbolTable(
+    const py::object &obj, bool allow_negative_labels) {
+  using fst::SymbolTable;
+
+  std::unique_ptr<const SymbolTable> syms;
+  if (obj.is_none()) return syms;
+
+  if (py::isinstance<py::str>(obj)) {
+    syms.reset(SymbolTable::ReadText(py::cast<std::string>(obj)));
+  } else {
+    syms.reset(py::cast<SymbolTable *>(obj)->Copy());
+  }
+
+  KALDIFST_ASSERT(syms);
+  if (!allow_negative_labels) {
+    for (const auto &item : *syms) {
+      if (item.Label() < 0) {
+        KALDIFST_ERR << "Negative labels are not allowed in symbol tables";
+      }
+    }
+  }
+  return syms;
+}
+
 struct FstCompileParams {
   // Input in acceptor format
   bool acceptor = false;
@@ -134,47 +158,16 @@ struct FstCompileParams {
 
 py::object FstCompileImpl(const FstCompileParams &params,
                           const std::string &str) {
-  using fst::SymbolTable;
-  using fst::SymbolTableTextOptions;
-
   std::stringstream ss(str);
 
-  const SymbolTableTextOptions opts(params.allow_negative_labels);
+  auto isyms = GetSymbolTable(params.isymbols, params.allow_negative_labels);
+  auto osyms = GetSymbolTable(params.osymbols, params.allow_negative_labels);
+  auto ssyms = GetSymbolTable(params.ssymbols, params.allow_negative_labels);
 
-  std::unique_ptr<const SymbolTable> isyms;
-  if (!params.isymbols.is_none()) {
-    if (py::isinstance<py::str>(params.isymbols)) {
-      isyms.reset(SymbolTable::ReadText(py::str(params.isymbols), opts));
-    } else {
-      isyms.reset(py::cast<SymbolTable *>(params.isymbols)->Copy());
-    }
-    KALDIFST_ASSERT(isyms);
-  }
-
-  std::unique_ptr<const SymbolTable> osyms;
-  if (!params.osymbols.is_none()) {
-    if (py::isinstance<py::str>(params.osymbols)) {
-      osyms.reset(SymbolTable::ReadText(py::str(params.osymbols), opts));
-    } else {
-      osyms.reset(py::cast<SymbolTable *>(params.osymbols)->Copy());
-    }
-    KALDIFST_ASSERT(osyms);
-  }
-
-  std::unique_ptr<const SymbolTable> ssyms;
-  if (!params.ssymbols.is_none()) {
-    if (py::isinstance<py::str>(params.ssymbols)) {
-      ssyms.reset(SymbolTable::ReadText(py::str(params.ssymbols), opts));
-    } else {
-      ssyms.reset(py::cast<SymbolTable *>(params.ssymbols)->Copy());
-    }
-    KALDIFST_ASSERT(ssyms);
-  }
-
-  std::unique_ptr<fst::script::FstClass> fst(fst::script::CompileFstInternal(
+  std::unique_ptr<fst::script::FstClass> fst(fst::script::CompileInternal(
       ss, "", params.fst_type, params.arc_type, isyms.get(), osyms.get(),
-      ssyms.get(), params.acceptor, params.keep_isymbols, params.keep_osymbols,
-      params.keep_state_numbering, params.allow_negative_labels));
+      ssyms.get(), params.acceptor, params.keep_isymbols,
+      params.keep_osymbols, params.keep_state_numbering));
 
   if (params.arc_type == "standard") {
     const fst::StdFst *_ans = fst->GetFst<fst::StdArc>();

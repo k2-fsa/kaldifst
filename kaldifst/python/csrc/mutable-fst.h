@@ -63,7 +63,8 @@ void PybindMutableFst(py::module &m,  // NOLINT
       .def("set_properties", &PyClass::SetProperties, py::arg("props"),
            py::arg("mask"))
       .def("add_state", &PyClass::AddState)
-      .def("add_arc", &PyClass::AddArc, py::arg("state"), py::arg("arc"))
+      .def("add_arc", (void (PyClass::*)(StateId, const A &))(&PyClass::AddArc),
+           py::arg("state"), py::arg("arc"))
       .def("delete_states",
            (void (PyClass::*)(const std::vector<StateId> &))(
                &PyClass::DeleteStates),

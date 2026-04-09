@@ -113,7 +113,7 @@ class LatticeWeightTpl {
                               floor(value2_ / delta + 0.5F) * delta);
     }
   }
-  static constexpr uint64 Properties() {
+  static constexpr uint64_t Properties() {
     return kLeftSemiring | kRightSemiring | kCommutative | kPath | kIdempotent;
   }
 
@@ -205,7 +205,7 @@ class LatticeWeightTpl {
 
   friend std::istream &operator>>
       <FloatType>(std::istream &, LatticeWeightTpl<FloatType> &);
-  friend std::ostream &operator<<<FloatType>(
+  friend std::ostream &operator<< <FloatType>(
       std::ostream &, const LatticeWeightTpl<FloatType> &);
 
  private:
@@ -395,8 +395,8 @@ template <class FloatType>
 inline std::ostream &operator<<(std::ostream &strm,
                                 const LatticeWeightTpl<FloatType> &w) {
   LatticeWeightTpl<FloatType>::WriteFloatType(strm, w.Value1());
-  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
-  strm << FLAGS_fst_weight_separator[0];  // comma by default;
+  CHECK_EQ(FST_FLAGS_fst_weight_separator.size(), 1);
+  strm << FST_FLAGS_fst_weight_separator[0];  // comma by default;
   // may or may not be settable from Kaldi programs.
   LatticeWeightTpl<FloatType>::WriteFloatType(strm, w.Value2());
   return strm;
@@ -405,9 +405,9 @@ inline std::ostream &operator<<(std::ostream &strm,
 template <class FloatType>
 inline std::istream &operator>>(std::istream &strm,
                                 LatticeWeightTpl<FloatType> &w1) {
-  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
+  CHECK_EQ(FST_FLAGS_fst_weight_separator.size(), 1);
   // separator defaults to ','
-  return w1.ReadNoParen(strm, FLAGS_fst_weight_separator[0]);
+  return w1.ReadNoParen(strm, FST_FLAGS_fst_weight_separator[0]);
 }
 
 // CompactLattice will be an acceptor (accepting the words/output-symbols),
@@ -500,7 +500,7 @@ class CompactLatticeWeightTpl {
     return CompactLatticeWeightTpl(weight_.Quantize(delta), string_);
   }
 
-  static constexpr uint64 Properties() {
+  static constexpr uint64_t Properties() {
     return kLeftSemiring | kRightSemiring | kPath | kIdempotent;
   }
 
@@ -511,7 +511,7 @@ class CompactLatticeWeightTpl {
     if (strm.fail()) {
       return strm;
     }
-    int32 sz;
+    int32_t sz;
     ReadType(strm, &sz);
     if (strm.fail()) {
       return strm;
@@ -522,7 +522,7 @@ class CompactLatticeWeightTpl {
       return strm;
     }
     string_.resize(sz);
-    for (int32 i = 0; i < sz; i++) {
+    for (int32_t i = 0; i < sz; i++) {
       ReadType(strm, &(string_[i]));
     }
     return strm;
@@ -535,9 +535,9 @@ class CompactLatticeWeightTpl {
     if (strm.fail()) {
       return strm;
     }
-    int32 sz = static_cast<int32>(string_.size());
+    int32_t sz = static_cast<int32_t>(string_.size());
     WriteType(strm, sz);
-    for (int32 i = 0; i < sz; i++) WriteType(strm, string_[i]);
+    for (int32_t i = 0; i < sz; i++) WriteType(strm, string_[i]);
     return strm;
   }
   size_t Hash() const {
@@ -626,9 +626,9 @@ class NaturalLess<
   }
 };
 template <>
-class NaturalLess<CompactLatticeWeightTpl<LatticeWeightTpl<float>, int32>> {
+class NaturalLess<CompactLatticeWeightTpl<LatticeWeightTpl<float>, int32_t>> {
  public:
-  typedef CompactLatticeWeightTpl<LatticeWeightTpl<float>, int32> Weight;
+  typedef CompactLatticeWeightTpl<LatticeWeightTpl<float>, int32_t> Weight;
 
   NaturalLess() {}
 
@@ -640,9 +640,9 @@ class NaturalLess<CompactLatticeWeightTpl<LatticeWeightTpl<float>, int32>> {
   }
 };
 template <>
-class NaturalLess<CompactLatticeWeightTpl<LatticeWeightTpl<double>, int32>> {
+class NaturalLess<CompactLatticeWeightTpl<LatticeWeightTpl<double>, int32_t>> {
  public:
-  typedef CompactLatticeWeightTpl<LatticeWeightTpl<double>, int32> Weight;
+  typedef CompactLatticeWeightTpl<LatticeWeightTpl<double>, int32_t> Weight;
 
   NaturalLess() {}
 
@@ -745,8 +745,8 @@ template <class WeightType, class IntType>
 inline std::ostream &operator<<(
     std::ostream &strm, const CompactLatticeWeightTpl<WeightType, IntType> &w) {
   strm << w.Weight();
-  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
-  strm << FLAGS_fst_weight_separator[0];  // comma by default.
+  CHECK_EQ(FST_FLAGS_fst_weight_separator.size(), 1);
+  strm << FST_FLAGS_fst_weight_separator[0];  // comma by default.
   for (size_t i = 0; i < w.String().size(); i++) {
     strm << w.String()[i];
     if (i + 1 < w.String().size())
@@ -764,8 +764,8 @@ inline std::istream &operator>>(
   if (strm.fail()) {
     return strm;
   }
-  CHECK_EQ(FLAGS_fst_weight_separator.size(), 1);
-  size_t pos = s.find_last_of(FLAGS_fst_weight_separator);  // normally ","
+  CHECK_EQ(FST_FLAGS_fst_weight_separator.size(), 1);
+  size_t pos = s.find_last_of(FST_FLAGS_fst_weight_separator);  // normally ","
   if (pos == std::string::npos) {
     strm.clear(std::ios::badbit);
     return strm;
@@ -885,7 +885,7 @@ typedef LatticeWeightTpl<float> LatticeWeight;
 typedef ArcTpl<LatticeWeight> LatticeArc;
 typedef VectorFst<LatticeArc> Lattice;
 
-// careful: kaldi::int32 is not always the same C type as fst::int32
+// careful: kaldi::int32_t is not always the same C type as fst::int32_t
 typedef CompactLatticeWeightTpl<LatticeWeight, int32_t> CompactLatticeWeight;
 typedef CompactLatticeWeightCommonDivisorTpl<LatticeWeight, int32_t>
     CompactLatticeWeightCommonDivisor;

@@ -14,8 +14,8 @@
 
 #include <vector>
 
+#include "fst/arc-map.h"
 #include "fst/fst.h"
-#include "fst/map.h"
 #include "fst/minimize.h"
 
 namespace fst {
@@ -29,7 +29,7 @@ namespace fst {
 // something that is satisfied by our normal FSTs.
 template <class Arc>
 void MinimizeEncoded(MutableFst<Arc> *fst, float delta = kDelta) {
-  Map(fst, QuantizeMapper<Arc>(delta));
+  ArcMap(fst, QuantizeMapper<Arc>(delta));
   EncodeMapper<Arc> encoder(kEncodeLabels | kEncodeWeights, ENCODE);
   Encode(fst, &encoder);
   internal::AcceptorMinimize(fst);

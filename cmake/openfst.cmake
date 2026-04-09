@@ -3,25 +3,23 @@
 function(download_openfst)
   include(FetchContent)
 
-  set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/tags/sherpa-onnx-2024-06-13.tar.gz")
-  set(openfst_URL2 "https://hub.nuaa.cf/csukuangfj/openfst/archive/refs/tags/sherpa-onnx-2024-06-13.tar.gz")
-  set(openfst_HASH "SHA256=f10a71c6b64d89eabdc316d372b956c30c825c7c298e2f20c780320e8181ffb6")
+  set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/heads/openfst-1.8.5.zip")
+  set(openfst_HASH "SHA256=08ae541e252b1d727ac7b292bcda5dac72cba4035a114181b313b1fbafdff23c")
 
   # If you don't have access to the Internet,
   # please pre-download it
   set(possible_file_locations
-    $ENV{HOME}/Downloads/openfst-sherpa-onnx-2024-06-13.tar.gz
-    ${CMAKE_SOURCE_DIR}/openfst-sherpa-onnx-2024-06-13.tar.gz
-    ${CMAKE_BINARY_DIR}/openfst-sherpa-onnx-2024-06-13.tar.gz
-    /tmp/openfst-sherpa-onnx-2024-06-13.tar.gz
-    /star-fj/fangjun/download/github/openfst-sherpa-onnx-2024-06-13.tar.gz
+    $ENV{HOME}/Downloads/openfst-openfst-1.8.5.zip
+    ${CMAKE_SOURCE_DIR}/openfst-openfst-1.8.5.zip
+    ${CMAKE_BINARY_DIR}/openfst-openfst-1.8.5.zip
+    /tmp/openfst-openfst-1.8.5.zip
+    /star-fj/fangjun/download/github/openfst-openfst-1.8.5.zip
   )
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})
       set(openfst_URL  "${f}")
       file(TO_CMAKE_PATH "${openfst_URL}" openfst_URL)
-      set(openfst_URL2)
       break()
     endif()
   endforeach()
@@ -41,25 +39,10 @@ function(download_openfst)
   set(HAVE_PYTHON OFF CACHE BOOL "" FORCE)
   set(HAVE_SPECIAL OFF CACHE BOOL "" FORCE)
 
-  if(NOT WIN32)
-    FetchContent_Declare(openfst
-      URL
-        ${openfst_URL}
-        ${openfst_URL2}
-      URL_HASH          ${openfst_HASH}
-      PATCH_COMMAND
-        sed -i.bak s/enable_testing\(\)//g "src/CMakeLists.txt" &&
-        sed -i.bak s/add_subdirectory\(test\)//g "src/CMakeLists.txt" &&
-        sed -i.bak /message/d "src/script/CMakeLists.txt"
-        # sed -i.bak s/add_subdirectory\(script\)//g "src/CMakeLists.txt" &&
-        # sed -i.bak s/add_subdirectory\(extensions\)//g "src/CMakeLists.txt"
-    )
-  else()
-    FetchContent_Declare(openfst
-      URL               ${openfst_URL}
-      URL_HASH          ${openfst_HASH}
-    )
-  endif()
+  FetchContent_Declare(openfst
+    URL               ${openfst_URL}
+    URL_HASH          ${openfst_HASH}
+  )
 
   FetchContent_GetProperties(openfst)
   if(NOT openfst_POPULATED)

@@ -302,7 +302,7 @@ void ComposeContext(const std::vector<int32_t> &disambig_syms_in,
   if (central_position != context_width - 1) {
     AddSubsequentialLoop(subseq_sym, ifst);
     if (project_ifst) {
-      fst::Project(ifst, fst::PROJECT_INPUT);
+      fst::Project(ifst, fst::ProjectType::INPUT);
     }
   }
 

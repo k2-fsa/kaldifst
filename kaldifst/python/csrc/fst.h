@@ -119,6 +119,7 @@ void PybindFst(py::module &m,  // NOLINT
   using Arc = typename PyClass::Arc;
   using StateId = typename PyClass::StateId;
   using Weight = typename PyClass::Weight;
+  using ReadFromString = PyClass *(*)(std::string_view);
 
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
       .def_property_readonly("start", &PyClass::Start)
@@ -171,13 +172,13 @@ void PybindFst(py::module &m,  // NOLINT
            "      .. code-block:: python\n\n"
            "          fst2 = kaldifst.StdVectorFst(fst1)\n\n",
            py::arg("safe") = false, py::return_value_policy::take_ownership)
-      .def_static(
-          "read", overload_cast_<const fst::string &>()(&PyClass::Read),
-          "Reads an FST from a file; returns nullptr on error. An empty\n"
-          "filename results in reading from standard input.",
-          py::arg("filename"), py::return_value_policy::take_ownership)
+       .def_static(
+           "read", static_cast<ReadFromString>(&PyClass::Read),
+           "Reads an FST from a file; returns nullptr on error. An empty\n"
+           "filename results in reading from standard input.",
+           py::arg("filename"), py::return_value_policy::take_ownership)
       .def("write",
-           (bool (PyClass::*)(const fst::string &) const)(&PyClass::Write),
+           (bool (PyClass::*)(const std::string &) const)(&PyClass::Write),
            "Writes an FST to a file; returns false on error; an empty\n"
            "filename results in writing to standard output.",
            py::arg("filename"))
@@ -211,7 +212,7 @@ void PybindFst(py::module &m,  // NOLINT
                                   "      ",  // fst field separator, 6 spaces
                                   ""         // missing symbol
                                   )
-                 .Print(&os, "standard output");
+                  .Print(os, "standard output");
              return os.str();
            })
       .def(
@@ -227,7 +228,7 @@ void PybindFst(py::module &m,  // NOLINT
                                  _fst.OutputSymbols(), nullptr, is_acceptor,
                                  show_weight_one, fst_field_separator,
                                  missing_symbol)
-                .Print(&os, dest);
+                 .Print(os, dest);
             return os.str();
           },
           "see fstprint for help, e.g., fstprint --help",
@@ -248,17 +249,18 @@ void PybindFstImpl(py::module &m,  // NOLINT
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
       .def(py::init<>())
       .def_property("type", &PyClass::Type, &PyClass::SetType)
-      .def("properties", (uint64(PyClass::*)() const)(&PyClass::Properties))
+      .def("properties", (uint64_t (PyClass::*)() const)(&PyClass::Properties))
       .def("properties",
-           (uint64(PyClass::*)(uint64) const)(&PyClass::Properties))
+           (uint64_t (PyClass::*)(uint64_t) const)(&PyClass::Properties))
       .def("set_properties",
-           (void (PyClass::*)(uint64))(&PyClass::SetProperties),
+           (void (PyClass::*)(uint64_t))(&PyClass::SetProperties),
            py::arg("props"))
       .def("set_properties",
-           (void (PyClass::*)(uint64, uint64))(&PyClass::SetProperties),
+           (void (PyClass::*)(uint64_t, uint64_t))(&PyClass::SetProperties),
            py::arg("props"), py::arg("mask"))
       .def("set_properties",
-           (void (PyClass::*)(uint64, uint64) const)(&PyClass::SetProperties),
+           (void (PyClass::*)(uint64_t, uint64_t)
+                const)(&PyClass::SetProperties),
            py::arg("props"), py::arg("mask"))
       .def_property(
           "input_symbols", [](PyClass &self) { return self.InputSymbols(); },

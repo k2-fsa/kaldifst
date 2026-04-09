@@ -34,6 +34,7 @@ void PybindVectorFstBaseImpl(py::module &m,  // NOLINT
                              const std::string &class_help_doc = "") {
   using PyClass = fst::internal::VectorFstBaseImpl<S>;
   using Parent = fst::internal::FstImpl<typename S::Arc>;
+  using Arc = typename S::Arc;
   using StateId = typename PyClass::StateId;
   py::class_<PyClass>(m, class_name.c_str(), class_help_doc.c_str())
       .def(py::init<>())
@@ -45,10 +46,11 @@ void PybindVectorFstBaseImpl(py::module &m,  // NOLINT
       .def("num_output_epsilons", &PyClass::NumOutputEpsilons, py::arg("state"))
       .def("set_final", &PyClass::SetFinal, py::arg("state"), py::arg("weight"))
       .def("add_state", (StateId(PyClass::*)())(&PyClass::AddState))
-      .def("add_arc", &PyClass::AddArc, py::arg("state"), py::arg("arc"))
+      .def("add_arc", (void (PyClass::*)(StateId, const Arc &))(&PyClass::AddArc),
+           py::arg("state"), py::arg("arc"))
       .def("delete_states",
            (void (PyClass::*)(const std::vector<StateId> &))(
-               &PyClass::DeleteStates),
+                &PyClass::DeleteStates),
            py::arg("states"))
       .def("delete_states", (void (PyClass::*)())(&PyClass::DeleteStates))
       .def("delete_arcs",
@@ -80,11 +82,12 @@ void PybindVectorFst(py::module &m,  // NOLINT
   using PyClass = fst::VectorFst<A>;
   using Parent = fst::ImplToMutableFst<fst::internal::VectorFstImpl<S>>;
   using Arc = typename PyClass::Arc;
+  using ReadFromString = PyClass *(*)(std::string_view);
   py::class_<PyClass, Parent>(m, class_name.c_str(), class_help_doc.c_str())
       .def(py::init<>())
       .def(py::init<const fst::Fst<Arc> &>(), py::arg("fst"))
       .def_static(
-          "read", overload_cast_<const fst::string &>()(&PyClass::Read),
+          "read", static_cast<ReadFromString>(&PyClass::Read),
           "Reads an FST from a file; returns nullptr on error. An empty\n"
           "filename results in reading from standard input.",
           py::arg("filename"), py::return_value_policy::take_ownership);

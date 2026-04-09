@@ -152,15 +152,15 @@ class InverseContextFst : public DeterministicOnDemandFst<StdArc> {
   // Map type to map from vectors of int32_t (representing phonetic contexts,
   // which will be of dimension context_width - 1) to StateId (corresponding to
   // the state index in this FST).
-  typedef unordered_map<std::vector<int32_t>, StateId,
-                        kaldifst::VectorHasher<int32_t>>
+  typedef std::unordered_map<std::vector<int32_t>, StateId,
+                             kaldifst::VectorHasher<int32_t>>
       VectorToStateMap;
 
   // Map type to map from vectors of int32_t (representing ilabel-info,
   // see http://kaldi-asr.org/doc/tree_externals.html#tree_ilabel) to
   // Label (the output label in this FST).
-  typedef unordered_map<std::vector<int32_t>, Label,
-                        kaldifst::VectorHasher<int32_t>>
+  typedef std::unordered_map<std::vector<int32_t>, Label,
+                             kaldifst::VectorHasher<int32_t>>
       VectorToLabelMap;
 
   // Sometimes called N, context_width_ this is the width of the

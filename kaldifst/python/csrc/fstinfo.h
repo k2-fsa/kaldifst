@@ -5,6 +5,7 @@
 #ifndef KALDIFST_PYTHON_CSRC_FSTINFO_H_
 #define KALDIFST_PYTHON_CSRC_FSTINFO_H_
 
+#include <stdexcept>
 #include <string>
 
 #include "fst/script/info.h"
@@ -13,6 +14,19 @@
 namespace kaldifst {
 
 void PybindFstInfo(py::module &m);  // NOLINT
+
+inline fst::script::ArcFilterType GetArcFilterType(
+    const std::string &arc_filter) {
+  if (arc_filter == "any") return fst::script::ArcFilterType::ANY;
+  if (arc_filter == "epsilon") return fst::script::ArcFilterType::EPSILON;
+  if (arc_filter == "iepsilon") {
+    return fst::script::ArcFilterType::INPUT_EPSILON;
+  }
+  if (arc_filter == "oepsilon") {
+    return fst::script::ArcFilterType::OUTPUT_EPSILON;
+  }
+  throw std::invalid_argument("Unsupported arc_filter: " + arc_filter);
+}
 
 template <typename A>
 void PybindFstInfo(py::module &m,  // NOLINT
@@ -23,9 +37,10 @@ void PybindFstInfo(py::module &m,  // NOLINT
       [](const PyClass &fst, const std::string &arc_filter = "any",
          const std::string &info_type = "auto", bool pipe = false,
          bool test_properties = false, bool fst_verify = true) {
+        (void)pipe;
         auto _fst = fst::script::FstClass(fst);
-        fst::script::PrintFstInfo(_fst, test_properties, arc_filter, info_type,
-                                  fst_verify, pipe);
+        fst::script::Info(_fst, test_properties, GetArcFilterType(arc_filter),
+                          info_type, fst_verify);
       },
       R"(
 --arc_filter: type = string, default = "any"

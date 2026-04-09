@@ -14,6 +14,30 @@
 
 namespace kaldifst {
 
+static std::unique_ptr<const fst::SymbolTable> GetDrawSymbolTable(
+    const py::object &obj, bool allow_negative_labels) {
+  using fst::SymbolTable;
+
+  std::unique_ptr<const SymbolTable> syms;
+  if (obj.is_none()) return syms;
+
+  if (py::isinstance<py::str>(obj)) {
+    syms.reset(SymbolTable::ReadText(py::cast<std::string>(obj)));
+  } else {
+    syms.reset(py::cast<SymbolTable *>(obj)->Copy());
+  }
+
+  KALDIFST_ASSERT(syms);
+  if (!allow_negative_labels) {
+    for (const auto &item : *syms) {
+      if (item.Label() < 0) {
+        KALDIFST_ERR << "Negative labels are not allowed in symbol tables";
+      }
+    }
+  }
+  return syms;
+}
+
 void PybindFstDraw(py::module &m);  // NOLINT
 
 struct FstDrawParams {
@@ -71,42 +95,11 @@ struct FstDrawParams {
 template <typename A>
 std::string FstDrawImpl(const fst::script::FstClass &fst,
                         const FstDrawParams &params) {
-  using fst::SymbolTable;
-  using fst::SymbolTableTextOptions;
-
   std::ostringstream os;
 
-  const SymbolTableTextOptions opts(params.allow_negative_labels);
-
-  std::unique_ptr<const SymbolTable> isyms;
-  if (!params.isymbols.is_none()) {
-    if (py::isinstance<py::str>(params.isymbols)) {
-      isyms.reset(SymbolTable::ReadText(py::str(params.isymbols), opts));
-    } else {
-      isyms.reset(py::cast<SymbolTable *>(params.isymbols)->Copy());
-    }
-    KALDIFST_ASSERT(isyms);
-  }
-
-  std::unique_ptr<const SymbolTable> osyms;
-  if (!params.osymbols.is_none()) {
-    if (py::isinstance<py::str>(params.osymbols)) {
-      osyms.reset(SymbolTable::ReadText(py::str(params.osymbols), opts));
-    } else {
-      osyms.reset(py::cast<SymbolTable *>(params.osymbols)->Copy());
-    }
-    KALDIFST_ASSERT(osyms);
-  }
-
-  std::unique_ptr<const SymbolTable> ssyms;
-  if (!params.ssymbols.is_none()) {
-    if (py::isinstance<py::str>(params.ssymbols)) {
-      ssyms.reset(SymbolTable::ReadText(py::str(params.ssymbols), opts));
-    } else {
-      ssyms.reset(py::cast<SymbolTable *>(params.ssymbols)->Copy());
-    }
-    KALDIFST_ASSERT(ssyms);
-  }
+  auto isyms = GetDrawSymbolTable(params.isymbols, params.allow_negative_labels);
+  auto osyms = GetDrawSymbolTable(params.osymbols, params.allow_negative_labels);
+  auto ssyms = GetDrawSymbolTable(params.ssymbols, params.allow_negative_labels);
 
   if (!isyms && !params.numeric && fst.InputSymbols()) {
     isyms.reset(fst.InputSymbols()->Copy());
@@ -121,8 +114,8 @@ std::string FstDrawImpl(const fst::script::FstClass &fst,
       *fst.GetFst<A>(), isyms.get(), osyms.get(), ssyms.get(), params.acceptor,
       params.title, params.width, params.height, params.portrait,
       params.vertical, params.ranksep, params.nodesep, params.fontsize,
-      params.precision, params.float_format, params.show_weight_one);
-  a.Draw(&os, dest);
+      params.precision, params.float_format, params.show_weight_one, "dot");
+  a.Draw(os, dest);
   return os.str();
 }
 

@@ -138,7 +138,7 @@ VectorFst<fst::StdArc> *ReadAndPrepareLmFst(const std::string &rxfilename) {
     // symbol #0 on the input symbols of the backoff arc, and projection will
     // replace them with epsilons which is what is on the output symbols of
     // those arcs.
-    Project(ans, fst::PROJECT_OUTPUT);
+    Project(ans, fst::ProjectType::OUTPUT);
   }
   if (ans->Properties(fst::kILabelSorted, true) == 0) {
     // Make sure LM is sorted on ilabel.

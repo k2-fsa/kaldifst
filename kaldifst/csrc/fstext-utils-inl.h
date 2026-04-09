@@ -80,7 +80,7 @@ VectorFst<Arc> *MakeLoopFst(const std::vector<const ExpandedFst<Arc> *> &fsts) {
 
   // "cache" is used as an optimization when some of the pointers in "fsts"
   // may have the same value.
-  unordered_map<const ExpandedFst<Arc> *, Arc> cache;
+  std::unordered_map<const ExpandedFst<Arc> *, Arc> cache;
 
   for (Label i = 0; i < static_cast<Label>(fsts.size()); i++) {
     const ExpandedFst<Arc> *fst = fsts[i];
@@ -192,7 +192,7 @@ void RemoveSomeInputSymbols(const std::vector<I> &to_remove,
                             MutableFst<Arc> *fst) {
   static_assert(std::is_integral<I>::value, "");
   RemoveSomeInputSymbolsMapper<Arc, I> mapper(to_remove);
-  Map(fst, mapper);
+  ArcMap(fst, mapper);
 }
 
 template <class T>

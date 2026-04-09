@@ -40,10 +40,11 @@ static void PybindFstWriteOptions(py::module &m) {  // NOLINT
                      "Write data aligned (may fail on pipes)?")
       .def_readwrite("stream_write", &PyClass::stream_write,
                      "Avoid seek operations in writing.")
-      .def(py::init<const string &, bool, bool, bool, bool, bool>(),
+      .def(py::init<const std::string &, bool, bool, bool, bool, bool>(),
            py::arg("source") = "<unspecified>", py::arg("write_header") = true,
            py::arg("write_isymbols") = true, py::arg("write_osymbols") = true,
-           py::arg("align") = FLAGS_fst_align, py::arg("stream_write") = false)
+           py::arg("align") = FST_FLAGS_fst_align,
+           py::arg("stream_write") = false)
       .def("__str__", [](const PyClass &self) {
         std::ostringstream os;
         os << "source: " << self.source << "\n"
@@ -60,11 +61,11 @@ static void PybindFstReadOptions(py::module &m) {  // NOLINT
   using PyClass = fst::FstReadOptions;
   auto fst_read_options =
       py::class_<fst::FstReadOptions>(m, "FstReadOptions")
-          .def(py::init<const fst::string &, const fst::FstHeader *,
+          .def(py::init<const std::string &, const fst::FstHeader *,
                         const fst::SymbolTable *, const fst::SymbolTable *>(),
                py::arg("source") = "<unspecified>", py::arg("header") = nullptr,
                py::arg("isymbols") = nullptr, py::arg("osymbols") = nullptr)
-          .def(py::init<const fst::string &, const fst::SymbolTable *,
+          .def(py::init<const std::string &, const fst::SymbolTable *,
                         const fst::SymbolTable *>(),
                py::arg("source"), py::arg("isymbols") = nullptr,
                py::arg("osymbols") = nullptr)

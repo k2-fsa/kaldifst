@@ -98,7 +98,7 @@ void ComposeDeterministicOnDemand(const Fst<Arc> &fst1,
   typedef typename Arc::Weight Weight;
   typedef typename Arc::StateId StateId;
   typedef std::pair<StateId, StateId> StatePair;
-  typedef unordered_map<StatePair, StateId, kaldifst::PairHasher<StateId>>
+  typedef std::unordered_map<StatePair, StateId, kaldifst::PairHasher<StateId>>
       MapType;
   typedef typename MapType::iterator IterType;
 
@@ -183,7 +183,7 @@ void ComposeDeterministicOnDemandInverse(const Fst<Arc> &right,
   typedef typename Arc::Weight Weight;
   typedef typename Arc::StateId StateId;
   typedef std::pair<StateId, StateId> StatePair;
-  typedef unordered_map<StatePair, StateId, kaldifst::PairHasher<StateId>>
+  typedef std::unordered_map<StatePair, StateId, kaldifst::PairHasher<StateId>>
       MapType;
   typedef typename MapType::iterator IterType;
 

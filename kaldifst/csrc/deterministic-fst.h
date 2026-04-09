@@ -76,8 +76,8 @@ class ComposeDeterministicOnDemandFst : public DeterministicOnDemandFst<Arc> {
  private:
   DeterministicOnDemandFst<Arc> *fst1_;
   DeterministicOnDemandFst<Arc> *fst2_;
-  typedef unordered_map<std::pair<StateId, StateId>, StateId,
-                        kaldifst::PairHasher<StateId>>
+  typedef std::unordered_map<std::pair<StateId, StateId>, StateId,
+                             kaldifst::PairHasher<StateId>>
       MapType;
   MapType state_map_;
   std::vector<std::pair<StateId, StateId>> state_vec_;  // maps from
