@@ -39,8 +39,11 @@ if(MSVC)
     _kaldifst
     PRIVATE
       $<$<CONFIG:Release>:/GL->
+      $<$<CONFIG:Release>:/Od /Ob0>
       $<$<CONFIG:RelWithDebInfo>:/GL->
+      $<$<CONFIG:RelWithDebInfo>:/Od /Ob0>
       $<$<CONFIG:MinSizeRel>:/GL->
+      $<$<CONFIG:MinSizeRel>:/Od /Ob0>
   )
   target_link_options(
     _kaldifst
