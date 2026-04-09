@@ -1,4 +1,4 @@
-from _kaldifst import (
+from kaldifst.lib._kaldifst import (
     FloatWeight,
     Lattice,
     LatticeArc,

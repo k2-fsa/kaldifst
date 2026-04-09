@@ -4,7 +4,7 @@ function(download_openfst)
   include(FetchContent)
 
   set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/heads/openfst-1.8.5.zip")
-  set(openfst_HASH "SHA256=b520301481c7b93904ed423bb5de65618bedab107c755e784f0314553729e520")
+  set(openfst_HASH "SHA256=dbfcbd9f41895a96ca54d70dfddca59e6333831fce0a49d70c84455e5c7e5da0")
 
   # If you don't have access to the Internet,
   # please pre-download it
@@ -51,15 +51,13 @@ function(download_openfst)
   endif()
   message(STATUS "openfst is downloaded to ${openfst_SOURCE_DIR}")
 
-  if(_build_shared_libs_bak)
-    set(_build_shared_libs_bak ${BUILD_SHARED_LIBS})
-    set(BUILD_SHARED_LIBS OFF)
-  endif()
+  set(_build_shared_libs_bak ${BUILD_SHARED_LIBS})
+  set(BUILD_SHARED_LIBS OFF)
 
   add_subdirectory(${openfst_SOURCE_DIR} ${openfst_BINARY_DIR} EXCLUDE_FROM_ALL)
 
   if(_build_shared_libs_bak)
-    set_target_properties(fst fstfar
+    set_target_properties(fst fstscript
       PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         C_VISIBILITY_PRESET hidden
@@ -72,24 +70,9 @@ function(download_openfst)
 
   set_target_properties(fst PROPERTIES OUTPUT_NAME "kaldifst_fst")
 
-  install(TARGETS fst
-    DESTINATION lib
-  )
-
   if(KALDIFST_BUILD_PYTHON)
     set_target_properties(fstscript PROPERTIES OUTPUT_NAME "kaldifst_fstscript")
   endif()
-
-  if(KALDIFST_BUILD_PYTHON AND WIN32)
-    install(TARGETS fst fstscript DESTINATION ..)
-  else()
-    install(TARGETS fst fstscript DESTINATION lib)
-  endif()
-
-  if(WIN32 AND BUILD_SHARED_LIBS)
-    install(TARGETS fst fstscript DESTINATION bin)
-  endif()
-
 endfunction()
 
 download_openfst()

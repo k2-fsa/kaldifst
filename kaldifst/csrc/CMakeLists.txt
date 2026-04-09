@@ -15,7 +15,7 @@ set(srcs
   text-utils.cc
   )
 
-add_library(kaldifst_core ${srcs})
+add_library(kaldifst_core STATIC ${srcs})
 target_link_libraries(kaldifst_core PUBLIC fst)
 
 if(MSVC)
@@ -63,14 +63,4 @@ if(KALDIFST_BUILD_TESTS)
   foreach(source IN LISTS test_srcs)
     kaldifst_add_test(${source})
   endforeach()
-endif()
-
-if(KALDIFST_BUILD_PYTHON AND WIN32)
-  install(TARGETS kaldifst_core DESTINATION ..)
-else()
-  install(TARGETS kaldifst_core DESTINATION lib)
-endif()
-
-if(WIN32 AND BUILD_SHARED_LIBS)
-  install(TARGETS kaldifst_core DESTINATION bin)
 endif()

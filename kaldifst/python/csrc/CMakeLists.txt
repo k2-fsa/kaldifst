@@ -64,7 +64,7 @@ if(APPLE)
   if(PYTHON_SITE_PACKAGE_DIR STREQUAL "")
     message(WARNING "PYTHON_SITE_PACKAGE_DIR is empty!")
   else()
-    target_link_libraries(_kaldifst PRIVATE "-Wl,-rpath,${PYTHON_SITE_PACKAGE_DIR}")
+    target_link_libraries(_kaldifst PRIVATE "-Wl,-rpath,${PYTHON_SITE_PACKAGE_DIR}/kaldifst/lib")
   endif()
 endif()
 
@@ -72,6 +72,4 @@ if(NOT WIN32)
   target_link_libraries(_kaldifst PRIVATE "-Wl,-rpath,${kaldifst_rpath_origin}/kaldifst/lib")
 endif()
 
-install(TARGETS _kaldifst
-  DESTINATION ../
-)
+install(TARGETS _kaldifst DESTINATION lib)

@@ -4,7 +4,7 @@
 
 from typing import Any, Tuple
 
-from _kaldifst import (
+from kaldifst.lib._kaldifst import (
     _RandomAccessVectorFstReader,
     _SequentialVectorFstReader,
     _VectorFstWriter,

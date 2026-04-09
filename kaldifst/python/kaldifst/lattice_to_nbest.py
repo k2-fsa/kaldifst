@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from _kaldifst import (
+from kaldifst.lib._kaldifst import (
     Lattice,
     StdVectorFst,
     convert_nbest_to_vector,

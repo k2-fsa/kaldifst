@@ -1,7 +1,7 @@
 # Copyright      2021  Xiaomi Corp.        (authors: Fangjun Kuang)
 # See ../../../LICENSE for clarification regarding multiple authors
 
-from _kaldifst import (
+from kaldifst.lib._kaldifst import (
     StdConstFst,
     StdFst,
     StdVectorFst,
