@@ -4,7 +4,7 @@ function(download_openfst)
   include(FetchContent)
 
   set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/heads/openfst-1.8.5.zip")
-  set(openfst_HASH "SHA256=66914a909586bd83637bf4cefd95dfa8d1b5013a834c0793676a36005e6122a4")
+  set(openfst_HASH "SHA256=a09c5d77777d73479a76bb04d7f496daf9b622e393df2f4da85d13838eb026f3")
 
   # If you don't have access to the Internet,
   # please pre-download it
