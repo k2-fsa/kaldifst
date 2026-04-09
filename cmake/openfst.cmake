@@ -3,17 +3,17 @@
 function(download_openfst)
   include(FetchContent)
 
-  set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/heads/openfst-1.8.5.zip")
-  set(openfst_HASH "SHA256=dbfcbd9f41895a96ca54d70dfddca59e6333831fce0a49d70c84455e5c7e5da0")
+  set(openfst_URL  "https://github.com/csukuangfj/openfst/archive/refs/tags/v1.8.5-2026-04-10.tar.gz")
+  set(openfst_HASH "SHA256=c3549940384cbe4fa9f18c2bcfb1bfbd0a80492fd1b0bfa27433cee395a6a199")
 
   # If you don't have access to the Internet,
   # please pre-download it
   set(possible_file_locations
-    $ENV{HOME}/Downloads/openfst-openfst-1.8.5.zip
-    ${CMAKE_SOURCE_DIR}/openfst-openfst-1.8.5.zip
-    ${CMAKE_BINARY_DIR}/openfst-openfst-1.8.5.zip
-    /tmp/openfst-openfst-1.8.5.zip
-    /star-fj/fangjun/download/github/openfst-openfst-1.8.5.zip
+    $ENV{HOME}/Downloads/openfst-1.8.5-2026-04-10.tar.gz
+    ${CMAKE_SOURCE_DIR}/openfst-1.8.5-2026-04-10.tar.gz
+    ${CMAKE_BINARY_DIR}/openfst-1.8.5-2026-04-10.tar.gz
+    /tmp/openfst-1.8.5-2026-04-10.tar.gz
+    /star-fj/fangjun/download/github/openfst-1.8.5-2026-04-10.tar.gz
   )
 
   foreach(f IN LISTS possible_file_locations)
