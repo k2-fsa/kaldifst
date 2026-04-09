@@ -59,7 +59,11 @@ jobs:
 
           python3 -m pip install -U pip wheel numpy setuptools
           python3 setup.py bdist_wheel
+
           ls -lh dist
+
+          unzip -l ./dist/kaldifst*.whl
+
           python3 -m pip install ./dist/kaldifst*.whl
 
       - name: Test Python
