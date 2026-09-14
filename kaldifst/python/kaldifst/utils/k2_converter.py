@@ -7,7 +7,7 @@ from typing import Optional
 
 import k2
 import torch
-from _kaldifst import StdArc, StdVectorFst, SymbolTable
+from kaldifst.lib._kaldifst import StdArc, StdVectorFst, SymbolTable
 
 
 def _k2_acceptor_to_openfst(fsa: k2.Fsa) -> StdVectorFst:
