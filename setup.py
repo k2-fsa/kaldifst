@@ -47,8 +47,12 @@ class BuildExtension(build_ext):
         make_args = os.environ.get("KALDIFST_MAKE_ARGS", "")
         system_make_args = os.environ.get("MAKEFLAGS", "")
 
-        if cmake_args == "":
-            cmake_args = "-DCMAKE_BUILD_TYPE=Release "
+        # KALDIFST_CMAKE_ARGS replaces the default rather than extending it,
+        # so only supply CMAKE_BUILD_TYPE when the caller has not. Otherwise
+        # any workflow that passes e.g. -A Win32 would silently build without
+        # optimisation.
+        if "CMAKE_BUILD_TYPE" not in cmake_args:
+            cmake_args += " -DCMAKE_BUILD_TYPE=Release "
 
         extra_cmake_args = " -DKALDIFST_BUILD_TESTS=OFF "
         extra_cmake_args += f" -DCMAKE_INSTALL_PREFIX={install_dir} "

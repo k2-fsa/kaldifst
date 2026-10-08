@@ -1,21 +1,22 @@
-name: test-pip-install
+name: test-uv-install
 
 on:
   push:
     branches:
       - master
       - wheels
+
   workflow_dispatch:
 
 concurrency:
-  group: test_pip_install-${{ github.ref }}
+  group: test-uv-install-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  test_pip_install:
+  test_uv_install:
     if: github.repository_owner == 'csukuangfj' || github.repository_owner == 'k2-fsa'
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }} ${{ matrix.python-version }} ${{ matrix.architecture || ((contains(matrix.os, 'arm') || matrix.os == 'macos-14' || matrix.os == 'macos-latest') && 'arm64' || 'x64') }}
@@ -125,34 +126,45 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # No ccache: this installs a prebuilt wheel from PyPI, so nothing is
-      # compiled here.
-
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      # Note: astral-sh/setup-uv has no `architecture` input, only `python-arch`
+      # (uv's own names: x86 / x86_64 / aarch64). Passing it is what makes the
+      # Windows x86 rows actually install a 32-bit Python instead of silently
+      # testing the host's x64 one.
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v4
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture || ((contains(matrix.os, 'arm') || matrix.os == 'macos-14' || matrix.os == 'macos-latest') && 'arm64' || 'x64') }}
+          python-arch: ${{ matrix.architecture || ((contains(matrix.os, 'arm') || matrix.os == 'macos-14' || matrix.os == 'macos-latest') && 'aarch64' || 'x86_64') }}
+
+      # Create the venv before any `uv run`: `uv run` creates .venv as a side
+      # effect, and a later plain `uv venv` then fails with "A virtual
+      # environment already exists at: .venv". --clear keeps this step
+      # idempotent if that ordering ever slips again.
+      - name: Create virtual environment
+        shell: bash
+        run: |
+          uv venv --clear
 
       - name: Display Python version
         shell: bash
-        run: python -c "import sys; print(sys.version)"
+        run: uv run python -c "import sys; print(sys.version)"
 
       - name: Install kaldifst
         shell: bash
         run: |
-          pip install --verbose -U kaldifst
+          uv pip install --verbose -U kaldifst
 
       - name: Run test
         shell: bash
         run: |
           # Run from a directory that has no kaldifst/ package next to it, so
-          # `import kaldifst` resolves to site-packages (the wheel we just
-          # installed) instead of the source tree in this checkout.
+          # `import kaldifst` resolves to the wheel we just installed instead
+          # of the source tree in this checkout. uv walks up to the repo root
+          # and uses the .venv created above.
           cd kaldifst/python/tests
 
-          python3 -c "import kaldifst; print(kaldifst.__file__)"
-          python3 -c "import kaldifst; print(kaldifst.__version__)"
+          uv run python -c "import kaldifst; print(kaldifst.__file__)"
+          uv run python -c "import kaldifst; print(kaldifst.__version__)"
 
-          python3 -m pip install --upgrade pip pytest
-          pytest --ignore-glob "*k2*" --ignore-glob "*star*"
+          uv pip install --verbose -U pytest
+          uv run pytest --ignore-glob "*k2*" --ignore-glob "*star*"
