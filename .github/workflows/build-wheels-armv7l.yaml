@@ -1,0 +1,72 @@
+name: build-wheels-armv7l
+
+on:
+  push:
+    branches:
+      - wheel
+    tags:
+      - '*'
+
+  workflow_dispatch:
+
+concurrency:
+  group: build-wheels-armv7l-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_wheels_armv7l:
+    name: ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The pinned manylinux_2_31_armv7l image below ships CPython 3.9+.
+        # cp38 is omitted here only; the x86_64/aarch64 jobs still build it.
+        python-version: ["cp39", "cp310", "cp311", "cp312", "cp313", "cp314"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # armv7l is not a native architecture on ubuntu-latest. cibuildwheel
+      # runs the manylinux image under QEMU emulation.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm
+
+      # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
+      # for a list of versions
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3.1.4
+        env:
+          CIBW_BUILD: "${{ matrix.python-version}}-* "
+          CIBW_SKIP: "pp* *-musllinux*"
+          CIBW_ARCHS: "armv7l"
+          CIBW_BUILD_VERBOSITY: 3
+          # cibuildwheel's default armv7l image is still experimental; pin the
+          # one used by piper-phonemize and sherpa-onnx.
+          CIBW_MANYLINUX_ARMV7L_IMAGE: quay.io/pypa/manylinux_2_31_armv7l
+          # QEMU is slow; let make use every emulated CPU we can get.
+          CIBW_ENVIRONMENT_LINUX: KALDIFST_MAKE_ARGS="-j$(nproc)"
+
+      - name: Display wheels
+        shell: bash
+        run: |
+          ls -lh ./wheelhouse/
+
+          unzip -l wheelhouse/*.whl
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel-${{ matrix.python-version }}-armv7l
+          path: ./wheelhouse/*.whl
+
+      - name: Publish wheels to PyPI
+        env:
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel twine==5.0.0 setuptools
+
+          twine upload ./wheelhouse/*.whl

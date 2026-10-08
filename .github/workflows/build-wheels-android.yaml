@@ -1,0 +1,153 @@
+name: build-wheels-android
+
+on:
+  push:
+    branches:
+      - wheel
+    tags:
+      - '*'
+
+  workflow_dispatch:
+
+concurrency:
+  group: build-wheels-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_wheels_android:
+    name: ${{ matrix.abi }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # These wheels target Termux-on-Android, not an APK. They are built
+          # natively inside termux/termux-docker images (Termux clang already
+          # targets bionic), so there is no Android NDK and no cross-compiling
+          # toolchain involved. Same approach as sherpa-onnx and
+          # piper-phonemize.
+          #
+          # aarch64 + arm run on an ARM host so no qemu is needed; i686 +
+          # x86_64 run on the x64 host.
+          - abi: aarch64
+            os: ubuntu-24.04-arm
+            docker: aarch64
+            plat: android_24_arm64_v8a
+          - abi: arm
+            os: ubuntu-24.04-arm
+            docker: arm
+            plat: android_24_armeabi_v7a
+          - abi: i686
+            os: ubuntu-latest
+            docker: i686
+            plat: android_24_x86
+          - abi: x86_64
+            os: ubuntu-latest
+            docker: x86_64
+            plat: android_24_x86_64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # The container runs as root and writes into the mounted workspace.
+      - name: Prepare workspace for root-in-container build
+        shell: bash
+        run: |
+          mkdir -p build dist wheelhouse
+          chmod -R a+w "${{ github.workspace }}"
+
+      - name: Build wheel inside termux
+        shell: bash
+        run: |
+          docker run --rm \
+            --user 0:0 \
+            --volume ${{ github.workspace }}/:/kaldifst \
+            termux/termux-docker:${{ matrix.docker }} \
+          bash -c '
+            set -e
+            apt update -y
+            apt install -y cmake make git python python-pip clang libc++
+            # Package names vary between image snapshots.
+            apt install -y android-liblog || true
+            apt install -y libandroid-dev || true
+            apt install -y android-libandroid || true
+
+            pip install --upgrade pip setuptools wheel
+
+            # termux "python" is unpinned, so the wheel tag is whatever CPython
+            # the image ships today. Log it rather than assume.
+            python3 -VV
+            python3 -c "import sysconfig; print(sysconfig.get_platform())"
+
+            cd /kaldifst
+            export KALDIFST_MAKE_ARGS="-j$(nproc)"
+
+            # --plat-name is load-bearing: Termux CPython reports linux-aarch64
+            # (etc.), so without it the wheel is mis-tagged linux_* and pip
+            # refuses it on Android. API level 24 is encoded in the tag; it is
+            # the oldest level with RUNPATH support and covers ~99% of devices.
+            python3 setup.py bdist_wheel --plat-name=${{ matrix.plat }}
+
+            ls -lh dist
+          '
+
+      - name: Collect wheels
+        shell: bash
+        run: |
+          # setup.py also rewrites kaldifst/python/kaldifst/__init__.py, so
+          # that directory is dirty in addition to build/ and dist/.
+          sudo chown -R $USER ./build ./dist ./kaldifst ./wheelhouse
+          cp -v ./dist/*.whl ./wheelhouse
+
+      - name: Display wheels
+        shell: bash
+        run: |
+          ls -lh ./wheelhouse/
+
+          echo "---"
+          unzip -l ./wheelhouse/*.whl
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel-android-${{ matrix.abi }}
+          path: ./wheelhouse/*.whl
+
+      # The plat-name trick is the one part of this build that a green
+      # compile does not prove; actually import it on the target ABI.
+      - name: Smoke test
+        continue-on-error: true
+        shell: bash
+        run: |
+          docker run --rm \
+            --user 0:0 \
+            --volume ${{ github.workspace }}/wheelhouse:/wheels:ro \
+            termux/termux-docker:${{ matrix.docker }} \
+          bash -c '
+            set -e
+            apt update -y
+            apt install -y python python-pip libc++ clang
+            apt install -y android-liblog || true
+            apt install -y libandroid-dev || true
+            apt install -y android-libandroid || true
+
+            pip install --upgrade pip setuptools wheel
+            pip install /wheels/kaldifst-*.whl
+
+            # termux has no /tmp and / is not writable, so use / as cwd. It
+            # does not affect which package is imported: -c has no script
+            # directory, so the installed wheel is used.
+            cd /
+            python3 -c "import kaldifst; print(kaldifst.__file__)"
+            python3 -c "import kaldifst; print(kaldifst.__version__)"
+          '
+
+      - name: Publish wheels to PyPI
+        shell: bash
+        env:
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel twine==5.0.0 setuptools
+
+          twine upload ./wheelhouse/*.whl
