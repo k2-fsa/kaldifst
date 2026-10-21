@@ -113,19 +113,12 @@ jobs:
         run: |
           ls -lh kaldifst.pdf
 
-      - name: Release kaldifst.pdf
-        if: github.repository_owner == 'csukuangfj'
-        uses: svenstaro/upload-release-action@v2
+      - uses: actions/upload-artifact@v4
         with:
-          file_glob: true
-          overwrite: true
-          file: ./kaldifst.pdf
-          repo_name: k2-fsa/kaldifst
-          repo_token: ${{ secrets.UPLOAD_GH_SHERPA_ONNX_TOKEN }}
-          tag: doc
+          name: pdf
+          path: ./kaldifst.pdf
 
       - name: Release kaldifst.pdf
-        if: github.repository_owner == 'k2-fsa'
         uses: svenstaro/upload-release-action@v2
         with:
           file_glob: true
