@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 
+#include "fst/equivalent.h"
 #include "gtest/gtest.h"
 
 namespace kaldifst {
