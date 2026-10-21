@@ -113,14 +113,19 @@ jobs:
           path: ./wheelhouse/*.whl
 
       # The plat-name trick is the one part of this build that a green
-      # compile does not prove; actually import it on the target ABI.
+      # compile does not prove; actually import it on the target ABI and
+      # exercise the FST API before anything is published. This gates the
+      # publish step below on purpose -- a wheel that cannot load must not
+      # reach PyPI.
       - name: Smoke test
-        continue-on-error: true
         shell: bash
         run: |
+          chmod -R a+w "${{ github.workspace }}" || true
+
           docker run --rm \
             --user 0:0 \
             --volume ${{ github.workspace }}/wheelhouse:/wheels:ro \
+            --volume ${{ github.workspace }}/scripts/smoke_test.py:/test/smoke_test.py:ro \
             termux/termux-docker:${{ matrix.docker }} \
           bash -c '
             set -e
@@ -133,12 +138,12 @@ jobs:
             pip install --upgrade pip setuptools wheel
             pip install /wheels/kaldifst-*.whl
 
-            # termux has no /tmp and / is not writable, so use / as cwd. It
-            # does not affect which package is imported: -c has no script
-            # directory, so the installed wheel is used.
+            # termux has no /tmp and / is not writable, so use / as cwd.
+            # sys.path[0] is the directory of the script itself (/test,
+            # holding only smoke_test.py), so the installed wheel is what
+            # gets imported rather than the source tree.
             cd /
-            python3 -c "import kaldifst; print(kaldifst.__file__)"
-            python3 -c "import kaldifst; print(kaldifst.__version__)"
+            python3 /test/smoke_test.py
           '
 
       - name: Publish wheels to PyPI
@@ -150,4 +155,4 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel twine==5.0.0 setuptools
 
-          twine upload ./wheelhouse/*.whl
+          twine upload --skip-existing ./wheelhouse/*.whl
