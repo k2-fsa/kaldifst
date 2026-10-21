@@ -10,17 +10,21 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-
+import datetime
+import os
 import re
+import sys
+
 import sphinx_rtd_theme
+
+# make ./_ext/ importable, like sherpa does
+sys.path.insert(0, os.path.abspath("."))
 
 # -- Project information -----------------------------------------------------
 
+year = datetime.date.today().year
 project = "kaldifst"
-copyright = "2022, Next-gen Kaldi development team"
+copyright = f"2022-{year}, Next-gen Kaldi development team"
 author = "Next-gen Kaldi development team"
 
 
@@ -51,6 +55,11 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx_autodoc_typehints",
     "sphinx_rtd_theme",
+    "sphinx_tabs.tabs",
+    "sphinx_copybutton",
+    # the docs use .svg figures; this converts them to .pdf for the LaTeX
+    # builder using rsvg-convert
+    "_ext.svg_to_pdf",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -109,3 +118,11 @@ rst_epilog = """
 .. _Kaldi: https://github.com/kaldi-asr/kaldi
 .. _k2: https://github.com/k2-fsa/k2
 """
+
+# refer to
+# https://docs.readthedocs.com/platform/latest/guides/pdf-non-ascii-languages.html
+latex_engine = "xelatex"
+latex_use_xindy = False
+latex_elements = {
+    "preamble": "\\usepackage[UTF8]{ctex}\n",
+}

@@ -1,0 +1,134 @@
+# Copyright      2026  Xiaomi Corp.       (author: Fangjun Kuang)
+
+# See ../../LICENSE for clarification regarding multiple authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# refer to https://github.com/k2-fsa/sherpa/blob/master/.github/workflows/pdf-doc.yml
+
+# The PDF is published at https://github.com/k2-fsa/kaldifst/releases/tag/doc
+name: Generate PDF doc
+on:
+  push:
+    branches:
+      - master
+      - doc
+      - fix-doc
+
+  schedule:
+    # minute (0-59)
+    # hour (0-23)
+    # day of the month (1-31)
+    # month (1-12)
+    # day of the week (0-6)
+    # nightly build at 23:50 UTC time every day
+    - cron: "50 23 * * *"
+
+  workflow_dispatch:
+
+concurrency:
+  group: pdf-doc-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pdf-doc:
+    if: github.repository_owner == 'csukuangfj' || github.repository_owner == 'k2-fsa'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10"]
+    steps:
+      # refer to https://github.com/actions/checkout
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # The Sphinx build needs to import `kaldifst` (see docs/gen-api-doc.py
+      # and the autodoc directives in docs/source/python_api/api.rst), so we
+      # generate the LaTeX sources on the runner and only run latexmk inside
+      # the TeX Live container.
+      - name: Generate LaTeX sources
+        shell: bash
+        run: |
+          sudo apt-get update
+          # graphviz: provides `dot`, used by docs/source/*/code/Makefile to
+          #   draw the FSTs
+          # librsvg2-bin: provides rsvg-convert, used by docs/source/_ext/svg_to_pdf.py
+          #   to turn the .svg figures into .pdf for the LaTeX builder
+          sudo apt-get install -y graphviz librsvg2-bin
+
+          python3 -m pip install .
+          python3 -m pip install -r ./docs/requirements.txt
+          python3 -m pip install graphviz
+
+          # docs/source/convert-k2-to-openfst/code/*.py import k2; same pins
+          # as .github/workflows/build-doc.yml
+          python3 -m pip install torch==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+          python3 -m pip install k2==1.24.3.dev20230719+cpu.torch2.0.1 -f https://k2-fsa.github.io/k2/cpu.html
+
+          cd docs
+          make latex
+
+          ls -lh build/latex | head -n 30
+
+      - name: Build PDF with TeX Live
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            --entrypoint /bin/bash \
+            reitzig/texlive-full:latest \
+            -c "
+              uname -a
+              cat /etc/*release
+              which latexmk
+
+              cd docs/build/latex
+              latexmk -pdf -dvi- -ps- -interaction=nonstopmode kaldifst.tex
+
+              find . -name '*.pdf'
+              ls -lh kaldifst.pdf
+              cp -v kaldifst.pdf /workspace/
+            "
+
+      - name: View generated files
+        shell: bash
+        run: |
+          ls -lh kaldifst.pdf
+
+      - name: Release kaldifst.pdf
+        if: github.repository_owner == 'csukuangfj'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file_glob: true
+          overwrite: true
+          file: ./kaldifst.pdf
+          repo_name: k2-fsa/kaldifst
+          repo_token: ${{ secrets.UPLOAD_GH_SHERPA_ONNX_TOKEN }}
+          tag: doc
+
+      - name: Release kaldifst.pdf
+        if: github.repository_owner == 'k2-fsa'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file_glob: true
+          overwrite: true
+          file: ./kaldifst.pdf
+          tag: doc
