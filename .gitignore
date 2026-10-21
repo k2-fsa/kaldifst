@@ -9,3 +9,6 @@ dist
 *.fst
 *.scp
 *.ark
+*.so
+*.dylib
+*.pyd
