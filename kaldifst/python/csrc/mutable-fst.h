@@ -5,11 +5,11 @@
 #ifndef KALDIFST_PYTHON_CSRC_MUTABLE_FST_H_
 #define KALDIFST_PYTHON_CSRC_MUTABLE_FST_H_
 
+#include "kaldifst/python/csrc/kaldifst.h"
 #include <string>
 #include <vector>
 
 #include "fst/mutable-fst.h"
-#include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 

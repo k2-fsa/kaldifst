@@ -5,11 +5,11 @@
 #ifndef KALDIFST_PYTHON_CSRC_FSTINFO_H_
 #define KALDIFST_PYTHON_CSRC_FSTINFO_H_
 
+#include "kaldifst/python/csrc/kaldifst.h"
 #include <stdexcept>
 #include <string>
 
 #include "fst/script/info.h"
-#include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 

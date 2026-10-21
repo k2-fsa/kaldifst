@@ -5,12 +5,12 @@
 #ifndef KALDIFST_PYTHON_CSRC_FST_H_
 #define KALDIFST_PYTHON_CSRC_FST_H_
 
+#include "kaldifst/python/csrc/kaldifst.h"
 #include <memory>
 #include <string>
 
 #include "fst/fst.h"
 #include "fst/script/print.h"
-#include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 
