@@ -2,11 +2,11 @@
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+#include "kaldifst/python/csrc/determinize-star.h"
 #include "kaldifst/csrc/determinize-star.h"
 
 #include "fst/arcsort.h"
 #include "kaldifst/csrc/fstext-utils.h"
-#include "kaldifst/python/csrc/determinize-star.h"
 
 static constexpr const char *kFstDeterminizeStarDoc = R"doc(
 Removes epsilons and determinizes in one step.

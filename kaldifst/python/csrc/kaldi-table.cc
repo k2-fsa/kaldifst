@@ -2,13 +2,13 @@
 //
 // Copyright (c)  2022  Xiaomi Corporation (authors: Fangjun Kuang)
 
+#include "kaldifst/python/csrc/kaldi-table.h"
 #include "kaldifst/csrc/kaldi-table.h"
 
 #include <string>
 
 #include "kaldifst/csrc/kaldi-fst-io.h"
 #include "kaldifst/csrc/kaldi-holder.h"
-#include "kaldifst/python/csrc/kaldi-table.h"
 
 namespace kaldifst {
 

@@ -2,6 +2,7 @@
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+#include "kaldifst/python/csrc/fstarcsort.h"
 #include "kaldifst/csrc/fstext-utils.h"
 
 #include <tuple>
@@ -9,7 +10,6 @@
 #include <vector>
 
 #include "kaldifst/csrc/lattice-weight.h"
-#include "kaldifst/python/csrc/fstarcsort.h"
 #include "kaldifst/python/csrc/fstext-utils.h"
 
 static constexpr const char *kFstMinimizeEncodedDoc = R"doc(
