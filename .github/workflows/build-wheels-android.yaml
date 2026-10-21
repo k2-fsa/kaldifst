@@ -33,18 +33,26 @@ jobs:
             os: ubuntu-24.04-arm
             docker: aarch64
             plat: android_24_arm64_v8a
+            makejobs: "-j$(nproc)"
           - abi: arm
             os: ubuntu-24.04-arm
             docker: arm
             plat: android_24_armeabi_v7a
+            # 32-bit ARM is the constrained leg: -j4 hit
+            # "make[2]: *** duping jobs pipe: Bad file descriptor" part way
+            # through the pybind11 sources. -j1 both halves peak memory and
+            # keeps make from creating a jobserver at all.
+            makejobs: "-j1"
           - abi: i686
             os: ubuntu-latest
             docker: i686
             plat: android_24_x86
+            makejobs: "-j$(nproc)"
           - abi: x86_64
             os: ubuntu-latest
             docker: x86_64
             plat: android_24_x86_64
+            makejobs: "-j$(nproc)"
 
     steps:
       - uses: actions/checkout@v4
@@ -80,7 +88,9 @@ jobs:
             python3 -c "import sysconfig; print(sysconfig.get_platform())"
 
             cd /kaldifst
-            export KALDIFST_MAKE_ARGS="-j$(nproc)"
+            # Per-ABI parallelism -- see the matrix comments above. The
+            # shell below expands $(nproc) when the value contains it.
+            export KALDIFST_MAKE_ARGS="${{ matrix.makejobs }}"
 
             # --plat-name is load-bearing: Termux CPython reports linux-aarch64
             # (etc.), so without it the wheel is mis-tagged linux_* and pip
