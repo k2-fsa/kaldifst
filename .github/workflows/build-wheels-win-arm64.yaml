@@ -24,15 +24,33 @@ jobs:
         # cp39/cp310 are skipped because actions/setup-python cannot find an
         # arm64 interpreter for them ("The version '3.10' with architecture
         # 'arm64' was not found for Windows Enterprise").
-        python-version: ["cp311", "cp312", "cp313", "cp314"]
+        #
+        # python-version is the cibuildwheel selector; python-short is the same
+        # version in actions/setup-python form, used only by the smoke test.
+        # The smoke test runs outside cibuildwheel's venv, so without this the
+        # host python3 is a different version and pip rejects the wheel with
+        # "not a supported wheel on this platform".
+        include:
+          - python-version: "cp311"
+            python-short: "3.11"
+          - python-version: "cp312"
+            python-short: "3.12"
+          - python-version: "cp313"
+            python-short: "3.13"
+          - python-version: "cp314"
+            python-short: "3.14"
+          - python-version: "cp315"
+            python-short: "3.15"
 
     steps:
       - uses: actions/checkout@v4
 
       # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
       # for a list of versions
+      # No cp38 split here: Windows on ARM has no CPython 3.8 (see above), so
+      # cibuildwheel 4.x can be used for every entry in this matrix.
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.1.4
+        uses: pypa/cibuildwheel@v4.3.2
         env:
           CIBW_BUILD: "${{ matrix.python-version}}-* "
           CIBW_ARCHS: "ARM64"
@@ -41,9 +59,11 @@ jobs:
           # already targets the host architecture (ARM64). Passing -A makes
           # CMake fail with "Generator does not support platform
           # specification" when it picks Ninja.
-          # No CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: cibuildwheel v3.1.4 has no
-          # default Windows repair step and _kaldifst.pyd is self-contained
-          # (openfst is linked statically).
+          # cibuildwheel 4.x runs delvewheel repair by default on Windows.
+          # _kaldifst.pyd is self-contained (openfst is linked statically), so
+          # there is nothing for delvewheel to bundle and it errors with
+          # "Unable to find library: ...". Skip the repair step entirely.
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: ""
 
       - name: Display wheels
         shell: bash
@@ -57,6 +77,27 @@ jobs:
           name: wheel-${{ matrix.python-version }}-win-arm64
           path: ./wheelhouse/*.whl
 
+      # A green compile does not prove the wheel imports on ARM64 -- actually
+      # install it and exercise the FST API before publishing. Run from outside
+      # the source tree so `import kaldifst` resolves to site-packages.
+      #
+      # This interpreter must match the wheel tag: cibuildwheel builds in its
+      # own venv, so the runner default python3 would be some other version and
+      # pip would answer "not a supported wheel on this platform".
+      - name: Setup Python ${{ matrix.python-short }} for the smoke test
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-short }}
+
+      - name: Smoke test
+        shell: bash
+        run: |
+          python3 -m pip install --force-reinstall ./wheelhouse/*.whl
+
+          cd "$RUNNER_TEMP"
+
+          python3 "$GITHUB_WORKSPACE/scripts/smoke_test.py"
+
       - name: Publish wheels to PyPI
         shell: bash
         env:
@@ -66,4 +107,4 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel twine==5.0.0 setuptools
 
-          twine upload ./wheelhouse/*.whl
+          twine upload --skip-existing ./wheelhouse/*.whl

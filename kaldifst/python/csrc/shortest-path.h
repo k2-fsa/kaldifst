@@ -4,13 +4,14 @@
 
 #ifndef KALDIFST_PYTHON_CSRC_SHORTEST_PATH_H_
 #define KALDIFST_PYTHON_CSRC_SHORTEST_PATH_H_
+
+#include "kaldifst/python/csrc/kaldifst.h"
 #include <memory>
 
 #include "fst/script/fst-class.h"
 #include "fst/script/getters.h"
 #include "fst/script/shortest-path.h"
 #include "kaldifst/csrc/lattice-weight.h"
-#include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 

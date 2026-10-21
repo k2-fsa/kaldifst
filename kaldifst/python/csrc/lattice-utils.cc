@@ -2,9 +2,9 @@
 //
 // Copyright (c)  2021-2023  Xiaomi Corporation (authors: Fangjun Kuang)
 
+#include "kaldifst/python/csrc/lattice-utils.h"
 #include "kaldifst/csrc/lattice-utils.h"
 
-#include "kaldifst/python/csrc/lattice-utils.h"
 namespace kaldifst {
 
 static constexpr const char *kLatticeScaleDoc = R"doc(

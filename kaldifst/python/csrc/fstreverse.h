@@ -5,8 +5,8 @@
 #ifndef KALDIFST_PYTHON_CSRC_FSTREVERSE_H_
 #define KALDIFST_PYTHON_CSRC_FSTREVERSE_H_
 
-#include "fst/vector-fst.h"
 #include "kaldifst/python/csrc/kaldifst.h"
+#include "fst/vector-fst.h"
 
 namespace kaldifst {
 

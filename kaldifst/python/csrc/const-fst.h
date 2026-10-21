@@ -5,10 +5,10 @@
 #ifndef KALDIFST_PYTHON_CSRC_CONST_FST_H_
 #define KALDIFST_PYTHON_CSRC_CONST_FST_H_
 
+#include "kaldifst/python/csrc/kaldifst.h"
 #include <string>
 
 #include "fst/const-fst.h"
-#include "kaldifst/python/csrc/kaldifst.h"
 
 namespace kaldifst {
 

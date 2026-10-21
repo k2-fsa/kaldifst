@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        python-version: ["cp38", "cp39", "cp310", "cp311", "cp312", "cp313", "cp314"]
+        python-version: ["cp38", "cp39", "cp310", "cp311", "cp312", "cp313", "cp314", "cp315"]
         arch: ["arm64", "x86_64", "universal2"]
 
     steps:
@@ -47,9 +47,15 @@ jobs:
 
       # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
       # for a list of versions
-      - name: Build wheels
-        if: matrix.arch == 'universal2'
-        uses: pypa/cibuildwheel@v3.1.4
+      #
+      # CPython 3.8 is EOL and cibuildwheel 4.0 dropped support for building it
+      # (cp315 needs 4.x), so each arch has a cp38 step on 3.x and a step for
+      # the rest on 4.x. macOS needs no manylinux image pin: the interpreter
+      # comes from python.org.
+
+      - name: Build wheels (cp38, universal2)
+        if: matrix.arch == 'universal2' && matrix.python-version == 'cp38'
+        uses: pypa/cibuildwheel@v3.4.1
         env:
           CIBW_ENVIRONMENT: >
             KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES='arm64;x86_64' -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
@@ -62,9 +68,24 @@ jobs:
           #  Don't repair macOS wheels
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
-      - name: Build wheels
-        if: matrix.arch == 'x86_64'
-        uses: pypa/cibuildwheel@v3.1.4
+      - name: Build wheels (universal2)
+        if: matrix.arch == 'universal2' && matrix.python-version != 'cp38'
+        uses: pypa/cibuildwheel@v4.3.2
+        env:
+          CIBW_ENVIRONMENT: >
+            KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES='arm64;x86_64' -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
+            MACOSX_DEPLOYMENT_TARGET=10.15
+
+          CIBW_BUILD: "${{ matrix.python-version}}-* "
+          CIBW_ARCHS: "universal2"
+          CIBW_BUILD_VERBOSITY: 3
+
+          #  Don't repair macOS wheels
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+
+      - name: Build wheels (cp38, x86_64)
+        if: matrix.arch == 'x86_64' && matrix.python-version == 'cp38'
+        uses: pypa/cibuildwheel@v3.4.1
         env:
           CIBW_ENVIRONMENT: >
             KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
@@ -74,9 +95,34 @@ jobs:
           CIBW_ARCHS: "x86_64"
           CIBW_BUILD_VERBOSITY: 3
 
-      - name: Build wheels
-        if: matrix.arch == 'arm64'
-        uses: pypa/cibuildwheel@v3.1.4
+      - name: Build wheels (x86_64)
+        if: matrix.arch == 'x86_64' && matrix.python-version != 'cp38'
+        uses: pypa/cibuildwheel@v4.3.2
+        env:
+          CIBW_ENVIRONMENT: >
+            KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
+            MACOSX_DEPLOYMENT_TARGET=10.15
+
+          CIBW_BUILD: "${{ matrix.python-version}}-* "
+          CIBW_ARCHS: "x86_64"
+          CIBW_BUILD_VERBOSITY: 3
+
+      - name: Build wheels (cp38, arm64)
+        if: matrix.arch == 'arm64' && matrix.python-version == 'cp38'
+        uses: pypa/cibuildwheel@v3.4.1
+        env:
+          CIBW_ENVIRONMENT: >
+            KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64"
+
+          CIBW_BUILD: "${{ matrix.python-version}}-* "
+          CIBW_ARCHS: "arm64"
+          CIBW_BUILD_VERBOSITY: 3
+          #  Don't repair macOS wheels
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+
+      - name: Build wheels (arm64)
+        if: matrix.arch == 'arm64' && matrix.python-version != 'cp38'
+        uses: pypa/cibuildwheel@v4.3.2
         env:
           CIBW_ENVIRONMENT: >
             KALDIFST_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64"
@@ -102,8 +148,13 @@ jobs:
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        shell: bash
         run: |
-          # python3 -m pip install --break-system-packages --upgrade pip
-          python3 -m pip install --break-system-packages wheel twine==5.0.0 setuptools
+          # python3 on macOS runners is managed by Homebrew and cannot be
+          # upgraded in place ("no RECORD file was found for pip"), so install
+          # twine into a throwaway venv instead of the system environment.
+          python3 -m venv "$RUNNER_TEMP/twine"
 
-          twine upload ./wheelhouse/*.whl
+          "$RUNNER_TEMP/twine/bin/python" -m pip install -U pip wheel twine==5.0.0 setuptools
+
+          "$RUNNER_TEMP/twine/bin/twine" upload --skip-existing ./wheelhouse/*.whl

@@ -2,12 +2,11 @@
 //
 // Copyright (c)  2023  Xiaomi Corporation
 
+#include "kaldifst/python/csrc/text-normalizer.h"
 #include "kaldifst/csrc/text-normalizer.h"
 
 #include <string>
 #include <vector>
-
-#include "kaldifst/python/csrc/text-normalizer.h"
 
 namespace kaldifst {
 

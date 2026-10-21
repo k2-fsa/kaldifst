@@ -2,10 +2,10 @@
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+#include "kaldifst/python/csrc/expanded-fst.h"
 #include "fst/expanded-fst.h"
 
 #include "kaldifst/csrc/lattice-weight.h"
-#include "kaldifst/python/csrc/expanded-fst.h"
 
 namespace kaldifst {
 
