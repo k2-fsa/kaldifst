@@ -73,3 +73,16 @@ if(NOT WIN32)
 endif()
 
 install(TARGETS _kaldifst DESTINATION lib)
+
+# `kaldifst/__init__.py` does `from kaldifst.lib._kaldifst import ...`, so the
+# extension has to sit next to the Python package it belongs to. The tests put
+# kaldifst/python on PYTHONPATH and expect to find it under kaldifst/lib/;
+# `make install` puts it there for a real install, this covers the build tree.
+add_custom_command(TARGET _kaldifst POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E make_directory
+    "${CMAKE_SOURCE_DIR}/kaldifst/python/kaldifst/lib"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "$<TARGET_FILE:_kaldifst>"
+    "${CMAKE_SOURCE_DIR}/kaldifst/python/kaldifst/lib/"
+  COMMENT "Copying $<TARGET_FILE_NAME:_kaldifst> to kaldifst/python/kaldifst/lib"
+)

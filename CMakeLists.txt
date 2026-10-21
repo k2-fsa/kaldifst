@@ -101,4 +101,20 @@ if(KALDIFST_BUILD_TESTS)
   include(googletest)
 endif()
 
+# PYTHON_EXECUTABLE is used to run the Python tests and to query the Python
+# site-packages directory. pybind11 resolves the interpreter into
+# Python_EXECUTABLE, but only within its own add_subdirectory() scope, so it is
+# not visible here; fall back to FindPython3 when the Python bindings are off.
+if(NOT PYTHON_EXECUTABLE)
+  if(Python_EXECUTABLE)
+    set(PYTHON_EXECUTABLE "${Python_EXECUTABLE}")
+  elseif(Python3_EXECUTABLE)
+    set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+  else()
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+  endif()
+endif()
+message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+
 add_subdirectory(kaldifst)
