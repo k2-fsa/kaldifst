@@ -23,7 +23,7 @@ on:
     branches:
       - master
       - doc
-      - fix-doc
+
   workflow_dispatch:
 
 concurrency:
