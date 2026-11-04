@@ -4,9 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction to Lattice &mdash; kaldifst 1.7.14 documentation</title>
+  <title>Introduction to Lattice &mdash; kaldifst 1.9.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,7 +15,10 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.7.14
+                1.9.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +44,10 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">Download pdf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start/index.html">Quick start</a></li>
@@ -86,7 +93,7 @@
            <div itemprop="articleBody">
              
   <section id="introduction-to-lattice">
-<span id="id1"></span><h1>Introduction to Lattice<a class="headerlink" href="#introduction-to-lattice" title="Permalink to this headline"></a></h1>
+<span id="id1"></span><h1>Introduction to Lattice<a class="headerlink" href="#introduction-to-lattice" title="Permalink to this heading"></a></h1>
 <p>Arcs in a <a class="reference internal" href="../python_api/api.html#lattice-class"><span class="std std-ref">Lattice</span></a> are of type <a class="reference internal" href="../python_api/api.html#lattice-arc-class"><span class="std std-ref">LatticeArc</span></a>, whose weight
 is of type <a class="reference internal" href="../python_api/api.html#lattice-weight-class"><span class="std std-ref">LatticeWeight</span></a>.</p>
 <p>A <a class="reference internal" href="../python_api/api.html#lattice-weight-class"><span class="std std-ref">LatticeWeight</span></a> has two parts:</p>
@@ -156,13 +163,13 @@ is of type <a class="reference internal" href="../python_api/api.html#lattice-we
 <span class="linenos">55</span>
 <span class="linenos">56</span><span class="nb">print</span><span class="p">(</span><span class="n">fst</span><span class="p">)</span>
 <span class="linenos">57</span><span class="c1"># The above statement gives the following output</span>
-<span class="linenos">58</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">58</span><span class="sd">"""</span>
 <span class="linenos">59</span><span class="sd">0      1      1      2      0.1,0.2</span>
 <span class="linenos">60</span><span class="sd">0      2      3      4      0.3,0.4</span>
 <span class="linenos">61</span><span class="sd">1      3      5      6      0.5,0.6</span>
 <span class="linenos">62</span><span class="sd">2      3      6      8      0.7,0.8</span>
 <span class="linenos">63</span><span class="sd">3</span>
-<span class="linenos">64</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">64</span><span class="sd">"""</span>
 <span class="linenos">65</span>
 <span class="linenos">66</span><span class="c1"># Now we can draw it</span>
 <span class="linenos">67</span><span class="n">fst_dot</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">acceptor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">portrait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -173,7 +180,7 @@ is of type <a class="reference internal" href="../python_api/api.html#lattice-we
 <span class="linenos">72</span>
 <span class="linenos">73</span><span class="c1"># Alternatively, you can use graphviz to visualize it</span>
 <span class="linenos">74</span><span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
-<span class="linenos">75</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;lattice.svg&quot;</span><span class="p">)</span>
+<span class="linenos">75</span><span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">"lattice.svg"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -204,7 +211,7 @@ is of type <a class="reference internal" href="../python_api/api.html#lattice-we
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
+    <p>&#169; Copyright 2022-2026, Next-gen Kaldi development team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,9 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Creating FSTs using constructors and mutators &mdash; kaldifst 1.7.14 documentation</title>
+  <title>Creating FSTs using constructors and mutators &mdash; kaldifst 1.9.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,7 +15,10 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.7.14
+                1.9.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +44,10 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../pdf.html">Download pdf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Quick start</a><ul class="current">
@@ -88,7 +95,7 @@
            <div itemprop="articleBody">
              
   <section id="creating-fsts-using-constructors-and-mutators">
-<span id="quick-start"></span><h1>Creating FSTs using constructors and mutators<a class="headerlink" href="#creating-fsts-using-constructors-and-mutators" title="Permalink to this headline"></a></h1>
+<span id="quick-start"></span><h1>Creating FSTs using constructors and mutators<a class="headerlink" href="#creating-fsts-using-constructors-and-mutators" title="Permalink to this heading"></a></h1>
 <p>In this tutorial, we demonstrate how to create the following FST using constructors
 and mutators from Python.</p>
 <figure class="align-center" id="id1" style="width: 600px">
@@ -139,23 +146,23 @@ and mutators from Python.</p>
 <span class="linenos">39</span>
 <span class="linenos">40</span>    <span class="c1"># Add an input symbol table</span>
 <span class="linenos">41</span>    <span class="n">isym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">()</span>
-<span class="linenos">42</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">43</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="linenos">44</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">42</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s2">"a"</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">43</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">"b"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">44</span>    <span class="n">isym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">"c"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="linenos">45</span>    <span class="n">fst</span><span class="o">.</span><span class="n">input_symbols</span> <span class="o">=</span> <span class="n">isym</span>
 <span class="linenos">46</span>
 <span class="linenos">47</span>    <span class="c1"># Add an output symbol table</span>
 <span class="linenos">48</span>    <span class="n">osym</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">SymbolTable</span><span class="p">()</span>
-<span class="linenos">49</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos">50</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="linenos">51</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="linenos">49</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">50</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">51</span>    <span class="n">osym</span><span class="o">.</span><span class="n">add_symbol</span><span class="p">(</span><span class="s2">"z"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="linenos">52</span>    <span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span> <span class="o">=</span> <span class="n">osym</span>
 <span class="linenos">53</span>
 <span class="linenos">54</span>    <span class="c1"># We can save this FST to a file with</span>
-<span class="linenos">55</span>    <span class="n">fst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;binary.fst&quot;</span><span class="p">)</span>
+<span class="linenos">55</span>    <span class="n">fst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">"binary.fst"</span><span class="p">)</span>
 <span class="linenos">56</span>
 <span class="linenos">57</span>    <span class="c1"># We can read it back</span>
-<span class="linenos">58</span>    <span class="n">fst2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;binary.fst&quot;</span><span class="p">)</span>
+<span class="linenos">58</span>    <span class="n">fst2</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdVectorFst</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"binary.fst"</span><span class="p">)</span>
 <span class="linenos">59</span>    <span class="nb">print</span><span class="p">(</span><span class="n">fst2</span><span class="p">)</span>
 <span class="linenos">60</span>    <span class="nb">print</span><span class="p">(</span><span class="n">fst2</span><span class="o">.</span><span class="n">to_str</span><span class="p">())</span>
 <span class="linenos">61</span>
@@ -168,11 +175,11 @@ and mutators from Python.</p>
 <span class="linenos">68</span>
 <span class="linenos">69</span>    <span class="c1"># Alternatively, you can use graphviz to visualize it</span>
 <span class="linenos">70</span>    <span class="n">source</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">fst_dot</span><span class="p">)</span>
-<span class="linenos">71</span>    <span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;quick-start.svg&quot;</span><span class="p">)</span>
+<span class="linenos">71</span>    <span class="n">source</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s2">"quick-start.svg"</span><span class="p">)</span>
 <span class="linenos">72</span>    <span class="c1"># Done. quick-start.svg is the figure we showed at the start of this section</span>
 <span class="linenos">73</span>
 <span class="linenos">74</span>
-<span class="linenos">75</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">75</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 <span class="linenos">76</span>    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -190,7 +197,7 @@ and mutators from Python.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Next-gen Kaldi development team.</p>
+    <p>&#169; Copyright 2022-2026, Next-gen Kaldi development team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

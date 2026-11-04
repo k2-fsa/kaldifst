@@ -11,6 +11,11 @@ Python wrapper for `OpenFst`_ and its extensions from  `Kaldi`_, e.g.,
 
 .. toctree::
    :maxdepth: 2
+
+   ./pdf
+
+.. toctree::
+   :maxdepth: 2
    :caption: Contents:
 
    ./install/index
