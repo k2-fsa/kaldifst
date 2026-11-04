@@ -66,6 +66,37 @@ static void PybindLattice(py::module &m) {  // NOLINT
 void PybindVectorFst(py::module &m) {  // NOLINT
   PybindStdVectorFst(m);
   PybindLattice(m);
+
+  // ---- Cross-module zero-copy helpers ---------------------------------
+  // Each pybind11 module bundles its own hidden copy of openfst, so
+  // std::type_index based cross-module type matching cannot work.  These
+  // helpers expose the raw C++ address of a VectorFst and can wrap an
+  // arbitrary address back as a (non-)owning StdVectorFst, letting other
+  // pybind11 modules (kaldi-decoder, kaldi-hmm-gmm, ...) share the object by
+  // pointer with zero copies.  Contract: all modules must be built against
+  // the same openfst version and ABI-relevant flags.
+  m.def(
+      "_vector_fst_addr",
+      [](const fst::VectorFst<fst::StdArc> &f) -> uint64_t {
+        return reinterpret_cast<uint64_t>(&f);
+      },
+      py::arg("fst"), "Returns the raw C++ address of the given StdVectorFst.");
+  m.def(
+      "_vector_fst_borrow",
+      [](uint64_t addr) -> fst::VectorFst<fst::StdArc> * {
+        return reinterpret_cast<fst::VectorFst<fst::StdArc> *>(addr);
+      },
+      py::return_value_policy::reference,
+      "Wraps the given address as a NON-owning StdVectorFst (the caller keeps "
+      "ownership).");
+  m.def(
+      "_vector_fst_take",
+      [](uint64_t addr) -> fst::VectorFst<fst::StdArc> * {
+        return reinterpret_cast<fst::VectorFst<fst::StdArc> *>(addr);
+      },
+      py::return_value_policy::take_ownership,
+      "Wraps the given address as an OWNING StdVectorFst (must have been "
+      "allocated with new by the caller).");
 }
 
 }  // namespace kaldifst
