@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 function(download_googltest)
   include(FetchContent)
 

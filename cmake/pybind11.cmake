@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 function(download_pybind11)
   include(FetchContent)
 

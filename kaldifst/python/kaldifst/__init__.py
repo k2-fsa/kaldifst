@@ -1,4 +1,5 @@
 from kaldifst.lib._kaldifst import (
+    lookahead_compose_fst,
     FloatWeight,
     Lattice,
     LatticeArc,

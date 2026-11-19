@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "fst/arc-map.h"
+#include "fst/compose.h"
 #include "fst/fst.h"
 #include "fst/minimize.h"
 

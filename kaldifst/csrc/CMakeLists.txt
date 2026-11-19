@@ -28,6 +28,19 @@ endif()
 
 target_link_libraries(kaldifst_core PUBLIC fst)
 
+# Vosk-style graphs use openfst *extension* FST types (olabel_lookahead in
+# HCLr.fst, ngram in Gr.fst).  Their FstRegister entries live in static
+# initializers inside the extension libraries; plain static linking would
+# drop them (nothing references their symbols), making Fst::Read fall back
+# to dlopen()ing the plugin modules.  WHOLE_ARCHIVE forces the objects in
+# so the types register at load time.  (CMake >= 3.24.)
+foreach(_fst_ext fstlookahead fstngram)
+  if(TARGET ${_fst_ext})
+    target_link_libraries(kaldifst_core
+      PUBLIC "$<LINK_LIBRARY:WHOLE_ARCHIVE,${_fst_ext}>")
+  endif()
+endforeach()
+
 if(MSVC)
   set_source_files_properties(
     context-fst.cc

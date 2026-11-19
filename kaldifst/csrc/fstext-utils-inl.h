@@ -195,6 +195,30 @@ void RemoveSomeInputSymbols(const std::vector<I> &to_remove,
   ArcMap(fst, mapper);
 }
 
+// Lookahead composition is used for optimized online composition of FSTs
+// during decoding (see kaldi's nnet3-latgen-faster-lookahead.cc and vosk's
+// recognizer.cc: decode_fst_ = LookaheadComposeFst(*hcl, *g, disambig)).
+// The composition is LAZY (fst::ComposeFst): nothing is materialized, the
+// decoder traverses the composed graph on the fly.  `to_remove` is the list
+// of disambiguation symbols (e.g. graph/disambig_tid.int), removed from the
+// input labels of the composed graph via the mapper above.  For details of
+// compose filters see DefaultLookAhead in fst/compose.h.
+template <class Arc, class I>
+using LookaheadFst = ArcMapFst<Arc, Arc, RemoveSomeInputSymbolsMapper<Arc, I> >;
+
+template <class Arc, class I>
+LookaheadFst<Arc, I> *LookaheadComposeFst(const Fst<Arc> &ifst1,
+                                          const Fst<Arc> &ifst2,
+                                          const std::vector<I> &to_remove) {
+  static_assert(std::is_integral<I>::value, "");
+  fst::CacheOptions cache_opts(true, 1 << 25LL);
+  fst::CacheOptions cache_opts_map(true, 0);
+  fst::ArcMapFstOptions arcmap_opts(cache_opts);
+  RemoveSomeInputSymbolsMapper<Arc, I> mapper(to_remove);
+  return new LookaheadFst<Arc, I>(ComposeFst<Arc>(ifst1, ifst2, cache_opts),
+                                  mapper, arcmap_opts);
+}
+
 template <class T>
 struct IdentityFunction {
   typedef T Arg;
