@@ -7,6 +7,7 @@
 
 #include "kaldifst/python/csrc/kaldifst.h"
 #include <memory>
+#include <type_traits>
 #include <string>
 
 #include "fst/fst.h"
@@ -173,9 +174,29 @@ void PybindFst(py::module &m,  // NOLINT
            "          fst2 = kaldifst.StdVectorFst(fst1)\n\n",
            py::arg("safe") = false, py::return_value_policy::take_ownership)
        .def_static(
-           "read", static_cast<ReadFromString>(&PyClass::Read),
-           "Reads an FST from a file; returns nullptr on error. An empty\n"
-           "filename results in reading from standard input.",
+           "read",
+           [](const std::string &filename) -> PyClass * {
+             // Generic read: accepts any *registered* FST type and
+             // materializes it as a VectorFst.  Besides vector/const FSTs
+             // this covers the openfst extension types some toolkits ship
+             // (e.g. vosk graphs: olabel_lookahead HCLr.fst, ngram Gr.fst)
+             // as long as the corresponding extensions are built into the
+             // openfst we link (HAVE_LOOKAHEAD / HAVE_NGRAM).
+             std::unique_ptr<fst::Fst<typename PyClass::Arc>> generic(
+                 fst::Fst<typename PyClass::Arc>::Read(filename));
+             if (!generic) return nullptr;
+             if constexpr (std::is_abstract<PyClass>::value) {
+               // this binding is the abstract Fst base: the concrete type
+               // comes back from the registry as-is
+               return static_cast<PyClass *>(generic.release());
+             } else {
+               // a concrete VectorFst binding: materialize (convert) it
+               return new PyClass(*generic);
+             }
+           },
+           "Reads an FST from a file and returns it as a VectorFst; nullptr\n"
+           "on error.  Any FST type is accepted (non-vector types are\n"
+           "converted).  An empty filename reads from standard input.",
            py::arg("filename"), py::return_value_policy::take_ownership)
       .def("write",
            (bool (PyClass::*)(const std::string &) const)(&PyClass::Write),

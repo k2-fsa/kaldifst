@@ -97,6 +97,33 @@ void PybindVectorFst(py::module &m) {  // NOLINT
       py::return_value_policy::take_ownership,
       "Wraps the given address as an OWNING StdVectorFst (must have been "
       "allocated with new by the caller).");
+
+  // ---- Cross-module zero-copy helpers for GENERIC FSTs ----------------
+  // Same contract, but for any fst::Fst<StdArc> -- including lazy fsts
+  // (see lookahead_compose_fst) and native extension types read via
+  // StdFst.read.  Lets other pybind11 modules share them by pointer.
+  m.def(
+      "_fst_addr",
+      [](const fst::Fst<fst::StdArc> &f) -> uint64_t {
+        return reinterpret_cast<uint64_t>(&f);
+      },
+      py::arg("fst"), "Returns the raw C++ address of the given Fst.");
+  m.def(
+      "_fst_borrow",
+      [](uint64_t addr) -> fst::Fst<fst::StdArc> * {
+        return reinterpret_cast<fst::Fst<fst::StdArc> *>(addr);
+      },
+      py::return_value_policy::reference,
+      "Wraps the given address as a NON-owning Fst (the caller keeps "
+      "ownership).");
+  m.def(
+      "_fst_take",
+      [](uint64_t addr) -> fst::Fst<fst::StdArc> * {
+        return reinterpret_cast<fst::Fst<fst::StdArc> *>(addr);
+      },
+      py::return_value_policy::take_ownership,
+      "Wraps the given address as an OWNING Fst (must have been allocated "
+      "with new by the caller).");
 }
 
 }  // namespace kaldifst

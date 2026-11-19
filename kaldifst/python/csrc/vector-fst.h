@@ -6,6 +6,7 @@
 #define KALDIFST_PYTHON_CSRC_VECTOR_FST_H_
 
 #include "kaldifst/python/csrc/kaldifst.h"
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -87,9 +88,22 @@ void PybindVectorFst(py::module &m,  // NOLINT
       .def(py::init<>())
       .def(py::init<const fst::Fst<Arc> &>(), py::arg("fst"))
       .def_static(
-          "read", static_cast<ReadFromString>(&PyClass::Read),
-          "Reads an FST from a file; returns nullptr on error. An empty\n"
-          "filename results in reading from standard input.",
+          "read",
+          [](const std::string &filename) -> PyClass * {
+            // Generic read: accepts any *registered* FST type and
+            // materializes it as a VectorFst.  Besides vector/const FSTs
+            // this covers the openfst extension types some toolkits ship
+            // (e.g. vosk graphs: olabel_lookahead HCLr.fst, ngram Gr.fst)
+            // as long as the corresponding extensions are built into the
+            // openfst we link (HAVE_LOOKAHEAD / HAVE_NGRAM).
+            std::unique_ptr<fst::Fst<Arc>> generic(
+                fst::Fst<Arc>::Read(filename));
+            if (!generic) return nullptr;
+            return new PyClass(*generic);
+          },
+          "Reads an FST from a file and returns it as a VectorFst; nullptr\n"
+          "on error.  Any FST type is accepted (non-vector types are\n"
+          "converted).  An empty filename reads from standard input.",
           py::arg("filename"), py::return_value_policy::take_ownership);
 }
 

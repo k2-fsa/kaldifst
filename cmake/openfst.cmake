@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 # Copyright (c)  2020  Xiaomi Corporation (author: Fangjun Kuang)
 
 function(download_openfst)
@@ -34,8 +36,8 @@ function(download_openfst)
   set(HAVE_PDT OFF CACHE BOOL "" FORCE)
   set(HAVE_MPDT OFF CACHE BOOL "" FORCE)
   set(HAVE_LINEAR OFF CACHE BOOL "" FORCE)
-  set(HAVE_LOOKAHEAD OFF CACHE BOOL "" FORCE)
-  set(HAVE_NGRAM OFF CACHE BOOL "" FORCE)
+  set(HAVE_LOOKAHEAD ON CACHE BOOL "" FORCE)  # read olabel_lookahead fsts (vosk HCLr)
+  set(HAVE_NGRAM ON CACHE BOOL "" FORCE)  # read ngram fsts (vosk Gr)
   set(HAVE_PYTHON OFF CACHE BOOL "" FORCE)
   set(HAVE_SPECIAL OFF CACHE BOOL "" FORCE)
 

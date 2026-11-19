@@ -322,6 +322,50 @@ std::vector<fst::VectorFst<Arc>> ConvertNbestToVectorWrapper(
 
 void PybindFstExtUtils(py::module &m) {  // NOLINT
   m.def(
+      "lookahead_compose_fst",
+      [](const fst::Fst<fst::StdArc> &ifst1,
+         const fst::Fst<fst::StdArc> &ifst2,
+         const std::vector<int32_t> &to_remove) -> fst::Fst<fst::StdArc> * {
+        // LAZY composition, kaldi's LookaheadComposeFst
+        // (fstext-utils-inl.h) -- what vosk-api decodes over.  Nothing is
+        // materialized; keep the inputs in their native FST types (e.g.
+        // olabel_lookahead HCLr.fst, ngram Gr.fst) via StdFst.read.
+        return fst::LookaheadComposeFst<fst::StdArc, int32_t>(ifst1, ifst2,
+                                                              to_remove);
+      },
+      py::arg("ifst1"), py::arg("ifst2"), py::arg("to_remove"),
+      py::return_value_policy::take_ownership,
+      // the lazy composition REFERENCES its inputs: keep them alive for the
+      // lifetime of the returned fst (vosk-api holds them in Model members)
+      py::keep_alive<0, 1>(), py::keep_alive<0, 2>(),
+      R"doc(Lazily composes two FSTs (kaldi's ``LookaheadComposeFst``);
+the decoder traverses the composition on the fly -- nothing is materialized.
+
+Use this for two-part decoding graphs, e.g. vosk's ``HCLr.fst`` + ``Gr.fst``
+with the ``disambig_tid.int`` list:
+
+.. code-block:: python
+
+    hcl = kaldifst.StdFst.read("graph/HCLr.fst")   # keep native type!
+    gr = kaldifst.StdFst.read("graph/Gr.fst")
+    decode_fst = kaldifst.lookahead_compose_fst(hcl, gr, disambig)
+
+Its implementation is from `Kaldi`_:
+`<https://github.com/kaldi-asr/kaldi/blob/master/src/fstext/fstext-utils-inl.h>`_
+
+Args:
+  ifst1:
+    First FST (e.g. HCLr), any registered FST type.
+  ifst2:
+    Second FST (e.g. Gr), any registered FST type.
+  to_remove:
+    Disambiguation input labels to remove (e.g. from ``disambig_tid.int``).
+
+Returns:
+  The lazily composed FST.  The inputs ``ifst1``/``ifst2`` are kept alive
+  as long as the returned object lives.)doc");
+
+  m.def(
       "minimize_encoded",
       [](fst::MutableFst<fst::StdArc> *in_out, double delta = fst::kDelta) {
         fst::MinimizeEncoded(in_out, delta);
