@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kaldifst &mdash; kaldifst 1.9.0 documentation</title>
+  <title>kaldifst &mdash; kaldifst 1.9.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifst
           </a>
               <div class="version">
-                1.9.0
+                1.9.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -76,6 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#invert">invert</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lattice-scale">lattice_scale</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lattice-to-nbest">lattice_to_nbest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lookahead-compose-fst">lookahead_compose_fst</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#make-linear-acceptor">make_linear_acceptor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minimize">minimize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minimize-encoded">minimize_encoded</a></li>
@@ -2173,6 +2174,38 @@ and AM scale <code class="docutils literal notranslate"><span class="pre">amwt</
 <p><span class="caption-number">Fig. 55 </span><span class="caption-text">Visualization of lattice-3best-2.svg</span><a class="headerlink" href="#id110" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
+</dd></dl>
+
+</section>
+<section id="lookahead-compose-fst">
+<h2>lookahead_compose_fst<a class="headerlink" href="#lookahead-compose-fst" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kaldifst.lookahead_compose_fst">
+<span class="sig-prename descclassname"><span class="pre">kaldifst.</span></span><span class="sig-name descname"><span class="pre">lookahead_compose_fst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifst1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">kaldifst.lib._kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifst2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">kaldifst.lib._kaldifst.StdFst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_remove</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">kaldifst.lib._kaldifst.StdFst</span></span></span><a class="headerlink" href="#kaldifst.lookahead_compose_fst" title="Permalink to this definition"></a></dt>
+<dd><p>Lazily composes two FSTs (kaldi’s <code class="docutils literal notranslate"><span class="pre">LookaheadComposeFst</span></code>);
+the decoder traverses the composition on the fly – nothing is materialized.</p>
+<p>Use this for two-part decoding graphs, e.g. vosk’s <code class="docutils literal notranslate"><span class="pre">HCLr.fst</span></code> + <code class="docutils literal notranslate"><span class="pre">Gr.fst</span></code>
+with the <code class="docutils literal notranslate"><span class="pre">disambig_tid.int</span></code> list:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hcl</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdFst</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"graph/HCLr.fst"</span><span class="p">)</span>   <span class="c1"># keep native type!</span>
+<span class="n">gr</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">StdFst</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"graph/Gr.fst"</span><span class="p">)</span>
+<span class="n">decode_fst</span> <span class="o">=</span> <span class="n">kaldifst</span><span class="o">.</span><span class="n">lookahead_compose_fst</span><span class="p">(</span><span class="n">hcl</span><span class="p">,</span> <span class="n">gr</span><span class="p">,</span> <span class="n">disambig</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Its implementation is from <a class="reference external" href="https://github.com/kaldi-asr/kaldi">Kaldi</a>:
+<a class="reference external" href="https://github.com/kaldi-asr/kaldi/blob/master/src/fstext/fstext-utils-inl.h">https://github.com/kaldi-asr/kaldi/blob/master/src/fstext/fstext-utils-inl.h</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifst1</strong> – First FST (e.g. HCLr), any registered FST type.</p></li>
+<li><p><strong>ifst2</strong> – Second FST (e.g. Gr), any registered FST type.</p></li>
+<li><p><strong>to_remove</strong> – Disambiguation input labels to remove (e.g. from <code class="docutils literal notranslate"><span class="pre">disambig_tid.int</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The lazily composed FST.  The inputs <code class="docutils literal notranslate"><span class="pre">ifst1</span></code>/<code class="docutils literal notranslate"><span class="pre">ifst2</span></code> are kept alive
+as long as the returned object lives.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

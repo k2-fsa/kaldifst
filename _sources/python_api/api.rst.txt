@@ -88,6 +88,11 @@ lattice_to_nbest
 
 .. autofunction:: lattice_to_nbest
 
+lookahead_compose_fst
+---------------------
+
+.. autofunction:: lookahead_compose_fst
+
 make_linear_acceptor
 --------------------
 
